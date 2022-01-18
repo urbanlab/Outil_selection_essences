@@ -1,0 +1,25 @@
+{
+  "name": "essence",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/urbanlab/Outil_selection_essences.git"
+  },
+  "author": "CDLab",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/urbanlab/Outil_selection_essences/issues"
+  },
+  "homepage": "https://github.com/urbanlab/Outil_selection_essences#readme",
+  "dependencies": {
+    "body-parser": "^1.19.1",
+    "express": "^4.17.2",
+    "http": "0.0.1-security"
+  }
+}
