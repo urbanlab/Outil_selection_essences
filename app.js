@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require("body-parser");
 const gsheet = require("./gsheet.js")
+const utils = require("./utils")
 //-------------------------------------------------------------------------------------------------------------------------
 //-------------------------------------------- Paramétrages de base -------------------------------------------------------
 //-------------------------------------------------------------------------------------------------------------------------
@@ -49,4 +50,18 @@ app.get('/filtres', (req, res)=>{
 });
 //========================== Filtres ==============================
 
+//==================== /data/arbres ==================
+app.get('/data/arbres', (req, res)=>{
+    gsheet.getData(gsheet.client, `'Tableau des essences'!A4:4`)
+    .then((colnames)=>{
+        ncols = colnames[0].length
+        lastColumn = baseDecomposition(26, ncols)
+        gsheet.getData(gsheet.client, `'Tableau des essences'!A6:4`)
+        res.send("c'est bon")
+    })
+    .catch((err)=>{
+        console.log(err)
+    })
+})
+// ===================================================
 module.exports = app;

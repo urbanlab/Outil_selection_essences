@@ -6,102 +6,10 @@
   <link rel="stylesheet" type="text/css" href="/styles/style.css">
 </head>
 
-<div id="react-goes-here">
-  <!-- Le contenu de cet élément HTML sera remplacé par mes composants React -->
-  <aside>
-    <p id=taille>
-    </p>
-  
-    <p id=houpier>
-    </p>
-  
-    <p id=longevite>
-    </p>
-  
-    <p id=pH>
-    </p>
-  
-    <p id=humidite>
-    </p>
-  
-    <p id=feuillage>
-    </p>
-  
-    <p id=saisonnier>
-    </p>
-  
-    <p id=pollen>
-    </p>
-  
-    <p id=pepiniere>
-    </p>
-  
-    <p id=adaptation>
-    </p>
-  
-    <p id=canopee>
-    </p>
-  
-    <p id=confiance>
-    </p>
-  
-    <p id=provenance>
-    </p>
-  
-  </aside>
-  
 
-
-
-</div>
-
-
-
+<h1>Hello word</h1>
 
 <p>Ceci est la page d'accueil du projet d'outil de sélection d'essences d'Erasme ! Le site est en cours de déploiement.</p>
 
 
-
-
-
-<script>
-  function MyComponent() {
-    return (<div>Bonjour</div>)
-}
-  ReactDOM.render(<MyComponent />, document.getElementById("react-goes-here"))
-
-
-  var xhttp = new XMLHttpRequest();
-  xhttp.open("GET", "/filtres");
-  xhttp.setRequestHeader("Content-type", "plain/text");
-
-  xhttp.send();
-
-  xhttp.onload = function(){
-    var donnees_criteres = JSON.parse(xhttp.responseText);
-    console.log(donnees_criteres);
-
-  }
-
-  = document.getElementsById('taille'); 
-
-
-  = document.getElementsById('houpier'); 
-
-
-  = document.getElementsById('longevite'); 
-
-  = document.getElementsById('pH'); 
-  = document.getElementsById('humidite'); 
-  = document.getElementsById('feuillage'); 
-  = document.getElementsById('saisonnier'); 
-  = document.getElementsById('pollen'); 
-  = document.getElementsById('pepiniere'); 
-  = document.getElementsById('adaptation'); 
-  = document.getElementsById('canopee'); 
-  = document.getElementsById('confiance'); 
-  = document.getElementsById('provenance'); 
-
-
-
-</script>
+<script src="assets/jquery/jquery.min.js"></script>
