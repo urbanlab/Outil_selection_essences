@@ -23,7 +23,7 @@
 
   xhttp.onload = function () {
       console.log(JSON.parse(xhttp.responseText));
-      const data = JSON.parse(xhttp.responseText);
+      const data = tri(JSON.parse(xhttp.responseText));
       critere1 = data[0];
       for (let i = 0; i < data.length; i++) {
         const critere = data[i];
@@ -132,6 +132,27 @@
 
   }  
 
-
+  function tri(liste_criteres) {
+    liste_criteres_bloquant = []
+    liste_criteres_important = []
+    liste_criteres_peu_important = []
+    liste_criteres_triee = []
+    
+    for (let i = 0; i < liste_criteres.length; i++) {
+      critere = liste_criteres[i]
+      if (critere.importance=="Bloquant"){
+        liste_criteres_bloquant.push(critere)
+      }
+      else if (critere.importance=="Important"){
+        liste_criteres_important.push(critere)
+      }
+      else if (critere.importance=="Peu important"){
+        liste_criteres_peu_important.push(critere)
+      }
+    }
+    liste_criteres_triee = liste_criteres_bloquant.concat(liste_criteres_important, liste_criteres_peu_important);
+    console.log(liste_criteres_triee);
+    return(liste_criteres_triee);
+  }
 
 </script>
