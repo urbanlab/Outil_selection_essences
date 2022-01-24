@@ -19,6 +19,7 @@ app.get('/styles/style.css', (req, res) => {
 app.get('/filtres', (req, res)=>{
     const p = gsheet.getData(gsheet.client, `'Paramétrages critères'!A:Q`);
     p.then((value)=>{
+        console.log(value);
         liste_criteres=[];
         for (let i = 1; i < value[0].length; i++) {
             if (value[2][i] == 'TRUE'){

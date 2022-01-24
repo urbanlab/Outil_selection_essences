@@ -13,3 +13,14 @@
 
 
 <script src="assets/jquery/jquery.min.js"></script>
+
+<script>
+  var xhttp = new XMLHttpRequest();
+  xhttp.open('GET', '/filtres');
+  xhttp.setRequestHeader('Content-type', 'plain/text');
+  xhttp.send();
+
+  xhttp.onload = function () {
+      console.log(JSON.parse(xhttp.responseText));
+  }
+</script>
