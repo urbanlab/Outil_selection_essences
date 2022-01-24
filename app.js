@@ -15,7 +15,43 @@ app.get('/styles/style.css', (req, res) => {
     res.status(200).sendFile(__dirname + '/styles/style.css');
 });
 
-//==================== /data/arbres ==================
+// ========================== Filtres =============================
+app.get('/filtres', (req, res)=>{
+    const p = gsheet.getData(gsheet.client, `'Paramétrages critères'!A:Q`);
+    p.then((value)=>{
+        console.log(value);
+        liste_criteres=[];
+        for (let i = 1; i < value[0].length; i++) {
+            if (value[2][i] == 'TRUE'){
+                var json = {
+                    nom: value[0][i],
+                    importance: value[1][i],
+                    type_question: value[3][i]
+                }
+                var c=4;
+                reponses=[];
+                while (value[c] && value[c][i]!='') {
+                    morceaux = value[c][i].split(':');
+                    json_reponse = {
+                        valeur: morceaux[0],
+                        texte: morceaux[1]
+                    }
+                    reponses.push(json_reponse);
+                    c++;
+                }
+                json['reponses']=reponses;
+                liste_criteres.push(json);
+            }
+        }
+        res.send(JSON.stringify(liste_criteres));
+    })
+    .catch((err)=>{
+        console.log(err);
+    })
+});
+// =================================================== 
+
+// ==================== /data/arbres =================
 app.get('/data/arbres', (req, res)=>{
     gsheet.getData(gsheet.client, `'Tableau des essences'!A4:4`)
     .then((colnames)=>{
@@ -41,8 +77,9 @@ app.get('/data/arbres', (req, res)=>{
         console.log(err)
     })
 })
+// =====================================================
 
-//==================== /data/columns ==================
+// ==================== /data/columns ==================
 app.get('/data/columns', (req, res)=>{
     gsheet.getData(gsheet.client, `'Tableau des essences'!A4:4`)
     .then((colnames)=>{
