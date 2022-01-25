@@ -19,14 +19,14 @@
 <script src="assets/jquery/jquery.min.js"></script>
 
 <script>
-  var xhttp = new XMLHttpRequest();
-  xhttp.open('GET', '/filtres');
-  xhttp.setRequestHeader('Content-type', 'plain/text');
-  xhttp.send();
+  var xhttp_filtres = new XMLHttpRequest();
+  xhttp_filtres.open('GET', '/filtres');
+  xhttp_filtres.setRequestHeader('Content-type', 'application/json');
+  xhttp_filtres.send();
 
-  xhttp.onload = function () {
-      console.log(JSON.parse(xhttp.responseText));
-      const data = tri(JSON.parse(xhttp.responseText));
+  xhttp_filtres.onload = function () {
+      console.log(JSON.parse(xhttp_filtres.responseText));
+      const data = tri(JSON.parse(xhttp_filtres.responseText));
       critere1 = data[0];
       for (let i = 0; i < data.length; i++) {
         const critere = data[i];
@@ -37,6 +37,19 @@
           filtre_checkbox(critere);
         }
       }
+  }
+
+  var xhttp_arbres = new XMLHttpRequest();
+  xhttp_arbres.open('GET', '/data/arbres');
+  xhttp_arbres.setRequestHeader('Content-type', 'application/json');
+  xhttp_arbres.send()
+
+  xhttp_arbres.onload = function () {
+    const arbres = JSON.parse(xhttp_arbres.responseText);
+    for (let i = 0; i < 10; i++) {
+      const arbre = arbres[i];
+      montrer_arbre(arbre);
+    }
   }
 
 
@@ -110,6 +123,22 @@
     var aside = document.getElementById('filtres');
     aside.appendChild(div);
   }
+
+  function montrer_arbre(arbre) {
+    const nom_latin = arbre['Genre'] + ' ' + arbre['Espèce'];
+    var article = document.createElement('article');
+    article.setAttribute('id', 'article '+nom_latin);
+
+    var p_latin = document.createElement('p');
+    var p_francais = document.createElement('p');
+    p_latin.innerHTML = nom_latin;
+    p_francais.innerHTML = arbre['Nom commun'];
+    article.appendChild(p_latin);
+    article.appendChild(p_francais);
+    section = document.getElementById('arbres');
+    section.appendChild(article);
+  }
+
 
 
   function update_resultats(){
