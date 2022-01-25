@@ -7,6 +7,10 @@ const utils = require("./utils");
 //-------------------------------------------- Paramétrages de base -------------------------------------------------------
 //-------------------------------------------------------------------------------------------------------------------------
 
+app.use(bodyParser.json({
+    extended: true
+}));
+
 app.get('/', (req, res) => {
     res.status(200).sendFile(__dirname + '/templates/homepage.html');
 });
@@ -49,7 +53,12 @@ app.get('/filtres', (req, res)=>{
         console.log(err);
     })
 });
-// =================================================== 
+// ===================================================
+
+app.post('/update_filtres', (req, res) => {
+  console.log(req.body);
+  res.status(200).send('Success');
+});
 
 // ==================== /data/arbres =================
 app.get('/data/arbres', (req, res)=>{

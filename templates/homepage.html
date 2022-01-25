@@ -11,6 +11,7 @@
 
 <p>Ceci est la page d'accueil du projet d'outil de sélection d'essences d'Erasme ! Le site est en cours de déploiement.</p>
 
+<aside id='filtres'></aside>
 
 <script src="assets/jquery/jquery.min.js"></script>
 
@@ -22,5 +23,128 @@
 
   xhttp.onload = function () {
       console.log(JSON.parse(xhttp.responseText));
+      const data = tri(JSON.parse(xhttp.responseText));
+      critere1 = data[0];
+      for (let i = 0; i < data.length; i++) {
+        const critere = data[i];
+        if (critere.type_question == "Select") {
+          filtre_select(critere);
+        }
+        else if (critere.type_question == "Checkbox") {
+          filtre_checkbox(critere);
+        }
+      }
   }
+
+
+  function filtre_select(critere) {
+    var div = document.createElement('div');
+    div.setAttribute('id', 'div '+critere.nom);
+
+    var label = document.createElement('label');
+    label.setAttribute('for', critere.nom);
+    label.innerHTML = critere.nom;
+    div.appendChild(label);
+
+    var select = document.createElement('select');
+    select.setAttribute('name', critere.nom);
+    select.setAttribute('id', critere.nom);
+    select.addEventListener('change', update_resultats);
+
+    var option = document.createElement('option');
+    option.setAttribute('value','');
+    option.innerHTML = "Choisissez une option";
+    select.appendChild(option);
+
+    for (let i = 0; i < critere.reponses.length; i++) {
+      const reponse = critere.reponses[i];
+      var option = document.createElement('option');
+      option.setAttribute('value', reponse.valeur);
+      option.innerHTML = reponse.texte;
+      select.appendChild(option);
+    }
+
+    div.appendChild(select);
+
+    var aside = document.getElementById('filtres');
+    aside.appendChild(div);
+  }
+
+
+  function filtre_checkbox(critere) {
+    var div = document.createElement('div');
+    div.setAttribute('id', 'div '+critere.nom);
+
+    var p = document.createElement('p');
+    p.innerHTML = critere.nom;
+    div.appendChild(p);
+
+    for (let i = 0; i < critere.reponses.length; i++) {
+      const reponse = critere.reponses[i];
+      var input = document.createElement('input');
+      input.setAttribute('type', "checkbox");
+      input.setAttribute('id', reponse.texte);
+      input.setAttribute('name', reponse.texte);
+      input.setAttribute('value', reponse.valeur);
+      input.addEventListener('change', update_resultats);
+
+      var label = document.createElement('label');
+      label.setAttribute('for', reponse.texte);
+      label.innerHTML = reponse.texte;
+
+      div.appendChild(input);
+      div.appendChild(label);
+    }
+
+    var aside = document.getElementById('filtres');
+    aside.appendChild(div);
+  }
+
+
+  function update_resultats(){
+    var checkboxes = document.getElementsByTagName('input');
+    var selects = document.getElementsByTagName('select');
+
+    var json_filtres = {};
+    for (var i = 0; i < checkboxes.length; i++) {
+      json_filtres[checkboxes[i].name] = (checkboxes[i].checked)? checkboxes[i].value : '';
+    }
+    for (var i = 0; i < selects.length; i++) {
+      json_filtres[selects[i].name] = selects[i].value;
+    }
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.open('POST', '/update_filtres');
+    xhttp.setRequestHeader('Content-type', 'application/json');
+    xhttp.send(JSON.stringify(json_filtres));
+
+    xhttp.onload = function() {
+      console.log(xhttp.responseText);
+    }
+
+  }
+
+  function tri(liste_criteres) {
+    liste_criteres_bloquant = []
+    liste_criteres_important = []
+    liste_criteres_peu_important = []
+    liste_criteres_triee = []
+    
+    for (let i = 0; i < liste_criteres.length; i++) {
+      critere = liste_criteres[i]
+      if (critere.importance=="Bloquant"){
+        liste_criteres_bloquant.push(critere)
+      }
+      else if (critere.importance=="Important"){
+        liste_criteres_important.push(critere)
+      }
+      else if (critere.importance=="Peu important"){
+        liste_criteres_peu_important.push(critere)
+      }
+    }
+    liste_criteres_triee = liste_criteres_bloquant.concat(liste_criteres_important, liste_criteres_peu_important);
+    console.log(liste_criteres_triee);
+    return(liste_criteres_triee);
+  }
+
 </script>
