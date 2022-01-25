@@ -1,3 +1,4 @@
+const res = require('express/lib/response')
 const {google} = require('googleapis')
 const keys = require('./keys.json')
  
@@ -14,13 +15,16 @@ function getDataRange(client, range) {
         client.authorize(function(err, token){
             if(err){
                 console.log(err)
-                return new Promise((resolve, error)=>{})
+                return new Promise((resolve, error)=>{throw error})
             }
             else{
                 console.log("connecté")
                 const promise = gsrun(client, range)
                 promise.then((value)=>{
                     resolve(value)
+                })
+                .catch((err)=>{
+                    throw err
                 })
             }
         })
@@ -41,7 +45,9 @@ function gsrun(cl, range){
 
     const promise = new Promise((resolve, reject) => {
         gsapi.spreadsheets.values.get(opt, (err, result)=>{
-            // console.log(result.data.values.length, result.data.values[0])
+            if(err){
+                throw err
+            }
             resolve(result.data.values)
         })
     })
