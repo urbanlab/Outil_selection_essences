@@ -1,3 +1,65 @@
+*{
+  font-family: arial;
+}
+
 h1{
   color: red;
+  font-variant: small-caps;
+}
+
+p{
+  width: fit-content;
+}
+
+body{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+#filtres{
+  width: 20vw;
+  display: flex;
+  flex-direction: column;
+  border: solid black 1px;
+  padding: 2px;
+}
+
+#arbres{
+  width: 70vw;
+  height: 300px;
+  border: solid black 1px;
+}
+
+.filtre{
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  margin:5px;
+}
+
+.filtre_checkbox{
+  display: grid;
+  grid-template-columns: 2vw 15vw;
+  align-items: left;
+  margin:5px;
+}
+
+label{
+  text-align: left;
+  margin-bottom: 4px;
+}
+
+select{
+  width: 12vw;
+}
+
+header{
+  border: solid 1px black;
+  margin: 2vw 5vw;
+  width: 90vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }

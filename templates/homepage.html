@@ -6,12 +6,15 @@
   <link rel="stylesheet" type="text/css" href="/styles/style.css">
 </head>
 
+<header>
+  <h1>Hello word</h1>
 
-<h1>Hello word</h1>
-
-<p>Ceci est la page d'accueil du projet d'outil de sélection d'essences d'Erasme ! Le site est en cours de déploiement.</p>
+  <p>Ceci est la page d'accueil du projet d'outil de sélection d'essences d'Erasme ! Le site est en cours de déploiement.</p>
+</header>
 
 <aside id='filtres'></aside>
+
+<section id='arbres'></section>
 
 <script src="assets/jquery/jquery.min.js"></script>
 
@@ -40,6 +43,7 @@
   function filtre_select(critere) {
     var div = document.createElement('div');
     div.setAttribute('id', 'div '+critere.nom);
+    div.classList.add('filtre');
 
     var label = document.createElement('label');
     label.setAttribute('for', critere.nom);
@@ -74,10 +78,15 @@
   function filtre_checkbox(critere) {
     var div = document.createElement('div');
     div.setAttribute('id', 'div '+critere.nom);
+    div.classList.add('filtre');
 
     var p = document.createElement('p');
     p.innerHTML = critere.nom;
     div.appendChild(p);
+
+    var div_checkbox = document.createElement('div');
+    div_checkbox.setAttribute('id', 'div checkbox '+critere.nom);
+    div_checkbox.classList.add('filtre_checkbox');
 
     for (let i = 0; i < critere.reponses.length; i++) {
       const reponse = critere.reponses[i];
@@ -92,9 +101,11 @@
       label.setAttribute('for', reponse.texte);
       label.innerHTML = reponse.texte;
 
-      div.appendChild(input);
-      div.appendChild(label);
+      div_checkbox.appendChild(input);
+      div_checkbox.appendChild(label);
     }
+
+    div.appendChild(div_checkbox);
 
     var aside = document.getElementById('filtres');
     aside.appendChild(div);
@@ -129,7 +140,7 @@
     liste_criteres_important = []
     liste_criteres_peu_important = []
     liste_criteres_triee = []
-    
+
     for (let i = 0; i < liste_criteres.length; i++) {
       critere = liste_criteres[i]
       if (critere.importance=="Bloquant"){
