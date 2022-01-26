@@ -11,6 +11,14 @@ app.use(bodyParser.json({
     extended: true
 }));
 
+app.get('/assets/arbre_template.png', (req, res) => {
+  res.status(200).sendFile(__dirname + '/assets/arbre_template.png');
+});
+
+app.get('/assets/logo_erasme_grandlyon.png', (req, res) => {
+  res.status(200).sendFile(__dirname + '/assets/logo_erasme_grandlyon.png');
+});
+
 app.get('/', (req, res) => {
     res.status(200).sendFile(__dirname + '/templates/homepage.html');
 });
@@ -23,7 +31,6 @@ app.get('/styles/style.css', (req, res) => {
 app.get('/filtres', (req, res)=>{
     const p = gsheet.getData(gsheet.client, `'Paramétrages critères'!A:Q`);
     p.then((value)=>{
-        console.log(value);
         liste_criteres=[];
         for (let i = 1; i < value[0].length; i++) {
             if (value[2][i] == 'TRUE'){

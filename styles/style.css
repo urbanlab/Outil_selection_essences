@@ -11,6 +11,25 @@ p{
   width: fit-content;
 }
 
+p.latin{
+  font-style: italic;
+  color:white;
+  text-shadow: black 2px 1px 3px;
+  font-size: 16px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  text-align: center;
+}
+
+p.francais{
+  font-size: 20px;
+  color:white;
+  text-shadow: black 2px 1px 3px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  text-align: center;
+}
+
 body{
   display: flex;
   flex-direction: row;
@@ -24,12 +43,31 @@ body{
   flex-direction: column;
   border: solid black 1px;
   padding: 2px;
+  padding-bottom: 6px;
+  height: fit-content;
+}
+
+#plus_de_filtres{
+  order:100000000000;
+  width: fit-content;
+  margin: auto;
+  border: none;
+  background: none;
+  text-decoration: underline;
+}
+
+#plus_de_filtres:hover{
+  color: #D82600;
+  cursor: pointer;
 }
 
 #arbres{
   width: 70vw;
-  height: 300px;
   border: solid black 1px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
 }
 
 .filtre{
@@ -44,6 +82,29 @@ body{
   grid-template-columns: 2vw 15vw;
   align-items: left;
   margin:5px;
+}
+
+.info_arbre{
+  border: solid black 1px;
+  background-image: url('/assets/arbre_template.png');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  width: 13vw;
+  height:20vw;
+  margin: 5px;
+}
+
+.text-container{
+  padding:2px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  height: fit-content;
+  background: linear-gradient(#55555500 10%, #555);
 }
 
 label{

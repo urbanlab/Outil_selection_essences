@@ -7,12 +7,13 @@
 </head>
 
 <header>
-  <h1>Hello word</h1>
-
-  <p>Ceci est la page d'accueil du projet d'outil de sélection d'essences d'Erasme ! Le site est en cours de déploiement.</p>
+  <h1>Selection d'essence d'arbre</h1>
+  <img src="/assets/logo_erasme_grandlyon.png" width="500" >
 </header>
 
-<aside id='filtres'></aside>
+<aside id='filtres'>
+  <button type="button" id="plus_de_filtres" onclick="modifier_filtres()">Plus de filtres</button>
+</aside>
 
 <section id='arbres'></section>
 
@@ -57,6 +58,10 @@
     var div = document.createElement('div');
     div.setAttribute('id', 'div '+critere.nom);
     div.classList.add('filtre');
+    if (critere['importance'] != "Bloquant") {
+      div.classList.add('pas_bloquant');
+      div.style.display = 'none';
+    }
 
     var label = document.createElement('label');
     label.setAttribute('for', critere.nom);
@@ -92,6 +97,10 @@
     var div = document.createElement('div');
     div.setAttribute('id', 'div '+critere.nom);
     div.classList.add('filtre');
+    if (critere['importance'] != "Bloquant") {
+      div.classList.add('pas_bloquant');
+      div.style.display = 'none';
+    }
 
     var p = document.createElement('p');
     p.innerHTML = critere.nom;
@@ -128,18 +137,49 @@
     const nom_latin = arbre['Genre'] + ' ' + arbre['Espèce'];
     var article = document.createElement('article');
     article.setAttribute('id', 'article '+nom_latin);
+    article.classList.add('info_arbre');
+
+    var div = document.createElement('div');
+    div.classList.add('text-container');
 
     var p_latin = document.createElement('p');
     var p_francais = document.createElement('p');
+    p_latin.classList.add('latin');
+    p_francais.classList.add('francais');
     p_latin.innerHTML = nom_latin;
     p_francais.innerHTML = arbre['Nom commun'];
-    article.appendChild(p_latin);
-    article.appendChild(p_francais);
+    div.appendChild(p_francais);
+    div.appendChild(p_latin);
+
+    article.appendChild(div);
+    if (arbre["Image Id"]!=""){
+      article.style.backgroundImage = 'url(https://drive.google.com/uc?export=view&id='+arbre["Image Id"]+')';
+    }
+
     section = document.getElementById('arbres');
     section.appendChild(article);
   }
 
-
+  function modifier_filtres(){
+    var filtres = document.getElementsByClassName('pas_bloquant');
+    var ajouter = true;
+    var button = document.getElementById('plus_de_filtres');
+    if (button.innerHTML == 'Plus de filtres') {
+      ajouter = false;
+      button.innerHTML = 'Moins de filtres';
+    }
+    else{
+      button.innerHTML = 'Plus de filtres';
+    }
+    for (var i = 0; i < filtres.length; i++) {
+      if (ajouter == false) {
+        filtres[i].style.display = '';
+      }
+      else{
+        filtres[i].style.display = 'none';
+      }
+    }
+  }
 
   function update_resultats(){
     var checkboxes = document.getElementsByTagName('input');
