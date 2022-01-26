@@ -47,7 +47,7 @@
 
   xhttp_arbres.onload = function () {
     const arbres = JSON.parse(xhttp_arbres.responseText);
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < arbres.length; i++) {
       const arbre = arbres[i];
       montrer_arbre(arbre);
     }
@@ -137,6 +137,8 @@
     const nom_latin = arbre['Genre'] + ' ' + arbre['Espèce'];
     var article = document.createElement('article');
     article.setAttribute('id', 'article '+nom_latin);
+    article.addEventListener('mouseenter', montrer_mots_cles);
+    article.addEventListener('mouseleave', cacher_mots_cles);
     article.classList.add('info_arbre');
 
     var div = document.createElement('div');
@@ -201,7 +203,28 @@
     xhttp.onload = function() {
       console.log(xhttp.responseText);
     }
+  }
 
+  function mots_cles(arbre){
+    return('mots clés super importants');
+  }
+
+  function montrer_mots_cles(event){
+    var p = document.createElement('p');
+    p.innerHTML = mots_cles("TROUVER L'ARBRE ET LE METTRE EN PARAMETRE");
+    p.style.color = 'red';
+    p.style.margin = 'auto';
+    p.style.marginBottom = '0.5vw';
+    p.style.fontSize = '14px';
+    p.style.fontWeight = 'bold';
+    p.style.fontStyle = 'italic';
+    p.style.textAlign = 'center';
+    p.style.textShadow = 'black 1px 1px 1px';
+    this.insertBefore(p, this.firstChild);
+  }
+
+  function cacher_mots_cles(event){
+    this.removeChild(this.firstChild);
   }
 
   function tri(liste_criteres) {

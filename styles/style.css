@@ -85,16 +85,29 @@ body{
 }
 
 .info_arbre{
-  border: solid black 1px;
+  /* border: solid black 1px; */
   background-image: url('/assets/arbre_template.png');
   background-size: cover;
   background-position: center;
+  border-radius: 0.5vw;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   width: 13vw;
   height:20vw;
   margin: 5px;
+  animation-duration: 0.7s;
+  animation-fill-mode: forwards;
+}
+
+.info_arbre:hover{
+  animation-name: zoom-in;
+  cursor: pointer;
+}
+
+@keyframes zoom-in {
+  from{transform: scale(100%);}
+  to{transform: scale(102%);}
 }
 
 .text-container{
@@ -105,6 +118,7 @@ body{
   align-items: center;
   height: fit-content;
   background: linear-gradient(#55555500 10%, #555);
+  border-radius: 0.5vw;
 }
 
 label{
