@@ -4,12 +4,310 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Outil de sélection d'essences</title>
   <link rel="stylesheet" type="text/css" href="/styles/style.css">
+  <link href='https://fonts.googleapis.com/css?family=Eczar' rel='stylesheet'>
 </head>
 
+<header>
+  <h1>Selection d'essence d'arbre</h1>
+  <img src="/assets/logo_erasme_grandlyon.png" width="500" >
+</header>
 
-<h1>Hello word</h1>
+<div id="popin" class="modal">
+  <div class="modal-content">
+    <img id="popin_photo" src="" alt="">
+    <div class="popin_titres">
+      <h1 id='popin_nom_francais'></h1>
+      <h2 id='popin_nom_latin'></h2>
+    </div>
+    <table id='popin_infos'>
 
-<p>Ceci est la page d'accueil du projet d'outil de sélection d'essences d'Erasme ! Le site est en cours de déploiement.</p>
+    </table>
+    <button id="popin_close" type="button" name="button" onclick="cacher_popin()">&times</button>
+  </div>
+</div>
 
+<aside id='filtres'>
+  <button type="button" id="plus_de_filtres" onclick="modifier_filtres()">Plus de filtres</button>
+</aside>
+
+<section id='arbres'></section>
 
 <script src="assets/jquery/jquery.min.js"></script>
+
+<script>
+  var xhttp_filtres = new XMLHttpRequest();
+  xhttp_filtres.open('GET', '/data/filtres');
+  xhttp_filtres.setRequestHeader('Content-type', 'application/json');
+  xhttp_filtres.send();
+
+  xhttp_filtres.onload = function () {
+      console.log(JSON.parse(xhttp_filtres.responseText));
+      const data = tri(JSON.parse(xhttp_filtres.responseText));
+      critere1 = data[0];
+      for (let i = 0; i < data.length; i++) {
+        const critere = data[i];
+        if (critere.type_question == "Select") {
+          filtre_select(critere);
+        }
+        else if (critere.type_question == "Checkbox") {
+          filtre_checkbox(critere);
+        }
+      }
+  }
+
+  var xhttp_arbres = new XMLHttpRequest();
+  xhttp_arbres.open('GET', '/data/arbres');
+  xhttp_arbres.setRequestHeader('Content-type', 'application/json');
+  xhttp_arbres.send()
+
+  xhttp_arbres.onload = function () {
+    const arbres = JSON.parse(xhttp_arbres.responseText);
+    for (let i = 0; i < arbres.length; i++) {
+      const arbre = arbres[i];
+      montrer_arbre(arbre);
+    }
+  }
+
+
+  function filtre_select(critere) {
+    var div = document.createElement('div');
+    div.setAttribute('id', 'div '+critere.nom);
+    div.classList.add('filtre');
+    if (critere['importance'] != "Bloquant") {
+      div.classList.add('pas_bloquant');
+      div.style.display = 'none';
+    }
+
+    var label = document.createElement('label');
+    label.setAttribute('for', critere.nom);
+    label.innerHTML = critere.nom;
+    div.appendChild(label);
+
+    var select = document.createElement('select');
+    select.setAttribute('name', critere.nom);
+    select.setAttribute('id', critere.nom);
+    select.addEventListener('change', update_resultats);
+
+    var option = document.createElement('option');
+    option.setAttribute('value','');
+    option.innerHTML = "Choisissez une option";
+    select.appendChild(option);
+
+    for (let i = 0; i < critere.reponses.length; i++) {
+      const reponse = critere.reponses[i];
+      var option = document.createElement('option');
+      option.setAttribute('value', reponse.valeur);
+      option.innerHTML = reponse.texte;
+      select.appendChild(option);
+    }
+
+    div.appendChild(select);
+
+    var aside = document.getElementById('filtres');
+    aside.appendChild(div);
+  }
+
+
+  function filtre_checkbox(critere) {
+    var div = document.createElement('div');
+    div.setAttribute('id', 'div '+critere.nom);
+    div.classList.add('filtre');
+    if (critere['importance'] != "Bloquant") {
+      div.classList.add('pas_bloquant');
+      div.style.display = 'none';
+    }
+
+    var p = document.createElement('p');
+    p.innerHTML = critere.nom;
+    div.appendChild(p);
+
+    var div_checkbox = document.createElement('div');
+    div_checkbox.setAttribute('id', 'div checkbox '+critere.nom);
+    div_checkbox.classList.add('filtre_checkbox');
+
+    for (let i = 0; i < critere.reponses.length; i++) {
+      const reponse = critere.reponses[i];
+      var input = document.createElement('input');
+      input.setAttribute('type', "checkbox");
+      input.setAttribute('id', reponse.texte);
+      input.setAttribute('name', reponse.texte);
+      input.setAttribute('value', reponse.valeur);
+      input.addEventListener('change', update_resultats);
+
+      var label = document.createElement('label');
+      label.setAttribute('for', reponse.texte);
+      label.innerHTML = reponse.texte;
+
+      div_checkbox.appendChild(input);
+      div_checkbox.appendChild(label);
+    }
+
+    div.appendChild(div_checkbox);
+
+    var aside = document.getElementById('filtres');
+    aside.appendChild(div);
+  }
+
+  function montrer_arbre(arbre) {
+    const nom_latin = arbre['Genre'] + ' ' + arbre['Espèce'];
+    var article = document.createElement('article');
+    article.setAttribute('id', 'article '+nom_latin);
+    article.addEventListener('mouseenter', montrer_mots_cles);
+    article.addEventListener('mouseleave', cacher_mots_cles);
+    article.addEventListener('click', afficher_popin);
+    article.classList.add('info_arbre');
+
+    var div = document.createElement('div');
+    div.classList.add('text-container');
+
+    var p_latin = document.createElement('p');
+    var p_francais = document.createElement('p');
+    p_latin.classList.add('latin');
+    p_francais.classList.add('francais');
+    p_latin.innerHTML = nom_latin;
+    p_francais.innerHTML = arbre['Nom commun'];
+    div.appendChild(p_francais);
+    div.appendChild(p_latin);
+
+    article.appendChild(div);
+    if (arbre["Image Id"]!=""){
+      article.style.backgroundImage = 'url(https://drive.google.com/uc?export=view&id='+arbre["Image Id"]+')';
+    }
+
+    section = document.getElementById('arbres');
+    section.appendChild(article);
+  }
+
+  function modifier_filtres(){
+    var filtres = document.getElementsByClassName('pas_bloquant');
+    var ajouter = true;
+    var button = document.getElementById('plus_de_filtres');
+    if (button.innerHTML == 'Plus de filtres') {
+      ajouter = false;
+      button.innerHTML = 'Moins de filtres';
+    }
+    else{
+      button.innerHTML = 'Plus de filtres';
+    }
+    for (var i = 0; i < filtres.length; i++) {
+      if (ajouter == false) {
+        filtres[i].style.display = '';
+      }
+      else{
+        filtres[i].style.display = 'none';
+      }
+    }
+  }
+
+  function update_resultats(){
+    var checkboxes = document.getElementsByTagName('input');
+    var selects = document.getElementsByTagName('select');
+
+    var json_filtres = {};
+    for (var i = 0; i < checkboxes.length; i++) {
+      json_filtres[checkboxes[i].name] = (checkboxes[i].checked)? checkboxes[i].value : '';
+    }
+    for (var i = 0; i < selects.length; i++) {
+      json_filtres[selects[i].name] = selects[i].value;
+    }
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.open('POST', '/update_filtres');
+    xhttp.setRequestHeader('Content-type', 'application/json');
+    xhttp.send(JSON.stringify(json_filtres));
+
+    xhttp.onload = function() {
+      console.log(xhttp.responseText);
+    }
+  }
+
+  function mots_cles(arbre){
+    return('mots clés super importants');
+  }
+
+  function montrer_mots_cles(event){
+    var p = document.createElement('p');
+    p.innerHTML = mots_cles("TROUVER L'ARBRE ET LE METTRE EN PARAMETRE");
+    p.classList.add('mot-cle');
+    this.insertBefore(p, this.firstChild);
+  }
+
+  function cacher_mots_cles(event){
+    this.removeChild(this.firstChild);
+  }
+
+  function afficher_popin(event){
+    var xhttp_popin = new XMLHttpRequest();
+    xhttp_popin.open('GET', `/data/arbres?id=${event.currentTarget.id.slice(8)}`);
+    xhttp_popin.setRequestHeader('Content-type', 'application/json');
+    xhttp_popin.send()
+
+    xhttp_popin.onload = function() {
+      var popin = document.getElementById('popin');
+      arbre_popin = JSON.parse(xhttp_popin.responseText)[0];
+      console.log(arbre_popin);
+      var popin_photo = document.getElementById('popin_photo');
+      popin_photo.setAttribute("src", (arbre_popin["Image Id"]!='') ? 'https://drive.google.com/uc?export=view&id='+arbre_popin["Image Id"] : '/assets/arbre_template.png');
+
+      var popin_nom_latin = document.getElementById('popin_nom_latin');
+      popin_nom_latin.innerHTML= arbre_popin['Genre'] + ' ' + arbre_popin['Espèce'] ;
+
+      var popin_nom_francais = document.getElementById('popin_nom_francais');
+      popin_nom_francais.innerHTML= arbre_popin['Nom commun'];
+
+      var tableau = document.getElementById('popin_infos');
+      const colonnes = Object.keys(arbre_popin);
+      for (var i = 0; i < tableau.children.length; i++) {
+        tableau.removeChild(tableau.children[i]);
+      }
+      for (var i = 0; i < colonnes.length; i++) {
+        if (colonnes[i]!='Nom commun' && colonnes[i]!='Genre' && colonnes[i]!='Espèce' && colonnes[i]!='Image Id') {
+          var tr = document.createElement('tr');
+          var col1 = document.createElement('td');
+          var col2 = document.createElement('td');
+          col1.innerHTML = colonnes[i];
+          col2.innerHTML = arbre_popin[colonnes[i]];
+          tr.appendChild(col1);
+          tr.appendChild(col2);
+          tableau.appendChild(tr);
+        }
+      }
+
+
+      popin.style.visibility = 'visible';
+      popin.style.opacity = "100%";
+    }
+
+
+  }
+
+  function cacher_popin(event){
+    var popin = document.getElementById('popin');
+    popin.style.visibility = 'hidden';
+    popin.style.opacity = "0%";
+  }
+
+  function tri(liste_criteres) {
+    liste_criteres_bloquant = []
+    liste_criteres_important = []
+    liste_criteres_peu_important = []
+    liste_criteres_triee = []
+
+    for (let i = 0; i < liste_criteres.length; i++) {
+      critere = liste_criteres[i]
+      if (critere.importance=="Bloquant"){
+        liste_criteres_bloquant.push(critere)
+      }
+      else if (critere.importance=="Important"){
+        liste_criteres_important.push(critere)
+      }
+      else if (critere.importance=="Peu important"){
+        liste_criteres_peu_important.push(critere)
+      }
+    }
+    liste_criteres_triee = liste_criteres_bloquant.concat(liste_criteres_important, liste_criteres_peu_important);
+    console.log(liste_criteres_triee);
+    return(liste_criteres_triee);
+  }
+
+</script>
