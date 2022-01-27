@@ -27,8 +27,13 @@ app.get('/styles/style.css', (req, res) => {
     res.status(200).sendFile(__dirname + '/styles/style.css');
 });
 
+app.post('/update_filtres', (req, res) => {
+  console.log(req.body);
+  res.status(200).send('Success');
+});
+
 // ========================== Filtres =============================
-app.get('/filtres', (req, res)=>{
+app.get('/data/filtres', (req, res)=>{
     const p = gsheet.getData(gsheet.client, `'Paramétrages critères'!A:Q`);
     p.then((value)=>{
         liste_criteres=[];
@@ -62,13 +67,10 @@ app.get('/filtres', (req, res)=>{
 });
 // ===================================================
 
-app.post('/update_filtres', (req, res) => {
-  console.log(req.body);
-  res.status(200).send('Success');
-});
-
 // ==================== /data/arbres =================
 app.get('/data/arbres', (req, res)=>{
+    const param = req.query.id;
+    console.log(param);
     gsheet.getData(gsheet.client, `'Tableau des essences'!A4:4`)
     .then((colnames)=>{
         ncols = colnames[0].length
@@ -77,11 +79,13 @@ app.get('/data/arbres', (req, res)=>{
         .then((values)=>{
             let response = []
             for (let i = 0; i < values.length; i++) {
-                let val = {}
-                for(let j=0; j<ncols-1; j++){
-                    val[colnames[0][j]]=values[i][j]
+                if (!param || (param && param == `${values[i][1].trim()} ${values[i][2].trim()}`)) {
+                    let val = {}
+                    for(let j=0; j<ncols-1; j++){
+                        val[colnames[0][j]]=values[i][j]
+                    }
+                    response.push(val)
                 }
-                response.push(val)
             }
             res.send(response)
         })

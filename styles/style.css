@@ -103,6 +103,7 @@ body{
   animation-fill-mode: forwards;
 }
 
+
 .info_arbre:hover{
   animation-name: zoom-in;
   cursor: pointer;
@@ -174,7 +175,60 @@ header{
   padding: 10px;
   width: 80%;
   height: 80%;
+}
+
+#popin_close{
+  background-color: white;
+  position: fixed;
+  margin:0;
+  width: 2vw;
+  height: 2vw;
+  left: 88%;
+  top: 10%;
+  cursor: pointer;
+}
+
+#popin_photo{
+  width: 20vw;
+  height: 30vw;
+  object-fit: cover;
+  position: fixed;
+  top : 30%;
+  left : 17%;
+}
+
+.popin_titres{
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
+  justify-content: flex-end;
+  position: fixed;
+  top: 10%;
+  left : 17%;
+  height: 20%;
+  width:20vw;
+}
+
+#popin_nom_francais{
+  margin:0;
+  width: 20vw;
+  text-align: center;
+  line-height: 100%;
+  margin-bottom: 2%;
+}
+
+#popin_nom_latin{
+  margin:0;
+  width: 20vw;
+  text-align: center;
+  line-height: 100%;
+  margin-bottom: 2%;
+}
+
+#popin_infos{
+  position: fixed;
+  display: inline-block;
+  overflow: auto;
+  left: 40%;
+  width: 50%;
+  height: 80%;
 }
