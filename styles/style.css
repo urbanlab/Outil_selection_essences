@@ -21,7 +21,7 @@ p.latin{
   margin-top: 0;
   margin-bottom: 1px;
   text-align: center;
-  line-height: normal;
+  line-height: 100%;
 }
 
 p.francais{
@@ -35,6 +35,7 @@ p.francais{
 }
 
 body{
+  margin:0;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -49,6 +50,7 @@ body{
   padding: 2px;
   padding-bottom: 6px;
   height: fit-content;
+  margin-top: 10%;
 }
 
 #plus_de_filtres{
@@ -66,6 +68,7 @@ body{
 }
 
 #arbres{
+  margin-top: 10%;
   width: 70vw;
   display: flex;
   flex-direction: row;
@@ -148,11 +151,62 @@ select{
 }
 
 header{
-  margin: 2vw 5vw;
-  width: 90vw;
+  width: 100%;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 10%;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
+  justify-content: center;
+  background-color: white;
+  z-index: 999;
+}
+
+header:after{
+  content: "";
+  display: block;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -14px;
+  height: 14px;
+  background: url('http://canographia.datagora.erasme.org/wp-content/themes/canographia/assets/rough-x-white.svg') repeat-x transparent;
+}
+
+
+footer{
+  margin:0;
+  width: 100%;
+  height: 10%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  background: #bdb246;
+  position: relative;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 36px 0 64px;
+  font-size: 15px;
+  margin-top: 5%;
+}
+
+
+
+footer:after{
+  content: "";
+  display: block;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -14px;
+  height: 14px;
+  background: url('http://canographia.datagora.erasme.org/wp-content/themes/canographia/assets/rough-x-secondary.svg') repeat-x transparent;
 }
 
 .modal{
@@ -171,30 +225,31 @@ header{
 }
 
 .modal-content{
-  background-color: white;
+  background-color: #DED25E;
   padding: 10px;
   width: 80%;
   height: 80%;
 }
 
 #popin_close{
-  background-color: white;
+  background-color: #DED25E;
   position: fixed;
+  text-align: center;
   margin:0;
-  width: 2vw;
-  height: 2vw;
+  width: 2.5em;
+  height: 2.5em;
   left: 88%;
   top: 10%;
   cursor: pointer;
 }
 
 #popin_photo{
-  width: 20vw;
-  height: 30vw;
+  width: 26%;
+  height: 55%;
   object-fit: cover;
   position: fixed;
   top : 30%;
-  left : 17%;
+  left : 12%;
 }
 
 .popin_titres{
@@ -203,30 +258,32 @@ header{
   justify-content: flex-end;
   position: fixed;
   top: 10%;
-  left : 17%;
+  left : 12%;
   height: 20%;
-  width:20vw;
+  width:26%;
 }
 
 #popin_nom_francais{
-  margin:0;
-  width: 20vw;
+  margin:0;  
+  width:100%;
   text-align: center;
   line-height: 100%;
   margin-bottom: 2%;
-  color: #294F8D;
+  color: white;
 }
 
 #popin_nom_latin{
   margin:0;
-  width: 20vw;
+  width:100%;
+  font-style: italic;
   text-align: center;
   line-height: 100%;
   margin-bottom: 2%;
-  color: #9c933a;
+  color: #4A494A;
 }
 
 #popin_infos{
+  margin:0;
   position: fixed;
   display: inline-block;
   overflow: auto;
@@ -234,10 +291,34 @@ header{
   width: 50%;
   height: 55%;
   top: 30%;
-  padding: 1vw;
-  background-color: #DED25E;
+  background-color: transparent;
   border-radius: 0.5vw;
+  line-height: 125%;
+  border-spacing: 0;
+  scrollbar-color: #f5e97d #DED25E;
+  scrollbar-width: thin;
 }
+
+#popin_infos::-webkit-scrollbar{
+  width: 10px;
+  margin-left: 5px;
+  background: #DED25E;
+}
+
+#popin_infos::-webkit-scrollbar-thumb {
+  background-color: #f5e97d;
+  background-clip: content-box;
+  border: 2px solid transparent;
+}
+
+td{
+  padding: 1vw;
+  background-color: #f5e97d;
+  border-bottom: solid 1px #DED25E;
+  border-top: solid 1px #DED25E;
+  margin: 0;
+}
+
 
 
 .popin_titre_tableau{
@@ -250,15 +331,14 @@ header{
   margin-bottom: 2%;
   padding: .1vw;
   background-color: #DED25E;
-  color: #294F8D;
-  text-shadow: #FCE5D2 1px 1px 2px;
+  color: #4A494A;
+  /*text-shadow: #FCE5D2 1px 1px 2px;*/
   font-size: 23px;
   border-radius: 0.5vw;
 }
 
 
-
-
+/*
 @media screen and (min-width:1000px) {
   #popin_photo{
     width: 15vw;
@@ -296,4 +376,4 @@ header{
     margin-bottom: 2%;
   }
   
-}
+}*/

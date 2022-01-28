@@ -1,0 +1,20 @@
+{
+    "Alignement routier": true,
+    "Autre situation urbaine": false,
+    "Petit jardin": false,
+    "Parc et grand jardin": false,
+    "Foret gourmande": true,
+    "Haie": false,
+    "Noue et jardin de pluie": false,
+    "Ripisylve": true,
+    "Boisement": false,
+    "Taille des arbres": "1",
+    "Largeur houpier (couronne de l'arbre à maturité)": "3",
+    "Tolérance pour le pH du sol ": "3",
+    "Besoin en eau et humidité": "2",
+    "Potentiel Canopée (ombrage)": "3",
+    "Feuillage": "Persistant",
+    "Impact ornemental saisonnier": "2",
+    "Pollen et potentiel allergisant ": "1",
+    "Provenance": "Océanie"
+}
