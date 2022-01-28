@@ -162,6 +162,12 @@
     article.addEventListener('click', afficher_popin);
     article.classList.add('info_arbre');
 
+    var p = document.createElement('p');
+    p.classList.add('mot-cle');
+    p.style.visibility='hidden';
+    p.innerHTML = mots_cles(arbre);
+    article.appendChild(p);
+
     var div = document.createElement('div');
     div.classList.add('text-container');
 
@@ -227,18 +233,28 @@
   }
 
   function mots_cles(arbre){
-    return('mots clés super importants');
+    mots_clé=[];
+    if (arbre['Disponibilité en pépinière']=="4"){
+      mots_clé.push("rare");
+    }
+    if (arbre['Potentiel invasif']=="Fort"){
+      mots_clé.push("invasif");
+    }
+    if (arbre['Impact sur la biodiversité']=="Négatif"){
+      mots_clé.push("néfaste");
+    }
+    if (arbre['Pollen et potentiel allergisant']=="Fort"){
+      mots_clé.push("allergène");
+    }
+    return(mots_clé.join(", "));
   }
 
   function montrer_mots_cles(event){
-    var p = document.createElement('p');
-    p.innerHTML = mots_cles("TROUVER L'ARBRE ET LE METTRE EN PARAMETRE");
-    p.classList.add('mot-cle');
-    this.insertBefore(p, this.firstChild);
+    event.currentTarget.children[0].style.visibility = 'visible';
   }
 
   function cacher_mots_cles(event){
-    this.removeChild(this.firstChild);
+    event.currentTarget.children[0].style.visibility = 'hidden';
   }
 
   function afficher_popin(event){
