@@ -9,11 +9,10 @@
 
 <header>
   <h1>Selection d'essence d'arbre</h1>
-  <img src="/assets/logo_erasme_grandlyon.png" width="500" >
 </header>
 
-<div id="popin" class="modal">
-  <div class="modal-content">
+<div id="popin" class="modal" onclick="click_hors_popin()">
+  <div class="modal-content" onclick="event.stopPropagation()">
     <img id="popin_photo" src="" alt="">
     <div class="popin_titres">
       <h1 id='popin_nom_francais'></h1>
@@ -32,6 +31,11 @@
 </aside>
 
 <section id='arbres'></section>
+
+
+<footer id="footer">
+  <img src="/assets/logo_erasme_grandlyon.png" width="500" >
+</footer>
 
 <script src="assets/jquery/jquery.min.js"></script>
 
@@ -63,7 +67,7 @@
 
   xhttp_arbres.onload = function () {
     const arbres = JSON.parse(xhttp_arbres.responseText);
-    for (let i = 0; i < arbres.length; i++) {
+    for (let i = 0; i < 10; i++) {
       const arbre = arbres[i];
       montrer_arbre(arbre);
     }
@@ -268,12 +272,17 @@
           var col1 = document.createElement('td');
           var col2 = document.createElement('td');
           col1.innerHTML = colonnes[i];
-          col1.style.color = '#294F8D';
-          col1.style.textShadow = "#FCE5D2 1px 1px 2px"; 
+          col1.style.color = '#675F1E';
+          /*col1.style.textShadow = "#FCE5D2 1px 1px 2px"; */
           col1.style.fontSize = '20px';
+          col1.style.width = '47%';
+          col1.style.borderRadius = '10px 0 0 10px';
           col2.innerHTML = arbre_popin[colonnes[i]];
-          col2.style.color = '#294F8D';
+          col2.style.color = '#6B6B6B';
           col2.style.fontSize = '20px';
+          col2.style.width = '53%';
+          col2.style.textAlign = 'center';
+          col2.style.borderRadius = '0 10px 10px 0';
           tr.appendChild(col1);
           tr.appendChild(col2);
           tableau.appendChild(tr);
@@ -294,7 +303,9 @@
     popin.style.opacity = "0%";
   }
 
-
+  function click_hors_popin(event) {
+    cacher_popin(event)
+  }
   
   
 
