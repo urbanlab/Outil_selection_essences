@@ -1,6 +1,6 @@
 var mydata = require('./ex.json');
 var input = require('./input.json');
-var description=require('./desc.json');
+var description=require('./description.json');
 
 /********************************************************************************/
 
@@ -11,6 +11,24 @@ function update_data(data,filters){
 
     
 			for (const prop in filters){
+				if (prop=='Indice de potentiel d\'adaptation'){
+				
+									if(parseFloat(data[i][prop])>=3){
+										
+										data[i][prop]=1;
+									}else if(2.5=<parseFloat(data[i][prop])<3){
+										data[i][prop]=2;
+				
+									}else if(2=<parseFloat(data[i][prop])<2.5){
+										data[i][prop]=3;
+				
+									}else if (1=<parseFloat(data[i][prop])<2){
+										data[i][prop]=4;
+									}else if (parseFloat(data[i][prop])<1) {
+										data[i][prop]=5;
+									} 
+				}
+
 		         switch (data[i][prop]){
 
 							case 'X':
@@ -34,10 +52,11 @@ function update_data(data,filters){
 						     data[i][prop]=3;
 						     break;
 						     // c'est une entier 
-						     case 
-						     data[i][prop]=parseFloat(data[i][prop]);
+						     default:
+						     data[i][prop]=parseInt(data[i][prop]);
 						     break;}
-		};}
+				}
+		}
 	return data;
 
 };
@@ -89,10 +108,14 @@ function build_default_input_and_weights(description){
 				     break;
 				case '':
 				     const nbr_choice=lenght(description[i]['Réponses']);
-					 let valuedef=Array(nbr_choice-1).fill(0);
+					 if (description[i].name=='Indice de confiance'){
+					 	value_def=5;
+					 }else{
+					 	value_def=1;
+					 };
 				     default_inputs.push({
 				     	key:description[i].name;
-				     	value: 1;
+				     	value: value_def;
 				     });
 				     default_var.push(description[i].name);
 				     weight.push({
@@ -144,15 +167,24 @@ function update_prop(prop,input,default_inputs){
     
 };
 
-
+function delete_non_input(input){
+	const l=lenght(input);
+	for (var i=0;i<l;i++){
+		if (Object.values(input[i])==''){
+			    input.splice(i,1); 
+		};
+    };
+    return  input;
+}
 function update_input(input,default_inputs,filters){
     
-	for (const filter in filters){
-         var output=update_prop(prop,input,default_inputs);
-	};
-	return output;
+     for (const prop in filters){
+     	     let output=update_prop(prop,input,default_inputs);
 
-};
+     	 };
+	 return output;
+
+           };
 
 /************************/
 
@@ -170,7 +202,8 @@ function compute_score(inputs_updated,prop,data_updated,i,weight){
 					   score=0;
 					   break;
 					default:
-					   score=weight[pop]*Math.pow(1/2,inputs_updated[prop]-data_updated[i][prop])}
+					   score=weight[pop]*Math.pow(1/2,inputs_updated[prop]-data_updated[i][prop])};
+					break;}
 
      
 
@@ -186,7 +219,7 @@ function compute_score(inputs_updated,prop,data_updated,i,weight){
 }
 
 /************************/
-
+let input=delete_non_input(input);
 let [default_inputs, weight,default_var]=build_default_input_and_weights(description);
 let filters_input=Object.keys(input);
 let filters=Object.keys(default_inputs);
@@ -210,8 +243,7 @@ for (let i=0;i<n_arbre;i++){
 				if (weight[fil] == 'bloquant'){
 		
 					if(inputs_updated[fil]!=data_updated[i][fil]){
-						bloqued=true;
-					}
+						bloqued=true;}
 				}else{
 					score+=compute_score(inputs_updated,prop,data_updated,i,weight);
 				}
@@ -227,3 +259,4 @@ for (let i=0;i<n_arbre;i++){
 }
 
 
+console.log(scores)
