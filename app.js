@@ -12,6 +12,14 @@ app.use(bodyParser.json({
     extended: true
 }));
 
+app.get('/assets/arbre_template.png', (req, res) => {
+  res.status(200).sendFile(__dirname + '/assets/arbre_template.png');
+});
+
+app.get('/assets/logo_erasme_grandlyon.png', (req, res) => {
+  res.status(200).sendFile(__dirname + '/assets/logo_erasme_grandlyon.png');
+});
+
 app.get('/', (req, res) => {
     res.status(200).sendFile(__dirname + '/templates/homepage.html');
 });
@@ -20,11 +28,15 @@ app.get('/styles/style.css', (req, res) => {
     res.status(200).sendFile(__dirname + '/styles/style.css');
 });
 
+app.post('/update_filtres', (req, res) => {
+  console.log(req.body);
+  res.status(200).send('Success');
+});
+
 // ========================== Filtres =============================
-app.get('/filtres', (req, res)=>{
+app.get('/data/filtres', (req, res)=>{
     const p = gsheet.getData(gsheet.client, `'${config.filter_spreadsheet}'!A:Q`);
     p.then((value)=>{
-        console.log(value);
         liste_criteres=[];
         for (let i = 1; i < value[0].length; i++) {
             if (value[2][i] == 'TRUE'){
@@ -56,13 +68,10 @@ app.get('/filtres', (req, res)=>{
 });
 // ===================================================
 
-app.post('/update_filtres', (req, res) => {
-  console.log(req.body);
-  res.status(200).send('Success');
-});
-
 // ==================== /data/arbres =================
 app.get('/data/arbres', (req, res)=>{
+    const param = req.query.id;
+    console.log(param);
     gsheet.getData(gsheet.client, `'${config.data_spreadsheet}'!${config.data_row_offset}${config.data_column_names_row}:${config.data_column_names_row}`)
     .then((colnames)=>{
         ncols = colnames[0].length
@@ -71,14 +80,13 @@ app.get('/data/arbres', (req, res)=>{
         .then((values)=>{
             let response = []
             for (let i = 0; i < values.length; i++) {
-                let val = {}
-                if(ncols != values[i].length){
-                    res.status(500).send("Erreur Parsing des données (la dernière colonne doit être remplie)")
+                if (!param || (param && param == `${values[i][1].trim()} ${values[i][2].trim()}`)) {
+                    let val = {}
+                    for(let j=0; j<ncols-1; j++){
+                        val[colnames[0][j]]=values[i][j]
+                    }
+                    response.push(val)
                 }
-                for(let j=0; j<ncols-1; j++){
-                    val[colnames[0][j]]=values[i][j]
-                }
-                response.push(val)
             }
             res.send(response)
         })

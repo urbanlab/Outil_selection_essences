@@ -1,3 +1,379 @@
-h1{
-  color: red;
+*{
+  font-family: 'Eczar', arial;
+  color: #282828;
+  font-weight: 600;
 }
+
+h1{
+  color: #294F8D;
+  font-variant: small-caps;
+}
+
+p{
+  width: fit-content;
+}
+
+p.latin{
+  font-style: italic;
+  color:#BDB246;
+  text-shadow: black 2px 1px 3px;
+  font-size: 16px;
+  margin-top: 0;
+  margin-bottom: 1px;
+  text-align: center;
+  line-height: 100%;
+}
+
+p.francais{
+  font-size: 20px;
+  color:white;
+  text-shadow: black 2px 1px 3px;
+  margin-top: 0;
+  margin-bottom: 0;
+  text-align: center;
+  line-height: 100%;
+}
+
+body{
+  margin:0;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  background-color: #FCE5D2;
+}
+
+#filtres{
+  width: 20vw;
+  display: flex;
+  flex-direction: column;
+  padding: 2px;
+  padding-bottom: 6px;
+  height: fit-content;
+  margin-top: 10%;
+}
+
+#plus_de_filtres{
+  order:100000000000;
+  width: fit-content;
+  margin: auto;
+  border: none;
+  background: none;
+  text-decoration: underline;
+}
+
+#plus_de_filtres:hover{
+  color: #D82600;
+  cursor: pointer;
+}
+
+#arbres{
+  margin-top: 10%;
+  width: 70vw;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.filtre{
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  margin:5px;
+}
+
+.filtre_checkbox{
+  display: grid;
+  grid-template-columns: 2vw 15vw;
+  align-items: left;
+  margin:5px;
+}
+
+.info_arbre{
+  /* border: solid black 1px; */
+  background-image: url('/assets/arbre_template.png');
+  background-size: cover;
+  background-position: center;
+  border-radius: 0.5vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  width: 13vw;
+  height:20vw;
+  margin: 5px;
+  animation-duration: 0.7s;
+  animation-fill-mode: forwards;
+}
+
+
+.info_arbre:hover{
+  animation-name: zoom-in;
+  cursor: pointer;
+}
+
+@keyframes zoom-in {
+  from{transform: scale(100%);}
+  to{transform: scale(102%);}
+}
+
+.text-container{
+  padding:2px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  height: fit-content;
+  background: linear-gradient(#55555500 10%, #555);
+  border-radius: 0.5vw;
+}
+
+.mot-cle{
+  color : red;
+  margin : auto;
+  margin-bottom : 0.4vw;
+  font-size : 14px;
+  font-weight : bold;
+  font-style : italic;
+  text-align : center;
+  text-shadow : black 1px 1px 1px;
+  line-height: 100%;
+}
+
+label{
+  text-align: left;
+  margin-bottom: 4px;
+  color:#294F8D;
+}
+
+select{
+  width: 12vw;
+}
+
+header{
+  width: 100%;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 10%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  z-index: 999;
+}
+
+header:after{
+  content: "";
+  display: block;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -14px;
+  height: 14px;
+  background: url('http://canographia.datagora.erasme.org/wp-content/themes/canographia/assets/rough-x-white.svg') repeat-x transparent;
+}
+
+
+footer{
+  margin:0;
+  width: 100%;
+  height: 10%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  background: #bdb246;
+  position: relative;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 36px 0 64px;
+  font-size: 15px;
+  margin-top: 5%;
+}
+
+
+
+footer:after{
+  content: "";
+  display: block;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -14px;
+  height: 14px;
+  background: url('http://canographia.datagora.erasme.org/wp-content/themes/canographia/assets/rough-x-secondary.svg') repeat-x transparent;
+}
+
+.modal{
+  visibility: hidden;
+  opacity: 0%;
+  position: fixed;
+  right: 0;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 9999;
+  background-color: #77777777;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content{
+  background-color: #DED25E;
+  padding: 10px;
+  width: 80%;
+  height: 80%;
+}
+
+#popin_close{
+  background-color: #DED25E;
+  position: fixed;
+  text-align: center;
+  margin:0;
+  width: 2.5em;
+  height: 2.5em;
+  left: 88%;
+  top: 10%;
+  cursor: pointer;
+}
+
+#popin_photo{
+  width: 26%;
+  height: 55%;
+  object-fit: cover;
+  position: fixed;
+  top : 30%;
+  left : 12%;
+}
+
+.popin_titres{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  position: fixed;
+  top: 10%;
+  left : 12%;
+  height: 20%;
+  width:26%;
+}
+
+#popin_nom_francais{
+  margin:0;  
+  width:100%;
+  text-align: center;
+  line-height: 100%;
+  margin-bottom: 2%;
+  color: white;
+}
+
+#popin_nom_latin{
+  margin:0;
+  width:100%;
+  font-style: italic;
+  text-align: center;
+  line-height: 100%;
+  margin-bottom: 2%;
+  color: #4A494A;
+}
+
+#popin_infos{
+  margin:0;
+  position: fixed;
+  display: inline-block;
+  overflow: auto;
+  left: 40%;
+  width: 50%;
+  height: 55%;
+  top: 30%;
+  background-color: transparent;
+  border-radius: 0.5vw;
+  line-height: 125%;
+  border-spacing: 0;
+  scrollbar-color: #f5e97d #DED25E;
+  scrollbar-width: thin;
+}
+
+#popin_infos::-webkit-scrollbar{
+  width: 10px;
+  margin-left: 5px;
+  background: #DED25E;
+}
+
+#popin_infos::-webkit-scrollbar-thumb {
+  background-color: #f5e97d;
+  background-clip: content-box;
+  border: 2px solid transparent;
+}
+
+td{
+  padding: 1vw;
+  background-color: #f5e97d;
+  border-bottom: solid 1px #DED25E;
+  border-top: solid 1px #DED25E;
+  margin: 0;
+}
+
+
+
+.popin_titre_tableau{
+  margin:0;
+  position: fixed;
+  left: 40%;
+  width: 50%;
+  top: 20%;
+  text-align: center;
+  margin-bottom: 2%;
+  padding: .1vw;
+  background-color: #DED25E;
+  color: #4A494A;
+  /*text-shadow: #FCE5D2 1px 1px 2px;*/
+  font-size: 23px;
+  border-radius: 0.5vw;
+}
+
+
+/*
+@media screen and (min-width:1000px) {
+  #popin_photo{
+    width: 15vw;
+    height: 25vw;
+    object-fit: cover;
+    position: fixed;
+    top : 30%;
+    left : 17%;
+  }
+
+  .popin_titres{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    position: fixed;
+    top: 10%;
+    left : 17%;
+    height: 20%;
+    width:15vw;
+  }
+
+  #popin_nom_francais{
+    margin:0;
+    width: 15vw;
+    text-align: center;
+    line-height: 100%;
+    margin-bottom: 2%;
+  }
+  
+  #popin_nom_latin{
+    margin:0;
+    width: 15vw;
+    text-align: center;
+    line-height: 100%;
+    margin-bottom: 2%;
+  }
+  
+}*/
