@@ -3,6 +3,7 @@ const app = express();
 const bodyParser = require("body-parser");
 const gsheet = require("./gsheet.js")
 const utils = require("./utils");
+const config = require('./config.json')
 //-------------------------------------------------------------------------------------------------------------------------
 //-------------------------------------------- Paramétrages de base -------------------------------------------------------
 //-------------------------------------------------------------------------------------------------------------------------
@@ -21,7 +22,7 @@ app.get('/styles/style.css', (req, res) => {
 
 // ========================== Filtres =============================
 app.get('/filtres', (req, res)=>{
-    const p = gsheet.getData(gsheet.client, `'Paramétrages critères'!A:Q`);
+    const p = gsheet.getData(gsheet.client, `'${config.filter_spreadsheet}'!A:Q`);
     p.then((value)=>{
         console.log(value);
         liste_criteres=[];
@@ -62,11 +63,11 @@ app.post('/update_filtres', (req, res) => {
 
 // ==================== /data/arbres =================
 app.get('/data/arbres', (req, res)=>{
-    gsheet.getData(gsheet.client, `'Tableau des essences'!A4:4`)
+    gsheet.getData(gsheet.client, `'${config.data_spreadsheet}'!${config.data_row_offset}${config.data_column_names_row}:${config.data_column_names_row}`)
     .then((colnames)=>{
         ncols = colnames[0].length
         lastColumn = utils.columnToLetter(ncols)
-        gsheet.getData(gsheet.client, `'Tableau des essences'!A6:${lastColumn}358`)
+        gsheet.getData(gsheet.client, `'${config.data_spreadsheet}'!${config.data_row_offset}${config.data_start_row}:${lastColumn}`)
         .then((values)=>{
             let response = []
             for (let i = 0; i < values.length; i++) {
@@ -93,7 +94,7 @@ app.get('/data/arbres', (req, res)=>{
 
 // ==================== /data/columns ==================
 app.get('/data/colonnes', (req, res)=>{
-    gsheet.getData(gsheet.client, `'Tableau des essences'!A4:4`)
+    gsheet.getData(gsheet.client, `'${config.data_spreadsheet}'!${config.data_row_offset}${config.data_column_names_row}:${config.data_column_names_row}`)
     .then((colnames)=>{
         colnames[0].pop()
         res.send(colnames[0])
@@ -106,7 +107,7 @@ app.get('/data/colonnes', (req, res)=>{
 
 // ==================== /data/legendes ==================
 app.get('/data/legendes', (req, res)=>{
-    gsheet.getData(gsheet.client,`'Notice des légendes'!A1:B`)
+    gsheet.getData(gsheet.client,`'${config.data_spreadsheet}'!A1:B`)
     .then((legendes)=>{
         let newAttr = true
         let curentAttr = ""
