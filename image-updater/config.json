@@ -1,0 +1,12 @@
+{
+    "image_folder_id": "10nA57iSUTDO182VUqLlojlY8BmJInH7w",
+    "image_column_name": "Image Id",
+    "genre_column_name": "Genre",
+    "espece_column_name": "Espèce",
+    "gsheet_id": "1ya91BlEzHoI6FegU0FJtEFzFBEWzQEkKc74HARh2zmk",
+    "data_spreadsheet": "Tableau des essences",
+    "data_column_names_row": "4",
+    "data_start_row": "6",
+    "data_column_offset": "A",
+    "data_row_offset": "A"
+}

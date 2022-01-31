@@ -277,35 +277,58 @@
 
       var tableau = document.getElementById('popin_infos');
       const colonnes = Object.keys(arbre_popin);
-      for (var i = 0; i < tableau.children.length; i++) {
-        tableau.removeChild(tableau.children[i]);
+      while(tableau.children.length>0){
+        tableau.removeChild(tableau.children[0]);
       }
-      for (var i = 0; i < colonnes.length; i++) {
-        if (colonnes[i]!='Nom commun' && colonnes[i]!='Genre' && colonnes[i]!='Espèce' && colonnes[i]!='Image Id') {
-          var tr = document.createElement('tr');
-          var col1 = document.createElement('td');
-          var col2 = document.createElement('td');
-          col1.innerHTML = colonnes[i];
-          col1.style.color = '#675F1E';
-          /*col1.style.textShadow = "#FCE5D2 1px 1px 2px"; */
-          col1.style.fontSize = '20px';
-          col1.style.width = '47%';
-          col1.style.borderRadius = '10px 0 0 10px';
-          col2.innerHTML = arbre_popin[colonnes[i]];
-          col2.style.color = '#6B6B6B';
-          col2.style.fontSize = '20px';
-          col2.style.width = '53%';
-          col2.style.textAlign = 'center';
-          col2.style.borderRadius = '0 10px 10px 0';
-          tr.appendChild(col1);
-          tr.appendChild(col2);
-          tableau.appendChild(tr);
+
+      var xhttp_legende = new XMLHttpRequest();
+      xhttp_legende.open('GET', `/data/legendes`);
+      xhttp_legende.setRequestHeader('Content-type', 'application/json');
+      xhttp_legende.send()
+
+      xhttp_legende.onload = function() {
+        console.log(JSON.parse(xhttp_legende.responseText));
+        legendes = JSON.parse(xhttp_legende.responseText);
+        for (var i = 0; i < colonnes.length; i++) {
+          if (colonnes[i]!='Nom commun' && colonnes[i]!='Genre' && colonnes[i]!='Espèce' && colonnes[i]!='Image Id') {
+            var tr = document.createElement('tr');
+            var col1 = document.createElement('td');
+            var col2 = document.createElement('td');
+            col1.innerHTML = colonnes[i];
+            col1.style.color = '#675F1E';
+            /*col1.style.textShadow = "#FCE5D2 1px 1px 2px"; */
+            col1.style.fontSize = '20px';
+            col1.style.width = '47%';
+            col1.style.borderRadius = '10px 0 0 10px';
+            if (colonnes[i] == "Indice de potentiel d'adaptation") {
+              var keys_adaptation = Object.keys(legendes[colonnes[i]]["values"]);
+              correspondance_legende = arbre_popin[colonnes[i]].replace(',', '.');
+              for (let j = 0; j < keys_adaptation.length; j++) {
+                var condition = keys_adaptation[j].replace(',', '.');
+                var boom = condition.split('<');
+                if (parseFloat(boom[0])<=parseFloat(correspondance_legende) && parseFloat(correspondance_legende)<parseFloat(boom[2])) {
+                  col2.innerHTML = legendes[colonnes[i]]["values"][keys_adaptation[j]];
+                }
+              }
+            } else {
+              correspondance_legende = arbre_popin[colonnes[i]];
+              col2.innerHTML = (legendes[colonnes[i]]) ? legendes[colonnes[i]]["values"][correspondance_legende]: correspondance_legende;
+            }
+            col2.style.color = '#6B6B6B';
+            col2.style.fontSize = '20px';
+            col2.style.width = '53%';
+            col2.style.textAlign = 'center';
+            col2.style.borderRadius = '0 10px 10px 0';
+            tr.appendChild(col1);
+            tr.appendChild(col2);
+            tableau.appendChild(tr);
+          }
         }
+
+
+        popin.style.visibility = 'visible';
+        popin.style.opacity = "100%";
       }
-
-
-      popin.style.visibility = 'visible';
-      popin.style.opacity = "100%";
     }
 
 

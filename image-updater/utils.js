@@ -17,10 +17,10 @@ function binSearch(arr, e, comp=(a,b)=>{
 }){
   let end = arr.length -1
   let start = 0
-  if(arr[start]==e){
+  if(comp(arr[start],e)==0){
     return start
   }
-  else if(arr[end]==e){
+  else if(comp(arr[end],e)==0){
     return end
   }
   else{
@@ -39,7 +39,7 @@ function binSearch(arr, e, comp=(a,b)=>{
     return -1
   }
 }
-
 module.exports ={
-    columnToLetter: columnToLetter
+    columnToLetter: columnToLetter,
+    binSearch: binSearch
 }

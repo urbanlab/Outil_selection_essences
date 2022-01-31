@@ -1,0 +1,8 @@
+version: '3.7'
+services:
+  web:
+    image: essence:1.0
+    ports:
+      - 80:80
+    volumes:
+      - C:/Users/user/Documents/Ecole/CDL/Outil_selection_essences:/app

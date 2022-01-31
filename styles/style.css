@@ -70,6 +70,7 @@ body{
 #arbres{
   margin-top: 10%;
   width: 70vw;
+  height: fit-content;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -101,7 +102,7 @@ body{
   justify-content: flex-end;
   width: 13vw;
   height:20vw;
-  margin: 5px;
+  margin: 15px 5px;
   animation-duration: 0.7s;
   animation-fill-mode: forwards;
 }

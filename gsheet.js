@@ -1,6 +1,8 @@
+const res = require('express/lib/response')
 const {google} = require('googleapis')
 const keys = require('./keys.json')
- 
+const config = require('./config.json')
+
 // Basé sur https://www.youtube.com/watch?v=MiPpQzW_ya0&ab_channel=LearnGoogleSpreadsheets
 const client = new google.auth.JWT(
     keys.client_email,
@@ -14,13 +16,15 @@ function getDataRange(client, range) {
         client.authorize(function(err, token){
             if(err){
                 console.log(err)
-                return new Promise((resolve, error)=>{})
+                return new Promise((resolve, error)=>{throw error})
             }
             else{
-                console.log("connecté")
                 const promise = gsrun(client, range)
                 promise.then((value)=>{
                     resolve(value)
+                })
+                .catch((err)=>{
+                    throw err
                 })
             }
         })
@@ -35,13 +39,15 @@ function gsrun(cl, range){
     })
 
     const opt ={
-        spreadsheetId: '1ya91BlEzHoI6FegU0FJtEFzFBEWzQEkKc74HARh2zmk',
+        spreadsheetId: config.gsheet_id,
         range:range
     }
 
     const promise = new Promise((resolve, reject) => {
         gsapi.spreadsheets.values.get(opt, (err, result)=>{
-            // console.log(result.data.values.length, result.data.values[0])
+            if(err){
+                throw err
+            }
             resolve(result.data.values)
         })
     })
