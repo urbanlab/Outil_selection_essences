@@ -277,8 +277,8 @@
 
       var tableau = document.getElementById('popin_infos');
       const colonnes = Object.keys(arbre_popin);
-      for (var i = 0; i < tableau.children.length; i++) {
-        tableau.removeChild(tableau.children[i]);
+      while(tableau.children.length>0){
+        tableau.removeChild(tableau.children[0]);
       }
       for (var i = 0; i < colonnes.length; i++) {
         if (colonnes[i]!='Nom commun' && colonnes[i]!='Genre' && colonnes[i]!='Espèce' && colonnes[i]!='Image Id') {
