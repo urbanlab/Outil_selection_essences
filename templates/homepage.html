@@ -29,6 +29,12 @@
   <button type="button" id="plus_de_filtres" onclick="modifier_filtres()">Plus de filtres</button>
 </aside>
 
+<nav id="bouton_pages">
+  <button type="button" id="bouton 1" onclick="changer_page('1')">1</button> 
+  <button type="button" id="bouton 2" onclick="changer_page('2')">2</button> 
+  <button type="button" id="bouton 3" onclick="changer_page('3')">3</button> 
+</nav>
+
 <section id='arbres'></section>
 
 
@@ -59,19 +65,60 @@
       }
   }
 
+  var xhttp_boutons = new XMLHttpRequest();
+  xhttp_boutons.open('GET', '/data/arbres');
+  xhttp_boutons.setRequestHeader('Content-type', 'application/json');
+  xhttp_boutons.send();
+
+  xhttp_boutons.onload = function () {
+    const tous_les_arbres = JSON.parse(xhttp_boutons.responseText);
+    const nb_boutons = Math.floor(tous_les_arbres.length/10);
+    console.log(nb_boutons);
+    //Compter le nombre de boutons, puis on les affiche
+  }
+
+
+
+
   var xhttp_arbres = new XMLHttpRequest();
-  xhttp_arbres.open('GET', '/data/arbres');
+  xhttp_arbres.open('GET', '/data/arbres?page=1');
   xhttp_arbres.setRequestHeader('Content-type', 'application/json');
-  xhttp_arbres.send()
+  xhttp_arbres.send();
 
   xhttp_arbres.onload = function () {
     const arbres = JSON.parse(xhttp_arbres.responseText);
-    for (let i = 0; i < 10; i++) {
-      const arbre = arbres[i];
-      montrer_arbre(arbre);
-    }
+    update_affichage_arbres(arbres);
   }
 
+
+  function changer_page(page) {
+    var xhttp_page_arbres = new XMLHttpRequest();
+    console.log(event);
+    xhttp_page_arbres.open('GET', '/data/arbres?page='+page);
+    xhttp_page_arbres.setRequestHeader('Content-type', 'application/json');
+    xhttp_page_arbres.send();
+
+    xhttp_page_arbres.onload = function () {
+      const arbres = JSON.parse(xhttp_page_arbres.responseText);
+      console.log(arbres);
+      update_affichage_arbres(arbres);
+    }
+
+    
+  }
+
+  function update_affichage_arbres(arbres) {
+    var div = document.getElementById('arbres');
+    var cloneArbres = div.cloneNode(true);
+    while (cloneArbres.children.length>0) {
+      cloneArbres.removeChild(cloneArbres.children[0]);
+    }
+    for (let i = 0; i < arbres.length; i++) {
+      const arbre = arbres[i];
+      montrer_arbre(cloneArbres, arbre);
+    }
+    document.body.replaceChild(cloneArbres, div);
+  }
 
   function filtre_select(critere) {
     var div = document.createElement('div');
@@ -152,7 +199,7 @@
     aside.appendChild(div);
   }
 
-  function montrer_arbre(arbre) {
+  function montrer_arbre(section, arbre) {
     const nom_latin = arbre['Genre'] + ' ' + arbre['Espèce'];
     var article = document.createElement('article');
     article.setAttribute('id', 'article '+nom_latin);
@@ -184,7 +231,6 @@
       article.style.backgroundImage = 'url(https://drive.google.com/uc?export=view&id='+arbre["Image Id"]+')';
     }
 
-    section = document.getElementById('arbres');
     section.appendChild(article);
   }
 

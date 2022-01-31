@@ -77,6 +77,10 @@ body{
   justify-content: space-around;
 }
 
+#bouton_pages{
+  margin-top: 20vw;
+}
+
 .filtre{
   display: flex;
   flex-direction: column;
