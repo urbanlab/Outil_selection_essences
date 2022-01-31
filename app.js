@@ -115,7 +115,7 @@ app.get('/data/colonnes', (req, res)=>{
 
 // ==================== /data/legendes ==================
 app.get('/data/legendes', (req, res)=>{
-    gsheet.getData(gsheet.client,`'${config.data_spreadsheet}'!A1:B`)
+    gsheet.getData(gsheet.client,`'${config.legend_spreadsheet}'!A1:B`)
     .then((legendes)=>{
         let newAttr = true
         let curentAttr = ""
