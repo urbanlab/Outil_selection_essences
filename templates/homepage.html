@@ -18,6 +18,7 @@
       <h1 id='popin_nom_francais'></h1>
       <h2 id='popin_nom_latin'></h2>
     </div>
+    <p class=popin_titre_tableau>Informations importantes</p>
     <table id='popin_infos'>
 
     </table>
@@ -29,13 +30,15 @@
   <button type="button" id="plus_de_filtres" onclick="modifier_filtres()">Plus de filtres</button>
 </aside>
 
-<nav id="bouton_pages">
-  <button type="button" id="bouton 1" onclick="changer_page('1')">1</button> 
-  <button type="button" id="bouton 2" onclick="changer_page('2')">2</button> 
-  <button type="button" id="bouton 3" onclick="changer_page('3')">3</button> 
-</nav>
 
-<section id='arbres'></section>
+
+<section id='arbres'>
+  <nav id="bouton_pages">
+    <button type="button" id="bouton_precedent" onclick="changer_page('precedent')">&#x2B05</button> 
+    <p id=indice_page>Page <span id="page_actuelle"></span>/<span id="nombre_pages"></span></p>
+    <button type="button" id="bouton_suivant" onclick="changer_page('suivant')">&#x27A1</button> 
+  </nav>
+</section>
 
 
 <footer id="footer">
@@ -72,9 +75,8 @@
 
   xhttp_boutons.onload = function () {
     const tous_les_arbres = JSON.parse(xhttp_boutons.responseText);
-    const nb_boutons = Math.floor(tous_les_arbres.length/10);
-    console.log(nb_boutons);
-    //Compter le nombre de boutons, puis on les affiche
+    const nb_pages = Math.ceil(tous_les_arbres.length/10);
+    document.getElementById('nombre_pages').innerHTML = nb_pages;
   }
 
 
@@ -88,13 +90,21 @@
   xhttp_arbres.onload = function () {
     const arbres = JSON.parse(xhttp_arbres.responseText);
     update_affichage_arbres(arbres);
+    document.getElementById('page_actuelle').innerHTML = 1;
   }
 
 
-  function changer_page(page) {
+  function changer_page(sens) {
+    var page_actuelle = document.getElementById('page_actuelle');
+    var nombre_pages = document.getElementById('nombre_pages');
+    if (sens=='suivant' && nombre_pages.innerHTML!=page_actuelle.innerHTML) {
+      page_actuelle.innerHTML=parseInt(page_actuelle.innerHTML)+1;
+    } else if(sens=='precedent' && page_actuelle.innerHTML!='1') { 
+      page_actuelle.innerHTML=parseInt(page_actuelle.innerHTML)-1;
+    }
     var xhttp_page_arbres = new XMLHttpRequest();
-    console.log(event);
-    xhttp_page_arbres.open('GET', '/data/arbres?page='+page);
+   
+    xhttp_page_arbres.open('GET', '/data/arbres?page='+page_actuelle.innerHTML);
     xhttp_page_arbres.setRequestHeader('Content-type', 'application/json');
     xhttp_page_arbres.send();
 
@@ -110,8 +120,8 @@
   function update_affichage_arbres(arbres) {
     var div = document.getElementById('arbres');
     var cloneArbres = div.cloneNode(true);
-    while (cloneArbres.children.length>0) {
-      cloneArbres.removeChild(cloneArbres.children[0]);
+    while (cloneArbres.children.length>1) {
+      cloneArbres.removeChild(cloneArbres.children[1]);
     }
     for (let i = 0; i < arbres.length; i++) {
       const arbre = arbres[i];
