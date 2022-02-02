@@ -4,6 +4,9 @@
     "data_column_names_row": "4",
     "data_start_row": "6",
     "data_column_offset": "A",
-    "data_row_offset": "A",
-    "filter_spreadsheet": "Paramétrages critères"
+    "data_row_offset": "1",
+    "filter_spreadsheet": "Paramétrages critères",
+    "filter_column_offset": "B",
+    "filter_row_offset": "2",
+    "legendes_spreadsheet": "Notice des légendes"
 }
