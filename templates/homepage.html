@@ -8,7 +8,10 @@
 </head>
 
 <header>
-  <h1>Selection d'essence d'arbre</h1>
+  <h1 id="titre_page">Selection d'essence d'arbre</h1>
+  <nav id="nav_pages">
+    <a href="/recherche">Rechercher un arbre</a>
+  </nav>
 </header>
 
 <div id="popin" class="modal" onclick="click_hors_popin()">
@@ -209,7 +212,7 @@
     aside.appendChild(div);
   }
 
-  function montrer_arbre(arbre) {
+  function montrer_arbre(section, arbre) {
     const nom_latin = arbre['Genre'].trim() + ' ' + arbre['Espèce'].trim();
     var article = document.createElement('article');
     article.setAttribute('id', 'article '+nom_latin);
