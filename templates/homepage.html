@@ -8,7 +8,10 @@
 </head>
 
 <header>
-  <h1>Selection d'essence d'arbre</h1>
+  <h1 id="titre_page">Selection d'essence d'arbre</h1>
+  <nav id="nav_pages">
+    <a href="/recherche">Rechercher un arbre</a>
+  </nav>
 </header>
 
 <div id="popin" class="modal" onclick="click_hors_popin()">
@@ -23,6 +26,7 @@
       <h1 id='popin_nom_francais'></h1>
       <h2 id='popin_nom_latin'></h2>
     </div>
+    <p class=popin_titre_tableau>Informations importantes</p>
     <table id='popin_infos'>
 
     </table>
@@ -35,7 +39,15 @@
   <button type="button" id="plus_de_filtres" onclick="modifier_filtres()">Plus de filtres</button>
 </aside>
 
-<section id='arbres'></section>
+
+
+<section id='arbres'>
+  <nav id="bouton_pages">
+    <button type="button" id="bouton_precedent" onclick="changer_page('precedent')">&#x2B05</button>
+    <p id=indice_page>Page <span id="page_actuelle"></span>/<span id="nombre_pages"></span></p>
+    <button type="button" id="bouton_suivant" onclick="changer_page('suivant')">&#x27A1</button>
+  </nav>
+</section>
 
 <aside class = "cookies_not_chosen" id='cookies_dialogue'>
   Voulez-vous accepter les cookies ? (Les cookies sont utilisés seulement pour la fonction favori)
@@ -68,19 +80,67 @@
       }
   }
 
+  var xhttp_boutons = new XMLHttpRequest();
+  xhttp_boutons.open('GET', '/data/arbres');
+  xhttp_boutons.setRequestHeader('Content-type', 'application/json');
+  xhttp_boutons.send();
+
+  xhttp_boutons.onload = function () {
+    const tous_les_arbres = JSON.parse(xhttp_boutons.responseText);
+    const nb_pages = Math.ceil(tous_les_arbres.length/10);
+    document.getElementById('nombre_pages').innerHTML = nb_pages;
+  }
+
+
+
+
   var xhttp_arbres = new XMLHttpRequest();
-  xhttp_arbres.open('GET', '/data/arbres');
+  xhttp_arbres.open('GET', '/data/arbres?page=1');
   xhttp_arbres.setRequestHeader('Content-type', 'application/json');
-  xhttp_arbres.send()
+  xhttp_arbres.send();
 
   xhttp_arbres.onload = function () {
     const arbres = JSON.parse(xhttp_arbres.responseText);
-    for (let i = 0; i < 10; i++) {
-      const arbre = arbres[i];
-      montrer_arbre(arbre);
-    }
+    update_affichage_arbres(arbres);
+    document.getElementById('page_actuelle').innerHTML = 1;
   }
 
+
+  function changer_page(sens) {
+    var page_actuelle = document.getElementById('page_actuelle');
+    var nombre_pages = document.getElementById('nombre_pages');
+    if (sens=='suivant' && nombre_pages.innerHTML!=page_actuelle.innerHTML) {
+      page_actuelle.innerHTML=parseInt(page_actuelle.innerHTML)+1;
+    } else if(sens=='precedent' && page_actuelle.innerHTML!='1') {
+      page_actuelle.innerHTML=parseInt(page_actuelle.innerHTML)-1;
+    }
+    var xhttp_page_arbres = new XMLHttpRequest();
+
+    xhttp_page_arbres.open('GET', '/data/arbres?page='+page_actuelle.innerHTML);
+    xhttp_page_arbres.setRequestHeader('Content-type', 'application/json');
+    xhttp_page_arbres.send();
+
+    xhttp_page_arbres.onload = function () {
+      const arbres = JSON.parse(xhttp_page_arbres.responseText);
+      console.log(arbres);
+      update_affichage_arbres(arbres);
+    }
+
+
+  }
+
+  function update_affichage_arbres(arbres) {
+    var div = document.getElementById('arbres');
+    var cloneArbres = div.cloneNode(true);
+    while (cloneArbres.children.length>1) {
+      cloneArbres.removeChild(cloneArbres.children[1]);
+    }
+    for (let i = 0; i < arbres.length; i++) {
+      const arbre = arbres[i];
+      montrer_arbre(cloneArbres, arbre);
+    }
+    document.body.replaceChild(cloneArbres, div);
+  }
 
   function filtre_select(critere) {
     var div = document.createElement('div');
@@ -161,8 +221,8 @@
     aside.appendChild(div);
   }
 
-  function montrer_arbre(arbre) {
-    const nom_latin = arbre['Genre'] + ' ' + arbre['Espèce'];
+  function montrer_arbre(section, arbre) {
+    const nom_latin = arbre['Genre'].trim() + ' ' + arbre['Espèce'].trim();
     var article = document.createElement('article');
     article.setAttribute('id', 'article '+nom_latin);
     article.addEventListener('mouseenter', montrer_mots_cles);
@@ -193,7 +253,6 @@
       article.style.backgroundImage = 'url(https://drive.google.com/uc?export=view&id='+arbre["Image Id"]+')';
     }
 
-    section = document.getElementById('arbres');
     section.appendChild(article);
   }
 
@@ -289,40 +348,61 @@
       while(tableau.children.length>0){
         tableau.removeChild(tableau.children[0]);
       }
-      for (var i = 0; i < colonnes.length; i++) {
-        if (colonnes[i]!='Nom commun' && colonnes[i]!='Genre' && colonnes[i]!='Espèce' && colonnes[i]!='Image Id') {
-          var tr = document.createElement('tr');
-          var col1 = document.createElement('td');
-          var col2 = document.createElement('td');
-          col1.innerHTML = colonnes[i];
-          col1.style.color = '#675F1E';
-          /*col1.style.textShadow = "#FCE5D2 1px 1px 2px"; */
-          col1.style.fontSize = '20px';
-          col1.style.width = '47%';
-          col1.style.borderRadius = '10px 0 0 10px';
-          col2.innerHTML = arbre_popin[colonnes[i]];
-          col2.style.color = '#6B6B6B';
-          col2.style.fontSize = '20px';
-          col2.style.width = '53%';
-          col2.style.textAlign = 'center';
-          col2.style.borderRadius = '0 10px 10px 0';
-          tr.appendChild(col1);
-          tr.appendChild(col2);
-          tableau.appendChild(tr);
+
+      var xhttp_legende = new XMLHttpRequest();
+      xhttp_legende.open('GET', `/data/legendes`);
+      xhttp_legende.setRequestHeader('Content-type', 'application/json');
+      xhttp_legende.send()
+
+      xhttp_legende.onload = function() {
+        console.log(JSON.parse(xhttp_legende.responseText));
+        legendes = JSON.parse(xhttp_legende.responseText);
+        for (var i = 0; i < colonnes.length; i++) {
+          if (colonnes[i]!='Nom commun' && colonnes[i]!='Genre' && colonnes[i]!='Espèce' && colonnes[i]!='Image Id') {
+            var tr = document.createElement('tr');
+            var col1 = document.createElement('td');
+            var col2 = document.createElement('td');
+            col1.innerHTML = colonnes[i];
+            col1.style.color = '#675F1E';
+            /*col1.style.textShadow = "#FCE5D2 1px 1px 2px"; */
+            col1.style.fontSize = '20px';
+            col1.style.width = '47%';
+            col1.style.borderRadius = '10px 0 0 10px';
+            if (colonnes[i] == "Indice de potentiel d'adaptation") {
+              var keys_adaptation = Object.keys(legendes[colonnes[i]]["values"]);
+              correspondance_legende = arbre_popin[colonnes[i]].replace(',', '.');
+              for (let j = 0; j < keys_adaptation.length; j++) {
+                var condition = keys_adaptation[j].replace(',', '.');
+                var boom = condition.split('<');
+                if (parseFloat(boom[0])<=parseFloat(correspondance_legende) && parseFloat(correspondance_legende)<parseFloat(boom[2])) {
+                  col2.innerHTML = legendes[colonnes[i]]["values"][keys_adaptation[j]];
+                }
+              }
+            } else {
+              correspondance_legende = arbre_popin[colonnes[i]];
+              col2.innerHTML = (legendes[colonnes[i]]) ? legendes[colonnes[i]]["values"][correspondance_legende]: correspondance_legende;
+            }
+            col2.style.color = '#6B6B6B';
+            col2.style.fontSize = '20px';
+            col2.style.width = '53%';
+            col2.style.textAlign = 'center';
+            col2.style.borderRadius = '0 10px 10px 0';
+            tr.appendChild(col1);
+            tr.appendChild(col2);
+            tableau.appendChild(tr);
+          }
         }
-      }
+        popin.style.visibility = 'visible';
+        popin.style.opacity = "100%";
 
-
-      popin.style.visibility = 'visible';
-      popin.style.opacity = "100%";
-
-      let favori_icon = document.getElementById("etoile_favori")
-      const fav = JSON.parse(localStorage.getItem("arbres_favori"))
-      if(fav && fav.indexOf(arbre_popin['Genre'] + ' ' + arbre_popin['Espèce'])>-1){
-        favori_icon.style.filter = "invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%)"
-      }
-      else{
-        favori_icon.style.filter = "none"
+        let favori_icon = document.getElementById("etoile_favori")
+        const fav = JSON.parse(localStorage.getItem("arbres_favori"))
+        if(fav && fav.indexOf(arbre_popin['Genre'] + ' ' + arbre_popin['Espèce'])>-1){
+          favori_icon.style.filter = "invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%)"
+        }
+        else{
+          favori_icon.style.filter = "none"
+        }
       }
     }
 
@@ -365,7 +445,7 @@
   }
 
   if(!localStorage.getItem("cookies-accepted")){
-    document.getElementById('cookies_dialogue').style.animation="ease-in cookies_slidein 0.5s normal forwards"
+    document.getElementById('cookies_dialogue').style.animation="ease-in cookies_slidein 1s normal forwards"
   }
   else{
     document.getElementById('cookies_dialogue').style.display="none"

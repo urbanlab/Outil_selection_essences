@@ -1,11 +1,12 @@
 var mydata = require('./ex.json');
-var input = require('./input.json');
+var input1 = require('./input.json');
 var description=require('./description.json');
-
+console.log(description[0]['reponses'][0])
+const n_arbre=mydata.length;
 /********************************************************************************/
 
 function update_data(data,filters){
-	const n_arbre=lenght(data);
+	const n_arbre=data.lenght;
 	
     for (var i=0;i<n_arbre ;i++){
 
@@ -16,13 +17,13 @@ function update_data(data,filters){
 									if(parseFloat(data[i][prop])>=3){
 										
 										data[i][prop]=1;
-									}else if(2.5=<parseFloat(data[i][prop])<3){
+									}else if((parseFloat(data[i][prop])>=2.5)&&(parseFloat(data[i][prop])<3)){
 										data[i][prop]=2;
 				
-									}else if(2=<parseFloat(data[i][prop])<2.5){
+									}else if((parseFloat(data[i][prop])>=2)&&(parseFloat(data[i][prop])<2.5)){
 										data[i][prop]=3;
 				
-									}else if (1=<parseFloat(data[i][prop])<2){
+									}else if ((parseFloat(data[i][prop])>=1)&&(parseFloat(data[i][prop])<2)){
 										data[i][prop]=4;
 									}else if (parseFloat(data[i][prop])<1) {
 										data[i][prop]=5;
@@ -43,7 +44,7 @@ function update_data(data,filters){
 						     break;
 						    case' Moyen':
 						    case 'Modéré':
-						    case 'Neutre'
+						    case 'Neutre':
 						     data[i][prop]=2;
 						     break;
 						    case 'limité':
@@ -89,61 +90,77 @@ function build_default_input_and_weights(description){
     let default_inputs=[];
     let weight=[];
     let default_var=[];
-    const nbr_prop=lenght(description);
+	let n_choice=[];
+	
+    const nbr_prop=description.length;
+	console.log(description[0]['type_question']);
     for (var i=0;i<nbr_prop;i++){
-    	switch (description[i]['Type de question']){
-                case 'Select':
-                  	const nbr_choice=lenght(description[i]['Réponses']);
-			
-				     default_inputs.push({
-				     	key:description[i].name;
-				     	value:0;
-				     });
-				     weight.push({
-				     	key:description[i].name;
-				     	value:get_weight(description[i].importance);
+		
+    	switch (description[i]['type_question']){
+			case 'Select':
+				
+				n_choice.push({
+					key:description[i].nom,
+					value:description[i]['reponses'].length,
+				});
+				default_inputs.push({
+					key:description[i].nom,
+					value:0,
+				});
+				weight.push({
+					key:description[i].nom,
+					value:get_weight(description[i].importance),
 
-				     })
+				})
 
-				     break;
-				case '':
-				     const nbr_choice=lenght(description[i]['Réponses']);
-					 if (description[i].name=='Indice de confiance'){
-					 	value_def=5;
-					 }else{
-					 	value_def=1;
-					 };
-				     default_inputs.push({
-				     	key:description[i].name;
-				     	value: value_def;
-				     });
-				     default_var.push(description[i].name);
-				     weight.push({
-				     	key:description[i].name;
-				     	value:get_weight(description[i].importance);
+				break;
+			case '':
+				n_choice.push({
+					key:description[i].nom,
+					value:description[i]['reponses'].length,
+				});
+				if (description[i].nom=='Indice de confiance'){
+					value_def=5;
+				}else{
+					value_def=1;
+				};
+				default_inputs.push({
+					key:description[i].nom,
+					value: value_def,
+				});
+				default_var.push(description[i].nom);
+				weight.push({
+					key:description[i].nom,
+					value:get_weight(description[i].importance),
 
-				     })
-				     break;
-				default:
-				     for (const choix in description[i]['Réponses']){
- 
-				       let name=get_name(choix)[0];
-				       default_inputs.push({
-					     	key:name;
-					     	value:false;
-					
-					     });
-				       weight.push({
-				     	key:name;
-				     	value:get_weight(description[i].importance);
+				})
+				 break;
+		default:
+			const nb_choix=description[i]['reponses'].length;
+            for (var j=0;j<nb_choix;j++){
 
-				     });
-		            };
-		            break;};
+                       let nom=description[i]['reponses'][j].valeur;
+						default_inputs.push({
+								key:nom,
+								value:false,
+						
+							});
+							n_choice.push({
+								key:nom,
+								value:2,
+							});
+						weight.push({
+							key:nom,
+							value:get_weight(description[i].importance),
+
+						});
+				  };
+			break;}
+						};
 
 
-
-    return [default_inputs, weight,default_var];
+					console.log(default_inputs)
+    return [default_inputs, weight,default_var,n_choice];
 	};
 /************************/
 
@@ -155,27 +172,20 @@ function update_prop(prop,input,default_inputs){
 	if (input[prop].length==1){
 		default_inputs[prop]=parseInt(input[prop]);
 	};
-	switch (input[prop]){
-		case 'true':
-		    default_inputs[prop]=true;
-		    break;
-		case 'false':
-		    default_inputs[prop]=false;
-		    break;
-     };
+	
      return default_inputs;
     
 };
 
-function delete_non_input(input){
-	const l=lenght(input);
-	for (var i=0;i<l;i++){
-		if (Object.values(input[i])==''){
-			    input.splice(i,1); 
+function delete_non_input(input ){
+	const props=Object.keys(input);
+	for (const prop in props){
+		if ((input[prop]=='')||(input[prop]==false)){
+			    delete input[prop]; 
 		};
     };
     return  input;
-}
+};
 function update_input(input,default_inputs,filters){
     
      for (const prop in filters){
@@ -188,43 +198,44 @@ function update_input(input,default_inputs,filters){
 
 /************************/
 
-function compute_score(inputs_updated,prop,data_updated,i,weight){
+function compute_score(inputs_updated,prop,data_updated,i,weight,n_choice){
     if ((prop=='Tolérance pour le pH du sol') && (data_updated[i][prop]==1)){
     	data_updated[i][prop]=inputs_updated[prop]
     }
+	console.log("1")
+    console.log(data_updated);
+    if(Number.isInteger(data_updated[i][prop])){
+		     const number_choice_prop=n_choice[prop];
 
-    if(data_updated[i][prop].isInteger()){
+             if(Math.abs(inputs_updated[prop]-data_updated[i][prop])==number_choice_prop-1){
+				score=0;
 
-             switch (inputs_updated[prop]-data_updated[i][prop]){
-
-					case number_choice_prop-1:
-
-					   score=0;
-					   break;
-					default:
-					   score=weight[pop]*Math.pow(1/2,inputs_updated[prop]-data_updated[i][prop])};
-					break;}
-
+						}
+			else{
+				score=weight[pop]*Math.pow(1/2,Math.abs(inputs_updated[prop]-data_updated[i][prop]))};
+						
+					}
      
-
-    }else{
+    } 
+	
+	if(!(Number.isInteger(data_updated[i][prop]))){
 
     	if(inputs_updated[prop]==data_updated[i][prop]){
-    		score=weight[prop]
+    		score=weight[prop];
     	}else{
-    		score=0
+    		score=0;
     	}
     }
 	return score;
-}
+};
 
 /************************/
-let input=delete_non_input(input);
-let [default_inputs, weight,default_var]=build_default_input_and_weights(description);
+console.log("1")
+let [default_inputs, weight,default_var,n_choice]=build_default_input_and_weights(description);
+let input=delete_non_input(input1);
 let filters_input=Object.keys(input);
 let filters=Object.keys(default_inputs);
 var data_updated=update_data(mydata,filters);
-
 //on ajoute les variables dont on entre input par défaut 
 filters_input=filters_input.concat(default_var);
 let inputs_updated=update_input(input,default_inputs,filters_input);
@@ -239,19 +250,19 @@ for (let i=0;i<n_arbre;i++){
     let score =0;
     let bloqued=false;
 	for (const fil in filters_input){
-		if !(bloqued){
+		if (!(bloqued)){
 				if (weight[fil] == 'bloquant'){
 		
 					if(inputs_updated[fil]!=data_updated[i][fil]){
 						bloqued=true;}
 				}else{
-					score+=compute_score(inputs_updated,prop,data_updated,i,weight);
+					score+=compute_score(inputs_updated,prop,data_updated,i,weight,n_choice);
 				}
 			}
 
 
 	};
-	if !(bloqued){
+	if (!(bloqued)){
 	   arbre_non_bloque.push(i);
        scores.push(score/sum_weights);
        	}

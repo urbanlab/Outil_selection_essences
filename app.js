@@ -42,21 +42,33 @@ app.get('/data/filtres', (req, res)=>{
 
 // ==================== /data/arbres =================
 app.get('/data/arbres', (req, res)=>{
-    const param = req.query.id;
-    gsheet.getData(gsheet.client, `'${config.data_spreadsheet}'!${config.data_column_offset}${config.data_column_names_row}:${config.data_column_names_row}`)
+    const param_id = req.query.id;
+    const param_page = req.query.page;
+    gsheet.getData(gsheet.client, `'${config.data_spreadsheet}'!${config.data_row_offset}${config.data_column_names_row}:${config.data_column_names_row}`)
     .then((colnames)=>{
         ncols = colnames[0].length+utils.letterToColumn(config.data_column_offset)
         lastColumn = utils.columnToLetter(ncols)
         gsheet.getData(gsheet.client, `'${config.data_spreadsheet}'!${config.data_column_offset}${config.data_start_row}:${lastColumn}`)
         .then((values)=>{
             let response = []
-            for (let i = 0; i < values.length; i++) {
-                if (!param || (param && param == `${values[i][1].trim()} ${values[i][2].trim()}`)) {
+            if (param_page) {
+                const page = parseInt(param_page);
+                for (let i = (page-1)*10; i < Math.min(page*10, values.length); i++) {
                     let val = {}
                     for(let j=0; j<ncols-1; j++){
                         val[colnames[0][j].trim()]=values[i][j].trim()
                     }
-                    response.push(val)
+                    response.push(val);
+                }
+            } else {
+                for (let i = 0; i < values.length; i++) {
+                    if (!param_id || (param_id && param_id == `${values[i][1].trim()} ${values[i][2].trim()}`)) {
+                        let val = {}
+                        for(let j=0; j<ncols-1; j++){
+                            val[colnames[0][j]]=values[i][j]
+                        }
+                        response.push(val)
+                    }
                 }
             }
             res.send(response)
