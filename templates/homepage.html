@@ -18,6 +18,7 @@
       <h1 id='popin_nom_francais'></h1>
       <h2 id='popin_nom_latin'></h2>
     </div>
+    <p class=popin_titre_tableau>Informations importantes</p>
     <table id='popin_infos'>
 
     </table>
@@ -29,7 +30,15 @@
   <button type="button" id="plus_de_filtres" onclick="modifier_filtres()">Plus de filtres</button>
 </aside>
 
-<section id='arbres'></section>
+
+
+<section id='arbres'>
+  <nav id="bouton_pages">
+    <button type="button" id="bouton_precedent" onclick="changer_page('precedent')">&#x2B05</button>
+    <p id=indice_page>Page <span id="page_actuelle"></span>/<span id="nombre_pages"></span></p>
+    <button type="button" id="bouton_suivant" onclick="changer_page('suivant')">&#x27A1</button>
+  </nav>
+</section>
 
 
 <footer id="footer">
@@ -59,19 +68,67 @@
       }
   }
 
+  var xhttp_boutons = new XMLHttpRequest();
+  xhttp_boutons.open('GET', '/data/arbres');
+  xhttp_boutons.setRequestHeader('Content-type', 'application/json');
+  xhttp_boutons.send();
+
+  xhttp_boutons.onload = function () {
+    const tous_les_arbres = JSON.parse(xhttp_boutons.responseText);
+    const nb_pages = Math.ceil(tous_les_arbres.length/10);
+    document.getElementById('nombre_pages').innerHTML = nb_pages;
+  }
+
+
+
+
   var xhttp_arbres = new XMLHttpRequest();
-  xhttp_arbres.open('GET', '/data/arbres');
+  xhttp_arbres.open('GET', '/data/arbres?page=1');
   xhttp_arbres.setRequestHeader('Content-type', 'application/json');
-  xhttp_arbres.send()
+  xhttp_arbres.send();
 
   xhttp_arbres.onload = function () {
     const arbres = JSON.parse(xhttp_arbres.responseText);
-    for (let i = 0; i < 10; i++) {
-      const arbre = arbres[i];
-      montrer_arbre(arbre);
-    }
+    update_affichage_arbres(arbres);
+    document.getElementById('page_actuelle').innerHTML = 1;
   }
 
+
+  function changer_page(sens) {
+    var page_actuelle = document.getElementById('page_actuelle');
+    var nombre_pages = document.getElementById('nombre_pages');
+    if (sens=='suivant' && nombre_pages.innerHTML!=page_actuelle.innerHTML) {
+      page_actuelle.innerHTML=parseInt(page_actuelle.innerHTML)+1;
+    } else if(sens=='precedent' && page_actuelle.innerHTML!='1') {
+      page_actuelle.innerHTML=parseInt(page_actuelle.innerHTML)-1;
+    }
+    var xhttp_page_arbres = new XMLHttpRequest();
+
+    xhttp_page_arbres.open('GET', '/data/arbres?page='+page_actuelle.innerHTML);
+    xhttp_page_arbres.setRequestHeader('Content-type', 'application/json');
+    xhttp_page_arbres.send();
+
+    xhttp_page_arbres.onload = function () {
+      const arbres = JSON.parse(xhttp_page_arbres.responseText);
+      console.log(arbres);
+      update_affichage_arbres(arbres);
+    }
+
+
+  }
+
+  function update_affichage_arbres(arbres) {
+    var div = document.getElementById('arbres');
+    var cloneArbres = div.cloneNode(true);
+    while (cloneArbres.children.length>1) {
+      cloneArbres.removeChild(cloneArbres.children[1]);
+    }
+    for (let i = 0; i < arbres.length; i++) {
+      const arbre = arbres[i];
+      montrer_arbre(cloneArbres, arbre);
+    }
+    document.body.replaceChild(cloneArbres, div);
+  }
 
   function filtre_select(critere) {
     var div = document.createElement('div');
@@ -184,7 +241,6 @@
       article.style.backgroundImage = 'url(https://drive.google.com/uc?export=view&id='+arbre["Image Id"]+')';
     }
 
-    section = document.getElementById('arbres');
     section.appendChild(article);
   }
 
