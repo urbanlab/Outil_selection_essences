@@ -10,6 +10,15 @@ function columnToLetter(column)
   return letter;
 }
 
+function letterToColumn(val){
+    var base = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', i, j, result = 0;
+  
+    for (i = 0, j = val.length - 1; i < val.length; i += 1, j -= 1) {
+      result += Math.pow(base.length, j) * (base.indexOf(val[i]) + 1)
+    } 
+    return result
+}
+
 function binSearch(arr, e, comp=(a,b)=>{
   if(a==b) return 0
   else if(a<b) return -1
@@ -41,5 +50,6 @@ function binSearch(arr, e, comp=(a,b)=>{
 }
 
 module.exports ={
-    columnToLetter: columnToLetter
+    columnToLetter: columnToLetter,
+    letterToColumn: letterToColumn
 }

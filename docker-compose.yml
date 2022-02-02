@@ -5,4 +5,4 @@ services:
     ports:
       - 80:80
     volumes:
-      - C:/Users/user/Documents/Ecole/CDL/Outil_selection_essences:/app
+      - .:/app
