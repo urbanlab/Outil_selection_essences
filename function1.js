@@ -246,7 +246,19 @@ function convertToObj(a, b){
 	a.forEach((k, i) => {obj[k] = b[i]})
 	return obj;
   }
+function sort_object(resultat,mydata){
+	let list_sorted=Object.entries(resultat).sort((a,b) => b[1]-a[1]).map(el=>el[0]);
+	let out =[]
+	for (const i in list_sorted){
+		let arbre=parseInt(list_sorted[i]);
+		
+		out.push(mydata[arbre]);
 
+
+	}
+	
+	return out
+}
 function compute_scores(mydata,description,input1){
 
 			let [default_inputs, weight,default_var,n_choice]=build_default_input_and_weights(description);
@@ -306,11 +318,15 @@ function compute_scores(mydata,description,input1){
 
 			}
 
-			return(convertToObj(arbre_non_bloque,scores))};
+			let resultat=convertToObj(arbre_non_bloque,scores);
+			return (sort_object(resultat,mydata));
+		};
+
 var mydata = require('./ex.json');
 var input1 = require('./input.json');
 var description=require('./description.json');
 console.log(compute_scores(mydata,description,input1))
+
 
 
 
