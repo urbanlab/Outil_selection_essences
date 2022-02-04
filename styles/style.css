@@ -615,58 +615,7 @@ td{
     top: 6%;
     cursor: pointer;
   }
-}
 
-/*
-@media screen and (min-width:1000px) {
-  #popin_photo{
-    top: 5%;
-    left: 0;
-    right: 0;
-    height: 25%;
-    width:100%;
-    object-fit: cover;
-    position: fixed;
-    
-  }
-  
-  .popin_titres{
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    position: fixed;
-    top: 15%;
-    left:0;
-    right:0;
-    height: 15%;
-    width:100%;
-  }
-  
-  #popin_nom_francais{
-    margin:0; 
-    width: 100%;
-    text-align: center;
-    justify-content: flex-end;
-    line-height: 100%;
-    margin-bottom: 2%;
-    position:fixed;
-    color: white;
-    margin:auto;
-    background: linear-gradient(#55555500 10%, #555);
-  }
-
-  #popin_nom_latin{
-    display: none;
-    /*margin:0;
-    top: 45%;
-    height: 15%;
-    width:100%;
-    font-style: italic;
-    text-align: center;
-    line-height: 100%;
-    margin-bottom: 2%;
-    color: #0e0d0e;*/
-  }
   
   #popin_infos{
     margin:0;
@@ -710,5 +659,4 @@ td{
   .popin_titre_tableau{
     display: none;
   }
-
-}*/
+}
