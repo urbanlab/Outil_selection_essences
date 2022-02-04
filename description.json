@@ -23,7 +23,7 @@
         ]
     },
     {
-        "nom": "Largeur houpier (couronne de l'arbre à maturité)",
+        "nom": "Largeur houpier",
         "importance": "Bloquant",
         "type_question": "Select",
         "reponses": [
@@ -46,7 +46,7 @@
         ]
     },
     {
-        "nom": "Tolérance pour le pH du sol ",
+        "nom": "Tolérance pour le pH du sol",
         "importance": "Bloquant",
         "type_question": "Select",
         "reponses": [
@@ -105,8 +105,8 @@
                 "texte": "Autre situation urbaine"
             },
             {
-                "valeur": "Petit jardin",
-                "texte": "Petit jardin"
+                "valeur": "Petit Jardin",
+                "texte": "Petit Jardin"
             },
             {
                 "valeur": "Parc et grand jardin",
@@ -162,7 +162,7 @@
         ]
     },
     {
-        "nom": "Potentiel Canopée (ombrage)",
+        "nom": "Potentiel Canopée",
         "importance": "Important",
         "type_question": "Select",
         "reponses": [
@@ -200,7 +200,7 @@
         ]
     },
     {
-        "nom": "Impact sur la biodiversité ",
+        "nom": "Impact sur la biodiversité",
         "importance": "Important",
         "type_question": "",
         "reponses": [
@@ -261,7 +261,7 @@
         ]
     },
     {
-        "nom": "Impact ornemental saisonnier",
+        "nom": "Impact ornemental saisonier",
         "importance": "Peu important",
         "type_question": "Select",
         "reponses": [
@@ -280,7 +280,7 @@
         ]
     },
     {
-        "nom": "Pollen et potentiel allergisant ",
+        "nom": "Pollen et potentiel allergisant",
         "importance": "Peu important",
         "type_question": "Select",
         "reponses": [
