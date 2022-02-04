@@ -8,11 +8,19 @@
 </head>
 
 <header>
-  <h1>Selection d'essence d'arbre</h1>
+  <h1 id="titre_page">Selection d'essence d'arbre</h1>
+  <nav id="nav_pages">
+    <a href="/recherche">Rechercher un arbre</a>
+  </nav>
 </header>
 
 <div id="popin" class="modal" onclick="click_hors_popin()">
   <div class="modal-content" onclick="event.stopPropagation()">
+    <img id="etoile_favori"
+    src="/assets/star-svgrepo-com.svg"
+    alt="ajouter aux favori"
+    onclick="update_favori()"
+    />
     <img id="popin_photo" src="" alt="">
     <div class="popin_titres">
       <h1 id='popin_nom_francais'></h1>
@@ -23,6 +31,7 @@
 
     </table>
     <button id="popin_close" type="button" name="button" onclick="cacher_popin()">&times</button>
+    </button>
   </div>
 </div>
 
@@ -34,18 +43,21 @@
 
 <section id='arbres'>
   <nav id="bouton_pages">
-    <button type="button" id="bouton_precedent" onclick="changer_page('precedent')">&#x2B05</button> 
+    <button type="button" id="bouton_precedent" onclick="changer_page('precedent')">&#x2B05</button>
     <p id=indice_page>Page <span id="page_actuelle"></span>/<span id="nombre_pages"></span></p>
-    <button type="button" id="bouton_suivant" onclick="changer_page('suivant')">&#x27A1</button> 
+    <button type="button" id="bouton_suivant" onclick="changer_page('suivant')">&#x27A1</button>
   </nav>
 </section>
 
-
+<aside class = "cookies_not_chosen" id='cookies_dialogue'>
+  Voulez-vous accepter les cookies ? (Les cookies sont utilisés seulement pour la fonction favori)
+  <br>
+  <button type="button" onclick="accepter_cookies()">Accepter</button>
+  <button type="button" onclick="refuser_cookies()">Refuser</button>
+</aside>
 <footer id="footer">
   <img src="/assets/logo_erasme_grandlyon.png" width="500" >
 </footer>
-
-<script src="assets/jquery/jquery.min.js"></script>
 
 <script>
   var xhttp_filtres = new XMLHttpRequest();
@@ -99,11 +111,11 @@
     var nombre_pages = document.getElementById('nombre_pages');
     if (sens=='suivant' && nombre_pages.innerHTML!=page_actuelle.innerHTML) {
       page_actuelle.innerHTML=parseInt(page_actuelle.innerHTML)+1;
-    } else if(sens=='precedent' && page_actuelle.innerHTML!='1') { 
+    } else if(sens=='precedent' && page_actuelle.innerHTML!='1') {
       page_actuelle.innerHTML=parseInt(page_actuelle.innerHTML)-1;
     }
     var xhttp_page_arbres = new XMLHttpRequest();
-   
+
     xhttp_page_arbres.open('GET', '/data/arbres?page='+page_actuelle.innerHTML);
     xhttp_page_arbres.setRequestHeader('Content-type', 'application/json');
     xhttp_page_arbres.send();
@@ -114,7 +126,7 @@
       update_affichage_arbres(arbres);
     }
 
-    
+
   }
 
   function update_affichage_arbres(arbres) {
@@ -210,7 +222,7 @@
   }
 
   function montrer_arbre(section, arbre) {
-    const nom_latin = arbre['Genre'] + ' ' + arbre['Espèce'];
+    const nom_latin = arbre['Genre'].trim() + ' ' + arbre['Espèce'].trim();
     var article = document.createElement('article');
     article.setAttribute('id', 'article '+nom_latin);
     article.addEventListener('mouseenter', montrer_mots_cles);
@@ -380,10 +392,17 @@
             tableau.appendChild(tr);
           }
         }
-
-
         popin.style.visibility = 'visible';
         popin.style.opacity = "100%";
+
+        let favori_icon = document.getElementById("etoile_favori")
+        const fav = JSON.parse(localStorage.getItem("arbres_favori"))
+        if(fav && fav.indexOf(arbre_popin['Genre'] + ' ' + arbre_popin['Espèce'])>-1){
+          favori_icon.style.filter = "invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%)"
+        }
+        else{
+          favori_icon.style.filter = "none"
+        }
       }
     }
 
@@ -425,4 +444,44 @@
     return(liste_criteres_triee);
   }
 
+  if(!localStorage.getItem("cookies-accepted")){
+    document.getElementById('cookies_dialogue').style.animation="ease-in cookies_slidein 1s normal forwards"
+  }
+  else{
+    document.getElementById('cookies_dialogue').style.display="none"
+  }
+
+  function accepter_cookies(){
+    let cookies_dialogue = document.getElementById('cookies_dialogue')
+    cookies_dialogue.style.display="none"
+    localStorage.setItem("cookies-accepted", true)
+  }
+
+  function refuser_cookies(){
+    document.getElementById('cookies_dialogue').style.display="none"
+  }
+
+  function update_favori(){
+    if(localStorage.getItem("cookies-accepted")){
+      const nom = document.getElementById('popin_nom_latin').innerText
+      console.log(nom)
+      if(!localStorage.getItem("arbres_favori")){
+        localStorage.setItem("arbres_favori", JSON.stringify([nom]))
+      }
+      else{
+        let fav = JSON.parse(localStorage.getItem("arbres_favori"))
+        const index = fav.indexOf(nom)
+        if(index>-1){
+          document.getElementById("etoile_favori").style.filter="none"
+          fav.splice(index,1)
+        }
+        else{
+          fav.push(nom)
+          document.getElementById("etoile_favori").style.filter="invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%)"
+        }
+        console.log(fav)
+        localStorage.setItem("arbres_favori", JSON.stringify(fav))
+      }
+    }
+  }
 </script>
