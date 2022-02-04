@@ -151,13 +151,24 @@ function main(pageToken){
     .catch((err)=>{
         console.log(err)
     })
+    return imagePromise
 }
 
-client.authorize(function(err, token){
-    if(err){
-        console.log(err)
-    }
-    else{
-        main(null) 
-    }
-})
+function refreshPictures(){
+    const refreshPromise = new Promise((resolve, reject)=>{
+        client.authorize(function(err, token){
+            if(err){
+                console.log(err)
+            }
+            else{
+                let prom = main(null) 
+                prom.then(()=>{
+                    resolve()
+                })
+            }
+        })
+    })
+    return refreshPromise
+}
+
+module.exports = refreshPictures

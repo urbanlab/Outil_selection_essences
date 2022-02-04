@@ -369,25 +369,32 @@ td{
 
 #cookies_dialogue{
   position: fixed;
-  bottom: 0%;
+  bottom: 0;
   background-color: rgba(255,255,255,0.5);
   z-index: 1000;
   width: 70%;
   border-radius: 0.5vw;
   text-align: center;
-  color: #294F8D
+  color: #294F8D;
+  max-height:0;
+  animation: 2s ease-in forwards 1s cookies_slidein;
 }
 
 @keyframes cookies_slidein {
-  from { height: 0%}
-  to   { height: auto }
+  from { 
+    max-height: 0;
+  }
+  to { 
+    max-height:100%;
+  }
 }
 #etoile_favori{
   width:5%;
   height:5%;
+  border-radius: 5em;
 }
 #etoile_favori:hover{
-  filter: invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%);
+  background-color: rgba(125,125,125,0.3);
 }
 /*
 @media screen and (min-width:1000px) {
