@@ -6,6 +6,7 @@ const utils = require("./utils");
 const config = require('./config.json')
 const fs = require('fs')
 const path=require('path')
+const image_updater = require('./image-updater/gdrive.js')
 //-------------------------------------------------------------------------------------------------------------------------
 //-------------------------------------------- Paramétrages de base -------------------------------------------------------
 //-------------------------------------------------------------------------------------------------------------------------
@@ -211,7 +212,8 @@ app.get("/data/refresh", (req,res)=>{
         res.status(500).send('Erreur Sauvegarde des filtres')
     })
 
-    Promise.all([arbresPromise, legendesPromise, filtresPromise])
+    const imagePromise = image_updater()
+    Promise.all([arbresPromise, legendesPromise, filtresPromise, imagePromise])
     .then((values)=>{
         res.send("Données rafraichies")
     })
