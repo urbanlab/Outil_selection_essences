@@ -53,41 +53,27 @@ app.get('/data/filtres', (req, res)=>{
 app.get('/data/arbres', (req, res)=>{
     const param_id = req.query.id;
     const param_page = req.query.page;
-    gsheet.getData(gsheet.client, `'${config.data_spreadsheet}'!${config.data_row_offset}${config.data_column_names_row}:${config.data_column_names_row}`)
-    .then((colnames)=>{
-        ncols = colnames[0].length+utils.letterToColumn(config.data_column_offset)
-        lastColumn = utils.columnToLetter(ncols)
-        gsheet.getData(gsheet.client, `'${config.data_spreadsheet}'!${config.data_column_offset}${config.data_start_row}:${lastColumn}`)
-        .then((values)=>{
-            let response = []
-            if (param_page) {
-                const page = parseInt(param_page);
-                for (let i = (page-1)*10; i < Math.min(page*10, values.length); i++) {
-                    let val = {}
-                    for(let j=0; j<ncols-1; j++){
-                        val[colnames[0][j].trim()]=values[i][j].trim()
-                    }
-                    response.push(val);
-                }
-            } else {
-                for (let i = 0; i < values.length; i++) {
-                    if (!param_id || (param_id && param_id == `${values[i][1].trim()} ${values[i][2].trim()}`)) {
-                        let val = {}
-                        for(let j=0; j<ncols-1; j++){
-                            val[colnames[0][j]]=values[i][j]
-                        }
-                        response.push(val)
-                    }
+    fs.readFile('./data/arbres.json', (err, value)=>{
+        if(err){
+            res.status(500).send("Erreur lecture des données filtres")
+        }
+        values = JSON.parse(value)
+        let response = []
+        if (param_page) {
+
+            const page = parseInt(param_page);
+            for (let i = (page-1)*10; i < Math.min(page*10, values.length); i++) {
+                let val = values[i]
+                response.push(val);
+            }
+        } else {
+            for (let i = 0; i < values.length; i++) {
+                if (!param_id || (param_id && param_id == `${values[i]["Genre"].trim()} ${values[i]["Espèce"].trim()}`)) {
+                    response.push(values[i])
                 }
             }
-            res.send(response)
-        })
-        .catch((err)=>{
-            console.log(err)
-        })
-    })
-    .catch((err)=>{
-        res.status(500).send("Erreur de connexion à ggsheet")
+        }
+        res.send(response)
     })
 })
 // =====================================================
@@ -121,7 +107,7 @@ app.get("/data/refresh", (req,res)=>{
     // ==== Données d'arbres ====
     let arbresPromise = gsheet.getData(gsheet.client, `'${config.data_spreadsheet}'!${config.data_column_offset}${config.data_column_names_row}:${config.data_column_names_row}`)
     arbresPromise.then((colnames)=>{
-        ncols = colnames[0].length+utils.letterToColumn(config.data_column_offset)
+        ncols = colnames[0].length+utils.letterToColumn(config.data_column_offset)-1
         lastColumn = utils.columnToLetter(ncols)
         gsheet.getData(gsheet.client, `'${config.data_spreadsheet}'!${config.data_column_offset}${config.data_start_row}:${lastColumn}`)
         .then((values)=>{
@@ -142,7 +128,7 @@ app.get("/data/refresh", (req,res)=>{
         res.status(500).send("Erreur Sauvegarde des arbres")
     })
 
-    // ==== Données de légende ====
+    // ==== Données légende ====
     let legendesPromise = gsheet.getData(gsheet.client,`'${config.legendes_spreadsheet}'!A1:B`)
     legendesPromise.then((legendes)=>{
         let newAttr = true
@@ -181,7 +167,7 @@ app.get("/data/refresh", (req,res)=>{
         return
     })
 
-    // ==== Données filres ====
+    // ==== Données filtres ====
     let filtresPromise = gsheet.getData(gsheet.client, `'${config.filter_spreadsheet}'!${config.filter_column_offset}${config.filter_row_offset}:${config.filter_row_offset}`)
     .then((colnames)=>{
         ncols = colnames[0].length+utils.letterToColumn(config.filter_column_offset)
