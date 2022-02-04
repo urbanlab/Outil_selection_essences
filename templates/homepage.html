@@ -295,7 +295,9 @@
     xhttp.send(JSON.stringify(json_filtres));
 
     xhttp.onload = function() {
-      console.log(xhttp.responseText);
+      arbres_tries = JSON.parse(xhttp.responseText);
+      console.log(JSON.parse(xhttp.responseText));
+      update_affichage_arbres(arbres_tries);
     }
   }
 
