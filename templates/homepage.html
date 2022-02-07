@@ -56,7 +56,7 @@
   <button type="button" onclick="refuser_cookies()">Refuser</button>
 </aside>
 <footer id="footer">
-  <img src="/assets/logo_erasme_grandlyon.png" width="500" >
+  <img class = "footer_logo_erasme" src="/assets/logo_erasme_grandlyon.png" width="500" >
 </footer>
 
 <script>
@@ -129,6 +129,7 @@
 
   }
 
+  
   function update_affichage_arbres(arbres) {
     var div = document.getElementById('arbres');
     var cloneArbres = div.cloneNode(true);
@@ -295,7 +296,9 @@
     xhttp.send(JSON.stringify(json_filtres));
 
     xhttp.onload = function() {
-      console.log(xhttp.responseText);
+      arbres_tries = JSON.parse(xhttp.responseText);
+      console.log(JSON.parse(xhttp.responseText));
+      update_affichage_arbres(arbres_tries);
     }
   }
 
@@ -401,7 +404,7 @@
           favori_icon.style.filter = "invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%)"
         }
         else{
-          favori_icon.style.filter = "none"
+          favori_icon.style.filter="none"
         }
       }
     }
@@ -444,12 +447,12 @@
     return(liste_criteres_triee);
   }
 
-  if(!localStorage.getItem("cookies-accepted")){
-    document.getElementById('cookies_dialogue').style.animation="ease-in cookies_slidein 1s normal forwards"
-  }
-  else{
-    document.getElementById('cookies_dialogue').style.display="none"
-  }
+  // if(!localStorage.getItem("cookies-accepted")){
+  //   document.getElementById('cookies_dialogue').style.animation="1s ease-in normal forwards cookies_slidein"
+  // }
+  // else{
+  //   document.getElementById('cookies_dialogue').style.display="none"
+  // }
 
   function accepter_cookies(){
     let cookies_dialogue = document.getElementById('cookies_dialogue')
@@ -467,6 +470,7 @@
       console.log(nom)
       if(!localStorage.getItem("arbres_favori")){
         localStorage.setItem("arbres_favori", JSON.stringify([nom]))
+        document.getElementById("etoile_favori").style.filter="invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%)"
       }
       else{
         let fav = JSON.parse(localStorage.getItem("arbres_favori"))

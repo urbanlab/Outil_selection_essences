@@ -127,7 +127,8 @@ function update_input(input,default_inputs){
 
 ///////////////////////////////////////////////////:
 
-function update_data(data,filters){
+function update_data(data1,filters){
+    data=JSON.parse(JSON.stringify(data1));
 	const n_arbre=data.length;
 	
     for (var i=0;i<n_arbre ;i++){
@@ -199,7 +200,7 @@ function update_data(data,filters){
 
 function compute_score(inputs_updated,prop,data_updated,i,weight,n_choice){
     if ((prop=='Tolérance pour le pH du sol') && (data_updated[i][prop]== 1)){
-    	data_updated[i][prop]=inputs_updated[prop]
+    	data_updated[i][prop]=inputs_updated[prop];
 		
     }
 	
@@ -246,9 +247,20 @@ function convertToObj(a, b){
 	a.forEach((k, i) => {obj[k] = b[i]})
 	return obj;
   }
+function sort_object(resultat,mydata){
+	let list_sorted=Object.entries(resultat).sort((a,b) => b[1]-a[1]).map(el=>el[0]);
+	let out =[]
+	for (const i in list_sorted){
+		let arbre=parseInt(list_sorted[i]);
+		
+		out.push(mydata[arbre]);
 
-function compute_scores(mydata,description,input1){
 
+	}
+	
+	return out
+}
+function compute_scores(mydata,description,input1){	
 			let [default_inputs, weight,default_var,n_choice]=build_default_input_and_weights(description);
 			
 			let input=delete_non_input(input1);
@@ -281,38 +293,46 @@ function compute_scores(mydata,description,input1){
 						
 						
 							
-							if (!(weight[fil] == 'bloquant')){
-								score+=compute_score(inputs_updated,fil,data_updated,i,weight,n_choice);
-								
-								
-					
-								
-							}else{
-								bloqued=((inputs_updated[fil]!=data_updated[i][fil])? true: false)
-								
-								
-							}
+						if (!(weight[fil] == 'bloquant')){
+							score+=compute_score(inputs_updated,fil,data_updated,i,weight,n_choice);
+							
+							
+				
+							
+						}else{
+							bloqued=((inputs_updated[fil]!=data_updated[i][fil])? true: false)
+							
 							
 						}
+						
+					}
 
 
 				};
 				if (!(bloqued)){
-				arbre_non_bloque.push(i);
-				scores.push(score/sum_weights);
-					}else{
-						arbre_bloque.push(i);
-					}
+					arbre_non_bloque.push(i);
+					scores.push(score/sum_weights);
+				}else{
+					arbre_bloque.push(i);
+				}
 
 			}
+            if (arbre_non_bloque.length==0 ){
+				return([])
+			}else{
+				let resultat=convertToObj(arbre_non_bloque,scores);
+				return (sort_object(resultat,mydata));
+			}
+			
+		};
 
-			return(convertToObj(arbre_non_bloque,scores))};
 var mydata = require('./ex.json');
 var input1 = require('./input.json');
 var description=require('./description.json');
-console.log(compute_scores(mydata,description,input1))
+//console.log(compute_scores(mydata,description,input1))
 
 
+module.exports = compute_scores;
 
 
 
