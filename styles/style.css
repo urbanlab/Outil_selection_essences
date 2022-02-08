@@ -367,17 +367,16 @@ td{
   border-radius: 0.5vw;
 }
 
-#cookies_dialogue{
+#cookies_dialogue, #merci_dialogue, #rappel_cookies{
   position: fixed;
   bottom: 0;
   background-color: rgba(255,255,255,0.5);
   z-index: 1000;
-  width: 70%;
-  border-radius: 0.5vw;
+  width: auto;
+  border-radius: 0.5vw 0.5vw 0 0;
   text-align: center;
   color: #294F8D;
   max-height:0;
-  animation: 2s ease-in forwards 1s cookies_slidein;
 }
 
 @keyframes cookies_slidein {

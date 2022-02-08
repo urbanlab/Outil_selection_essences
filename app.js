@@ -105,7 +105,7 @@ app.get('/data/legendes', (req, res)=>{
 
 app.get("/data/refresh", (req,res)=>{
     // ==== Données d'arbres ====
-    let arbresPromise = gsheet.getData(gsheet.client, `'${config.data_spreadsheet}'!${config.data_column_offset}${config.data_column_names_row}:${config.data_column_names_row}`)
+    const arbresPromise = gsheet.getData(gsheet.client, `'${config.data_spreadsheet}'!${config.data_column_offset}${config.data_column_names_row}:${config.data_column_names_row}`)
     arbresPromise.then((colnames)=>{
         ncols = colnames[0].length+utils.letterToColumn(config.data_column_offset)-1
         lastColumn = utils.columnToLetter(ncols)
@@ -129,7 +129,7 @@ app.get("/data/refresh", (req,res)=>{
     })
 
     // ==== Données légende ====
-    let legendesPromise = gsheet.getData(gsheet.client,`'${config.legendes_spreadsheet}'!A1:B`)
+    const legendesPromise = gsheet.getData(gsheet.client,`'${config.legendes_spreadsheet}'!A1:B`)
     legendesPromise.then((legendes)=>{
         let newAttr = true
         let curentAttr = ""
@@ -168,14 +168,14 @@ app.get("/data/refresh", (req,res)=>{
     })
 
     // ==== Données filtres ====
-    let filtresPromise = gsheet.getData(gsheet.client, `'${config.filter_spreadsheet}'!${config.filter_column_offset}${config.filter_row_offset}:${config.filter_row_offset}`)
+    const filtresPromise = gsheet.getData(gsheet.client, `'${config.filter_spreadsheet}'!${config.filter_column_offset}${config.filter_row_offset}:${config.filter_row_offset}`)
     .then((colnames)=>{
         ncols = colnames[0].length+utils.letterToColumn(config.filter_column_offset)
         lastColumn = utils.columnToLetter(ncols)
         gsheet.getData(gsheet.client, `'${config.filter_spreadsheet}'!${config.filter_column_offset}${config.filter_row_offset}:${lastColumn}`)
         .then((value)=>{
             liste_criteres=[];
-            for (let i = 1; i < value[0].length; i++) {
+            for (let i = 0; i < value[0].length; i++) {
                 if (value[2][i] == 'TRUE'){
                     var json = {
                         nom: value[0][i],
