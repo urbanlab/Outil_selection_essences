@@ -38,6 +38,7 @@ app.get('/styles/style_recherche.css', (req, res) => {
     res.status(200).sendFile(__dirname + '/styles/style_recherche.css');
 });
 
+<<<<<<< HEAD
 app.get('/styles/style_comparaison.css', (req, res) => {
     res.status(200).sendFile(__dirname + '/styles/style_comparaison.css');
 });
@@ -50,6 +51,8 @@ app.post('/update_filtres', (req, res) => {
     res.status(200).send(result_tri);
 });
 
+=======
+>>>>>>> 949160689fe887fea98f8fb82bf1975c04a5a013
 // ========================== Filtres =============================
 app.get('/data/filtres', (req, res)=>{
     fs.readFile('./data/filtres.json', (err, value)=>{
@@ -63,6 +66,26 @@ app.get('/data/filtres', (req, res)=>{
 // ===================================================
 
 // ==================== /data/arbres =================
+
+app.post('/data/arbres', (req, res) => {
+    const param_page = req.query.page;
+    mydata=require('./data/arbres.json');
+    description=require('./data/filtres.json');
+    result_tri = compute_scores(mydata,description,req.body);
+    response = [];
+
+    const page = (param_page) ? parseInt(param_page) : 1;
+
+    for (let i = (page-1)*10; i < Math.min(page*10, result_tri.length); i++) {
+        let arbre = result_tri[i]
+        response.push(arbre);
+    }
+    var json = {nb_arbres_tries : result_tri.length,
+                response: response};
+    res.status(200).send(json);
+});
+
+
 app.get('/data/arbres', (req, res)=>{
     const param_id = req.query.id;
     const param_page = req.query.page;
@@ -118,7 +141,7 @@ app.get('/data/legendes', (req, res)=>{
 
 app.get("/data/refresh", (req,res)=>{
     // ==== Données d'arbres ====
-    let arbresPromise = gsheet.getData(gsheet.client, `'${config.data_spreadsheet}'!${config.data_column_offset}${config.data_column_names_row}:${config.data_column_names_row}`)
+    const arbresPromise = gsheet.getData(gsheet.client, `'${config.data_spreadsheet}'!${config.data_column_offset}${config.data_column_names_row}:${config.data_column_names_row}`)
     arbresPromise.then((colnames)=>{
         ncols = colnames[0].length+utils.letterToColumn(config.data_column_offset)-1
         lastColumn = utils.columnToLetter(ncols)
@@ -142,7 +165,7 @@ app.get("/data/refresh", (req,res)=>{
     })
 
     // ==== Données légende ====
-    let legendesPromise = gsheet.getData(gsheet.client,`'${config.legendes_spreadsheet}'!A1:B`)
+    const legendesPromise = gsheet.getData(gsheet.client,`'${config.legendes_spreadsheet}'!A1:B`)
     legendesPromise.then((legendes)=>{
         let newAttr = true
         let curentAttr = ""
@@ -181,7 +204,7 @@ app.get("/data/refresh", (req,res)=>{
     })
 
     // ==== Données filtres ====
-    let filtresPromise = gsheet.getData(gsheet.client, `'${config.filter_spreadsheet}'!${config.filter_column_offset}${config.filter_row_offset}:${config.filter_row_offset}`)
+    const filtresPromise = gsheet.getData(gsheet.client, `'${config.filter_spreadsheet}'!${config.filter_column_offset}${config.filter_row_offset}:${config.filter_row_offset}`)
     .then((colnames)=>{
         ncols = colnames[0].length+utils.letterToColumn(config.filter_column_offset)
         lastColumn = utils.columnToLetter(ncols)
