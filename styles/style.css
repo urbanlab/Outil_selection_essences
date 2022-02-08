@@ -119,7 +119,7 @@ body{
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  width: 13vw;
+  width: 12.75vw;
   height:20vw;
   margin: 15px 5px;
   animation-duration: 0.7s;
@@ -379,12 +379,12 @@ td{
   max-height:0;
   animation: 2s ease-in forwards 1s cookies_slidein;
 }
-  
+
 @keyframes cookies_slidein {
-  from { 
+  from {
     max-height: 0;
   }
-  to { 
+  to {
     max-height:100%;
   }
 }
@@ -399,7 +399,7 @@ td{
   background-color: rgba(125,125,125,0.3);
 }
 
-@media screen and (min-width: 260px) and (max-width: 550px) {
+@media screen and (max-width: 550px) {
 
   #nav_pages{
     right: 5%;
@@ -419,9 +419,9 @@ td{
     animation: 2s ease-in forwards 1s cookies_slidein;
   }
 
- 
 
-    
+
+
   html{
     min-width: 100%;
     min-height: 100%;
@@ -437,7 +437,7 @@ td{
     flex-wrap: wrap;
     background-color: #FCE5D2;
   }
-    
+
   header{
     width: 100%;
     position: fixed;
@@ -487,7 +487,7 @@ td{
     height: 10vw;
     position: absolute;
     margin:0;
-    
+
   }
 
   footer:after{
@@ -539,7 +539,7 @@ td{
     padding-right: 10%;
   }
 
-    
+
   #bouton_pages{
     width: 100vw;
     height: fit-content;
@@ -571,7 +571,7 @@ td{
     justify-content: center;
     margin:0;
   }
-  
+
   .filtre_checkbox{
     display: grid;
     grid-template-columns: 15% 30%;
@@ -589,7 +589,7 @@ td{
     text-align: center;
     line-height: 100%;
   }
-  
+
   p.francais{
     font-size: 26px;
     color:white;
@@ -600,7 +600,7 @@ td{
     line-height: 100%;
   }
 
-  
+
 
   .modal{
     visibility: hidden;
@@ -616,14 +616,14 @@ td{
     justify-content: center;
     align-items: center;
   }
-  
+
   .modal-content{
     background-color: #DED25E;
     padding: 0px;
     width: 100%;
     height: 90%;
   }
-  
+
   #popin_close{
     background-color: #DED25E;
     position: fixed;
@@ -652,7 +652,7 @@ td{
     top : 7%;
     left: 53%;
   }
-  
+
   #popin_infos{
     margin:0;
     position: fixed;
@@ -669,19 +669,19 @@ td{
     scrollbar-color: #f5e97d #DED25E;
     scrollbar-width: thin;
   }
-  
+
   #popin_infos::-webkit-scrollbar{
     width: 10px;
     margin-left: 5px;
     background: #DED25E;
   }
-  
+
   #popin_infos::-webkit-scrollbar-thumb {
     background-color: #f5e97d;
     background-clip: content-box;
     border: 2px solid transparent;
   }
-  
+
   td{
     padding: 1vw;
     background-color: #f5e97d;
@@ -689,9 +689,9 @@ td{
     border-top: solid 1px #DED25E;
     margin: 0;
   }
-  
-  
-  
+
+
+
   .popin_titre_tableau{
     display: none;
   }
@@ -702,7 +702,7 @@ td{
 
 
 
-@media screen and (min-width: 750px) and (max-width: 950px) {
+@media screen and (min-width: 550px) and (max-width: 1000px) {
 
   body{
     margin:0;
@@ -712,7 +712,7 @@ td{
     justify-content: space-around;
     background-color: #FCE5D2;
   }
-  
+
   #filtres{
     width: 30vw;
     display: flex;
@@ -722,7 +722,7 @@ td{
     height: fit-content;
     margin-top: 20%;
   }
-  
+
   #plus_de_filtres{
     order:100000000000;
     width: fit-content;
@@ -731,8 +731,8 @@ td{
     background: none;
     text-decoration: underline;
   }
-  
-  
+
+
   #bouton_pages{
     width: 60vw;
     height: fit-content;
@@ -741,21 +741,21 @@ td{
     margin-top: 0;
     justify-content: flex-end;
   }
-  
+
   #indice_page{
     margin: 0;
     padding: 1vw;
     line-height: 0;
-  
+
   }
-  
-  
-  
+
+
+
   #plus_de_filtres:hover{
     color: #D82600;
     cursor: pointer;
   }
-  
+
   #arbres{
     margin-top: 20%;
     width: 65vw;
@@ -765,21 +765,21 @@ td{
     flex-wrap: wrap;
     justify-content: space-around;
   }
-  
+
   .filtre{
     display: flex;
     flex-direction: column;
     align-items: left;
     margin:5px;
   }
-  
+
   .filtre_checkbox{
     display: grid;
     grid-template-columns: 11% 24%;
     align-items: left;
     white-space:nowrap;
   }
-  
+
   .info_arbre{
     /* border: solid black 1px; */
     background-image: url('/assets/arbre_template.png');
@@ -795,18 +795,18 @@ td{
     animation-duration: 0.7s;
     animation-fill-mode: forwards;
   }
-  
-  
+
+
   .info_arbre:hover{
     animation-name: zoom-in;
     cursor: pointer;
   }
-  
+
   @keyframes zoom-in {
     from{transform: scale(100%);}
     to{transform: scale(102%);}
   }
-  
+
   .text-container{
     padding:2px;
     display: flex;
@@ -817,7 +817,7 @@ td{
     background: linear-gradient(#55555500 10%, #555);
     border-radius: 0.5vw;
   }
-  
+
   .mot-cle{
     color : red;
     margin : auto;
@@ -829,17 +829,17 @@ td{
     text-shadow : black 1px 1px 1px;
     line-height: 100%;
   }
-  
+
   label{
     text-align: left;
     margin-bottom: 4px;
     color:#294F8D;
   }
-  
+
   select{
     width: 20vw;
   }
-  
+
   header{
     width: 100%;
     position: fixed;
@@ -851,7 +851,7 @@ td{
     background-color: white;
     z-index: 999;
   }
-  
+
   header:after{
     content: "";
     display: block;
@@ -862,13 +862,13 @@ td{
     height: 14px;
     background: url('http://canographia.datagora.erasme.org/wp-content/themes/canographia/assets/rough-x-white.svg') repeat-x transparent;
   }
-  
+
   #titre_page{
     margin: auto;
     width: fit-content;
     align-self: center;
   }
-  
+
   #nav_pages{
     width: fit-content;
     height: fit-content;
@@ -876,7 +876,7 @@ td{
     right: 3%;
     top: 3.5%;
   }
-  
+
   footer{
     margin:0;
     width: 100%;
@@ -895,14 +895,14 @@ td{
     font-size: 15px;
     margin-top: 5%;
   }
-  
+
   .footer_logo_erasme{
     width: 65vw;
     height: 8vw;
     position: absolute;
     margin: 0;
   }
-  
+
   footer:after{
     content: "";
     display: block;
@@ -913,7 +913,7 @@ td{
     height: 14px;
     background: url('http://canographia.datagora.erasme.org/wp-content/themes/canographia/assets/rough-x-secondary.svg') repeat-x transparent;
   }
-  
+
   .modal{
     visibility: hidden;
     opacity: 0%;
@@ -928,14 +928,14 @@ td{
     justify-content: center;
     align-items: center;
   }
-  
+
   .modal-content{
     background-color: #DED25E;
     padding: 10px;
     width: 80%;
     height: 80%;
   }
-  
+
   #popin_close{
     background-color: #DED25E;
     position: fixed;
@@ -947,8 +947,8 @@ td{
     top: 10%;
     cursor: pointer;
   }
-  
-  
+
+
   .popin_titres{
     left: 16%;
     top: 11%;
@@ -968,7 +968,7 @@ td{
     top : 11%;
     left: 53%;
   }
-  
+
   #popin_infos{
     margin:0;
     position: fixed;
@@ -985,8 +985,8 @@ td{
     scrollbar-color: #f5e97d #DED25E;
     scrollbar-width: thin;
   }
- 
-  
+
+
   #popin_nom_francais{
     margin:0;
     width:100%;
@@ -995,7 +995,7 @@ td{
     margin-bottom: 2%;
     color: white;
   }
-  
+
   #popin_nom_latin{
     margin:0;
     width:100%;
@@ -1005,20 +1005,20 @@ td{
     margin-bottom: 2%;
     color: #4A494A;
   }
-  
- 
+
+
   #popin_infos::-webkit-scrollbar{
     width: 10px;
     margin-left: 5px;
     background: #DED25E;
   }
-  
+
   #popin_infos::-webkit-scrollbar-thumb {
     background-color: #f5e97d;
     background-clip: content-box;
     border: 2px solid transparent;
   }
-  
+
   td{
     padding: 1vw;
     background-color: #f5e97d;
@@ -1026,7 +1026,7 @@ td{
     border-top: solid 1px #DED25E;
     margin: 0;
   }
-  
+
   .popin_titre_tableau{
     display: none;
   }
@@ -1073,7 +1073,7 @@ td{
     flex-wrap: wrap;
     justify-content: space-around;
   }
-  
+
   #filtres{
     width: 20%;
     display: flex;
@@ -1085,7 +1085,3 @@ td{
   }
 
 }
-
-
-
-
