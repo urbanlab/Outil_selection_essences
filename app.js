@@ -26,12 +26,20 @@ app.get('/recherche', (req, res) => {
     res.status(200).sendFile(__dirname + '/templates/recherche.html');
 });
 
+app.get('/comparaison', (req, res) => {
+    res.status(200).sendFile(__dirname + '/templates/comparaison.html');
+});
+
 app.get('/styles/style.css', (req, res) => {
     res.status(200).sendFile(__dirname + '/styles/style.css');
 });
 
 app.get('/styles/style_recherche.css', (req, res) => {
     res.status(200).sendFile(__dirname + '/styles/style_recherche.css');
+});
+
+app.get('/styles/style_comparaison.css', (req, res) => {
+    res.status(200).sendFile(__dirname + '/styles/style_comparaison.css');
 });
 
 app.post('/update_filtres', (req, res) => {

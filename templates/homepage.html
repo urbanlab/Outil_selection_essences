@@ -11,6 +11,7 @@
   <h1 id="titre_page">Selection d'essence d'arbre</h1>
   <nav id="nav_pages">
     <a href="/recherche">Rechercher un arbre</a>
+    <a href="/comparaison">Comparer deux arbres</a>
   </nav>
 </header>
 
@@ -226,15 +227,12 @@
     const nom_latin = arbre['Genre'].trim() + ' ' + arbre['Espèce'].trim();
     var article = document.createElement('article');
     article.setAttribute('id', 'article '+nom_latin);
-    article.addEventListener('mouseenter', montrer_mots_cles);
-    article.addEventListener('mouseleave', cacher_mots_cles);
     article.addEventListener('click', afficher_popin);
     article.classList.add('info_arbre');
 
     var p = document.createElement('p');
-    p.classList.add('mot-cle');
-    p.style.visibility='hidden';
     p.innerHTML = mots_cles(arbre);
+    p.setAttribute('id', 'mot-cle');
     article.appendChild(p);
 
     var div = document.createElement('div');
@@ -316,16 +314,12 @@
     if (arbre['Pollen et potentiel allergisant']=="Fort"){
       mots_clé.push("allergène");
     }
-    return(mots_clé.join(", "));
+    return(mots_clé.join("<br>"));
   }
 
-  function montrer_mots_cles(event){
-    event.currentTarget.children[0].style.visibility = 'visible';
-  }
+ 
 
-  function cacher_mots_cles(event){
-    event.currentTarget.children[0].style.visibility = 'hidden';
-  }
+  
 
   function afficher_popin(event){
     var xhttp_popin = new XMLHttpRequest();
