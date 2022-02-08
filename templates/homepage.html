@@ -63,7 +63,7 @@
 </aside>
 <aside id="merci_dialogue">Merci</aside>
 <footer id="footer">
-  <img src="/assets/logo_erasme_grandlyon.png" width="500" >
+  <img class = "footer_logo_erasme" src="/assets/logo_erasme_grandlyon.png" width="500" >
 </footer>
 
 <script>
@@ -303,7 +303,9 @@
     xhttp.send(JSON.stringify(json_filtres));
 
     xhttp.onload = function() {
-      console.log(xhttp.responseText);
+      arbres_tries = JSON.parse(xhttp.responseText);
+      console.log(JSON.parse(xhttp.responseText));
+      update_affichage_arbres(arbres_tries);
     }
   }
 

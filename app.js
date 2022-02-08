@@ -1,12 +1,13 @@
 const express = require('express');
 const app = express();
 const bodyParser = require("body-parser");
-const gsheet = require("./gsheet.js")
+const gsheet = require("./gsheet.js");
 const utils = require("./utils");
-const config = require('./config.json')
-const fs = require('fs')
-const path=require('path')
-const image_updater = require('./image-updater/gdrive.js')
+const config = require('./config.json');
+const fs = require('fs');
+const path=require('path');
+const compute_scores = require('./function1.js');
+const image_updater = require('./image-updater/gdrive.js');
 //-------------------------------------------------------------------------------------------------------------------------
 //-------------------------------------------- Paramétrages de base -------------------------------------------------------
 //-------------------------------------------------------------------------------------------------------------------------
@@ -34,7 +35,11 @@ app.get('/styles/style_recherche.css', (req, res) => {
 });
 
 app.post('/update_filtres', (req, res) => {
-  res.status(200).send('Success');
+    console.log(req.body);
+    mydata=require('./data/arbres.json');
+    description=require('./data/filtres.json');
+    result_tri = compute_scores(mydata,description,req.body);
+    res.status(200).send(result_tri);
 });
 
 // ========================== Filtres =============================
