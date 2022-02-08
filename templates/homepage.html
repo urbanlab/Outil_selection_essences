@@ -48,12 +48,19 @@
   </nav>
 </section>
 
-<aside class = "cookies_not_chosen" id='cookies_dialogue'>
+<aside id='cookies_dialogue'>
   Voulez-vous accepter les cookies ? (Les cookies sont utilisés seulement pour la fonction favori)
   <br>
-  <button type="button" onclick="accepter_cookies()">Accepter</button>
-  <button type="button" onclick="refuser_cookies()">Refuser</button>
+  <button type="button" onclick="accepter_cookies(event)">Accepter</button>
+  <button type="button" onclick="refuser_cookies(event)">Refuser</button>
 </aside>
+<aside id='rappel_cookies'>
+  Vous devez activer les cookies pour utiliser cette fonctionnalité
+  <br>
+  <button type="button" onclick="accepter_cookies(event)">Accepter</button>
+  <button type="button" onclick="refuser_cookies(event)">Refuser</button>
+</aside>
+<aside id="merci_dialogue">Merci</aside>
 <footer id="footer">
   <img class = "footer_logo_erasme" src="/assets/logo_erasme_grandlyon.png" width="500" >
 </footer>
@@ -415,21 +422,23 @@
     return(liste_criteres_triee);
   }
 
-  // if(!localStorage.getItem("cookies-accepted")){
-  //   document.getElementById('cookies_dialogue').style.animation="1s ease-in normal forwards cookies_slidein"
-  // }
-  // else{
-  //   document.getElementById('cookies_dialogue').style.display="none"
-  // }
-
-  function accepter_cookies(){
-    let cookies_dialogue = document.getElementById('cookies_dialogue')
-    cookies_dialogue.style.display="none"
-    localStorage.setItem("cookies-accepted", true)
+  if(!localStorage.getItem("cookies-accepted")){
+    document.getElementById('cookies_dialogue').style.animation="2s ease-in normal forwards cookies_slidein"
+  }
+  else{
+    document.getElementById('cookies_dialogue').style.display="none"
   }
 
-  function refuser_cookies(){
-    document.getElementById('cookies_dialogue').style.display="none"
+  function accepter_cookies(e){
+    cookies_aside = e.path[1]
+    cookies_aside.style.animation = "1.5s ease-in reverse 0.5s cookies_slidein"
+    localStorage.setItem("cookies-accepted", true)
+    document.getElementById('merci_dialogue').style.animation = "1.5s ease-in alternate 2 1s cookies_slidein"
+  }
+
+  function refuser_cookies(e){
+    cookies_aside = e.path[1]
+    cookies_aside.style.animation = "1.5s ease-in reverse 0.5s cookies_slidein"
   }
 
   function update_favori(){
@@ -452,6 +461,10 @@
         }
         localStorage.setItem("arbres_favori", JSON.stringify(fav))
       }
+    }
+    else{
+      rappel_cookies= document.getElementById('rappel_cookies')
+      rappel_cookies.style.animation="2s ease-in normal forwards cookies_slidein"
     }
   }
 </script>
