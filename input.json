@@ -8,13 +8,13 @@
     "Noue et jardin de pluie": false,
     "Ripisylve": false,
     "Boisement": false,
-    "Taille des arbres": "",
-    "Largeur houpier": "",
+    "Taille des arbres": "3",
+    "Largeur houpier": "1",
     "Tolérance pour le pH du sol": "",
     "Besoin en eau et humidité": "",
     "Potentiel Canopée": "3",
     "Feuillage": "Persistant",
-    "Impact ornemental saisonier": "2",
+    "Impact ornemental saisonnier": "2",
     "Pollen et potentiel allergisant": "1",
     "Provenance": "Océanie"
 }

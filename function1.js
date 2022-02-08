@@ -14,8 +14,11 @@ function get_weight(mot){
 		case 'Peu important':
 		     return 0.5;
 		     break;
+		case 'Bloquant':
+				return 'Bloquant';
+				break;
 		default:
-		     return 'bloquant'
+		     return 'Bloquant+'
 	}
 }
 /***************************************************** */
@@ -209,18 +212,40 @@ function compute_score(inputs_updated,prop,data_updated,i,weight,n_choice){
 		
 		     const number_choice_prop=n_choice[prop];
 			 
-
-			score=((Math.abs(inputs_updated[prop]-data_updated[i][prop])==number_choice_prop-1) ? 0 : weight[prop]*Math.pow(1/2,Math.abs(inputs_updated[prop]-data_updated[i][prop])));
+            //console.log(inputs_updated[prop]-data_updated[i][prop])
+			score=((Math.abs(inputs_updated[prop]-data_updated[i][prop])==number_choice_prop-1) ? 0 : weight*Math.pow(1/2,Math.abs(inputs_updated[prop]-data_updated[i][prop])));
 
 			
      
     } 
 	else{
-        score=((inputs_updated[prop]==data_updated[i][prop]) ? weight[prop]: 0)
+        score=((inputs_updated[prop]==data_updated[i][prop]) ? weight: 0)
     	
     }
 	return score;
 }
+
+
+function update_weight(inputs_updated,prop,data_updated,i,weight){
+
+	if(Number.isInteger(data_updated[i][prop]) && (weight[prop]=='Bloquant+')){
+		
+	  
+	   updated_weight=((Math.sign(inputs_updated[prop]-data_updated[i][prop])>=0) ? 1 :'Bloquant');
+	   
+	   
+	}
+	
+	return updated_weight;
+
+	
+
+	   
+
+} 
+
+
+
 
 
 
@@ -229,9 +254,12 @@ function sum(weights,filters_input){
 	
 	for(const i in filters_input){
 		p=filters_input[i];
+	
 		
-		const add=((weights[p]=='bloquant')? 0:weights[p]);
+		const add=((weights[p]=='Bloquant')? 0:weights[p]);
+		
 		out+=add;
+		
 	}
 	return out
 }
@@ -279,7 +307,7 @@ function compute_scores(mydata,description,input1){
 			let scores=[];
 			let arbre_non_bloque=[];
 			let arbre_bloque=[];
-			const sum_weights=sum(weight,filters_input);
+			//const sum_weights=sum(weight,filters_input);
 			
 
 			for (let i=0;i<n_arbre;i++){
@@ -288,13 +316,17 @@ function compute_scores(mydata,description,input1){
 				for (const j in filters_input){
 					
 					fil=filters_input[j];
+					let updated_weight=weight[fil];
 					
 					if (!(bloqued)){
 						
+						updated_weight=update_weight(inputs_updated,fil,data_updated,i,weight);
+						
 						
 							
-						if (!(weight[fil] == 'bloquant')){
-							score+=compute_score(inputs_updated,fil,data_updated,i,weight,n_choice);
+						if (!(updated_weight == 'Bloquant')){
+							score+=compute_score(inputs_updated,fil,data_updated,i,updated_weight,n_choice);
+							
 							
 							
 				
@@ -311,28 +343,40 @@ function compute_scores(mydata,description,input1){
 				};
 				if (!(bloqued)){
 					arbre_non_bloque.push(i);
-					scores.push(score/sum_weights);
+					scores.push(score);
+					
 				}else{
 					arbre_bloque.push(i);
 				}
+				
+
 
 			}
+			
             if (arbre_non_bloque.length==0 ){
 				return([])
 			}else{
 				let resultat=convertToObj(arbre_non_bloque,scores);
 				return (sort_object(resultat,mydata));
+				
 			}
 			
 		};
 
-var mydata = require('./ex.json');
+var mydata = require('./data/arbres.json');
+
+
+
+//var description=require('./data/filtres.json');
+var description=require('./data/filtres.json');
+
+
 var input1 = require('./input.json');
-var description=require('./description.json');
-//console.log(compute_scores(mydata,description,input1))
+
 
 
 module.exports = compute_scores;
+//console.log(compute_scores(mydata,description,input1))
 
 
 

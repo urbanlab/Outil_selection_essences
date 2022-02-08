@@ -180,7 +180,7 @@ app.get("/data/refresh", (req,res)=>{
         gsheet.getData(gsheet.client, `'${config.filter_spreadsheet}'!${config.filter_column_offset}${config.filter_row_offset}:${lastColumn}`)
         .then((value)=>{
             liste_criteres=[];
-            for (let i = 1; i < value[0].length; i++) {
+            for (let i = 0; i < value[0].length; i++) {
                 if (value[2][i] == 'TRUE'){
                     var json = {
                         nom: value[0][i],

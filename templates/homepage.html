@@ -432,7 +432,7 @@
 
     for (let i = 0; i < liste_criteres.length; i++) {
       critere = liste_criteres[i]
-      if (critere.importance=="Bloquant"){
+      if ((critere.importance=="Bloquant" )||(critere.importance=="Bloquant+")){
         liste_criteres_bloquant.push(critere)
       }
       else if (critere.importance=="Important"){
