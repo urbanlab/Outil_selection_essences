@@ -8,6 +8,10 @@ const fs = require('fs');
 const path=require('path');
 const compute_scores = require('./function1.js');
 const image_updater = require('./image-updater/gdrive.js');
+const image_downloader = require('image-downloader');
+const { resolve } = require('path');
+const xss = require('xss');
+const { deleteFiles } = require('./utils');
 //-------------------------------------------------------------------------------------------------------------------------
 //-------------------------------------------- Paramétrages de base -------------------------------------------------------
 //-------------------------------------------------------------------------------------------------------------------------
@@ -21,6 +25,20 @@ app.use("/assets", express.static(path.join(__dirname, "/assets")));
 app.get('/', (req, res) => {
     res.status(200).sendFile(__dirname + '/templates/homepage.html');
 });
+
+app.get("/image/:id", (req, res)=>{
+    fs.readdir('./assets/images', (err, files)=>{
+        filtered = files.filter(x=>{
+            return x.split('.')[0]==xss(req.params.id)
+        })
+        if(filtered.length==0){
+            res.status(404).send()
+        }
+        else{
+            res.sendFile(path.join(__dirname,`/assets/images/${filtered[0]}`))
+        }
+    })
+})
 
 app.get('/recherche', (req, res) => {
     res.status(200).sendFile(__dirname + '/templates/recherche.html');
@@ -241,10 +259,54 @@ app.get("/data/refresh", (req,res)=>{
         res.status(500).send('Erreur Sauvegarde des filtres')
     })
 
-    const imagePromise = image_updater()
-    Promise.all([arbresPromise, legendesPromise, filtresPromise, imagePromise])
+    Promise.all([arbresPromise, legendesPromise, filtresPromise])
     .then((values)=>{
         res.send("Données rafraichies")
+    })
+})
+
+app.get('/images/refresh', (req, res)=>{
+    // A faire : vider le dossier des images avant
+    image_updater.refreshPictures(function(){
+        fs.readdir('./assets/images', (err, files)=>{
+            files = files.map(file=>`./assets/images/${file}`)
+            utils.deleteFiles(files, ()=>{
+                const arbresPromise = gsheet.getData(gsheet.client, `'${config.data_spreadsheet}'!${config.data_column_offset}${config.data_column_names_row}:${config.data_column_names_row}`)
+                arbresPromise.then((colnames)=>{
+                    ncols = colnames[0].length+utils.letterToColumn(config.data_column_offset)-1
+                    lastColumn = utils.columnToLetter(ncols)
+                    gsheet.getData(gsheet.client, `'${config.data_spreadsheet}'!${config.data_column_offset}${config.data_start_row}:${lastColumn}`)
+                    .then((values)=>{
+                        let response = []
+                        console.log("processing data")
+                        const processData = async (cb)=>{
+                            for (let i = 0; i < values.length; i++) {
+                                console.log(i)
+                                let val = {}
+                                for(let j=0; j<ncols-1; j++){
+                                    val[colnames[0][j]]=values[i][j]
+                                }
+                                response.push(val)
+                                const image_id = val[config.image_id_column]
+                                if(image_id.trim() != "" && image_id.trim() != "-"){
+                                    await image_updater.downloadImages(image_id)
+                                }
+                            }
+                            fs.writeFile('./data/arbres.json', JSON.stringify(response), (err)=>{
+                                if(err) throw err
+                                cb()
+                            })
+                        }
+                        return new Promise((resolve, reject)=>{
+                            processData(resolve)
+                        })
+                    })
+                    .then(()=>{
+                        res.send("images mises à jour")
+                    })
+                })
+            })
+        })
     })
 })
 module.exports = app;

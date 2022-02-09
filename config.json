@@ -8,5 +8,6 @@
     "filter_spreadsheet": "Paramétrages critères",
     "filter_column_offset": "B",
     "filter_row_offset": "2",
-    "legendes_spreadsheet": "Notice des légendes"
+    "legendes_spreadsheet": "Notice des légendes",
+    "image_id_column": "Image Id"
 }
