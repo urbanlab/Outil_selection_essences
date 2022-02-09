@@ -38,7 +38,7 @@ app.get('/styles/style_recherche.css', (req, res) => {
     res.status(200).sendFile(__dirname + '/styles/style_recherche.css');
 });
 
-<<<<<<< HEAD
+
 app.get('/styles/style_comparaison.css', (req, res) => {
     res.status(200).sendFile(__dirname + '/styles/style_comparaison.css');
 });
@@ -51,8 +51,7 @@ app.post('/update_filtres', (req, res) => {
     res.status(200).send(result_tri);
 });
 
-=======
->>>>>>> 949160689fe887fea98f8fb82bf1975c04a5a013
+
 // ========================== Filtres =============================
 app.get('/data/filtres', (req, res)=>{
     fs.readFile('./data/filtres.json', (err, value)=>{
