@@ -11,6 +11,7 @@
   <h1 id="titre_page">Selection d'essence d'arbre</h1>
   <nav id="nav_pages">
     <a href="/recherche">Rechercher un arbre</a>
+    <a href="/comparaison">Comparer deux arbres</a>
   </nav>
 </header>
 
@@ -31,7 +32,6 @@
 
     </table>
     <button id="popin_close" type="button" name="button" onclick="cacher_popin()">&times</button>
-    </button>
   </div>
 </div>
 
@@ -44,7 +44,7 @@
 <section id='arbres'>
   <nav id="bouton_pages">
     <button type="button" id="bouton_precedent" onclick="changer_page('precedent')">&#x2B05</button>
-    <p id=indice_page>Page <span id="page_actuelle"></span>/<span id="nombre_pages"></span></p>
+    <p id=indice_page>Page <span id="page_actuelle">1</span>/<span id="nombre_pages"></span></p>
     <button type="button" id="bouton_suivant" onclick="changer_page('suivant')">&#x27A1</button>
   </nav>
 </section>
@@ -73,7 +73,6 @@
   xhttp_filtres.send();
 
   xhttp_filtres.onload = function () {
-      console.log(JSON.parse(xhttp_filtres.responseText));
       const data = tri(JSON.parse(xhttp_filtres.responseText));
       critere1 = data[0];
       for (let i = 0; i < data.length; i++) {
@@ -87,56 +86,27 @@
       }
   }
 
-  var xhttp_boutons = new XMLHttpRequest();
-  xhttp_boutons.open('GET', '/data/arbres');
-  xhttp_boutons.setRequestHeader('Content-type', 'application/json');
-  xhttp_boutons.send();
 
-  xhttp_boutons.onload = function () {
-    const tous_les_arbres = JSON.parse(xhttp_boutons.responseText);
-    const nb_pages = Math.ceil(tous_les_arbres.length/10);
-    document.getElementById('nombre_pages').innerHTML = nb_pages;
-  }
-
-
-
-
-  var xhttp_arbres = new XMLHttpRequest();
-  xhttp_arbres.open('GET', '/data/arbres?page=1');
-  xhttp_arbres.setRequestHeader('Content-type', 'application/json');
-  xhttp_arbres.send();
-
-  xhttp_arbres.onload = function () {
-    const arbres = JSON.parse(xhttp_arbres.responseText);
-    update_affichage_arbres(arbres);
-    document.getElementById('page_actuelle').innerHTML = 1;
-  }
+  update_resultats(1);
 
 
   function changer_page(sens) {
     var page_actuelle = document.getElementById('page_actuelle');
     var nombre_pages = document.getElementById('nombre_pages');
+    var numero_page =parseInt(page_actuelle.innerHTML);
     if (sens=='suivant' && nombre_pages.innerHTML!=page_actuelle.innerHTML) {
-      page_actuelle.innerHTML=parseInt(page_actuelle.innerHTML)+1;
+      numero_page++;
+      page_actuelle.innerHTML=numero_page;
     } else if(sens=='precedent' && page_actuelle.innerHTML!='1') {
-      page_actuelle.innerHTML=parseInt(page_actuelle.innerHTML)-1;
-    }
-    var xhttp_page_arbres = new XMLHttpRequest();
-
-    xhttp_page_arbres.open('GET', '/data/arbres?page='+page_actuelle.innerHTML);
-    xhttp_page_arbres.setRequestHeader('Content-type', 'application/json');
-    xhttp_page_arbres.send();
-
-    xhttp_page_arbres.onload = function () {
-      const arbres = JSON.parse(xhttp_page_arbres.responseText);
-      console.log(arbres);
-      update_affichage_arbres(arbres);
+      numero_page--;
+      page_actuelle.innerHTML=numero_page;
     }
 
+    update_resultats(numero_page);
 
   }
 
-  
+
   function update_affichage_arbres(arbres) {
     var div = document.getElementById('arbres');
     var cloneArbres = div.cloneNode(true);
@@ -167,7 +137,7 @@
     var select = document.createElement('select');
     select.setAttribute('name', critere.nom);
     select.setAttribute('id', critere.nom);
-    select.addEventListener('change', update_resultats);
+    select.addEventListener('change', function() {update_resultats(1)});
 
     var option = document.createElement('option');
     option.setAttribute('value','');
@@ -213,7 +183,7 @@
       input.setAttribute('id', reponse.texte);
       input.setAttribute('name', reponse.texte);
       input.setAttribute('value', reponse.valeur);
-      input.addEventListener('change', update_resultats);
+      input.addEventListener('change', function() {update_resultats(1)});
 
       var label = document.createElement('label');
       label.setAttribute('for', reponse.texte);
@@ -233,15 +203,12 @@
     const nom_latin = arbre['Genre'].trim() + ' ' + arbre['Espèce'].trim();
     var article = document.createElement('article');
     article.setAttribute('id', 'article '+nom_latin);
-    article.addEventListener('mouseenter', montrer_mots_cles);
-    article.addEventListener('mouseleave', cacher_mots_cles);
     article.addEventListener('click', afficher_popin);
     article.classList.add('info_arbre');
 
     var p = document.createElement('p');
-    p.classList.add('mot-cle');
-    p.style.visibility='hidden';
     p.innerHTML = mots_cles(arbre);
+    p.setAttribute('id', 'mot-cle');
     article.appendChild(p);
 
     var div = document.createElement('div');
@@ -285,7 +252,7 @@
     }
   }
 
-  function update_resultats(){
+  function update_resultats(page){
     var checkboxes = document.getElementsByTagName('input');
     var selects = document.getElementsByTagName('select');
 
@@ -298,14 +265,16 @@
     }
 
     var xhttp = new XMLHttpRequest();
-    xhttp.open('POST', '/update_filtres');
+    xhttp.open('POST', '/data/arbres?page='+page);
     xhttp.setRequestHeader('Content-type', 'application/json');
     xhttp.send(JSON.stringify(json_filtres));
+    console.log(json_filtres);
 
     xhttp.onload = function() {
-      arbres_tries = JSON.parse(xhttp.responseText);
-      console.log(JSON.parse(xhttp.responseText));
+      nb_arbres_tries = JSON.parse(xhttp.responseText).nb_arbres_tries;
+      arbres_tries = JSON.parse(xhttp.responseText).response;
       update_affichage_arbres(arbres_tries);
+      document.getElementById('nombre_pages').innerHTML=Math.ceil(parseInt(nb_arbres_tries)/10);
     }
   }
 
@@ -323,16 +292,12 @@
     if (arbre['Pollen et potentiel allergisant']=="Fort"){
       mots_clé.push("allergène");
     }
-    return(mots_clé.join(", "));
+    return(mots_clé.join("<br>"));
   }
 
-  function montrer_mots_cles(event){
-    event.currentTarget.children[0].style.visibility = 'visible';
-  }
+ 
 
-  function cacher_mots_cles(event){
-    event.currentTarget.children[0].style.visibility = 'hidden';
-  }
+  
 
   function afficher_popin(event){
     var xhttp_popin = new XMLHttpRequest();
@@ -343,7 +308,6 @@
     xhttp_popin.onload = function() {
       var popin = document.getElementById('popin');
       arbre_popin = JSON.parse(xhttp_popin.responseText)[0];
-      console.log(arbre_popin);
       var popin_photo = document.getElementById('popin_photo');
       popin_photo.setAttribute("src", (arbre_popin["Image Id"]!='') ? `/image/${arbre_popin["Image Id"]}` : '/assets/arbre_template.png');
 
@@ -365,7 +329,6 @@
       xhttp_legende.send()
 
       xhttp_legende.onload = function() {
-        console.log(JSON.parse(xhttp_legende.responseText));
         legendes = JSON.parse(xhttp_legende.responseText);
         for (var i = 0; i < colonnes.length; i++) {
           if (colonnes[i]!='Nom commun' && colonnes[i]!='Genre' && colonnes[i]!='Espèce' && colonnes[i]!='Image Id') {
@@ -405,8 +368,8 @@
         popin.style.visibility = 'visible';
         popin.style.opacity = "100%";
 
-        let favori_icon = document.getElementById("etoile_favori")
-        const fav = JSON.parse(localStorage.getItem("arbres_favori"))
+        let favori_icon = document.getElementById("etoile_favori");
+        const fav = JSON.parse(localStorage.getItem("arbres_favori"));
         if(fav && fav.indexOf(arbre_popin['Genre'] + ' ' + arbre_popin['Espèce'])>-1){
           favori_icon.style.filter = "invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%)"
         }
@@ -450,7 +413,6 @@
       }
     }
     liste_criteres_triee = liste_criteres_bloquant.concat(liste_criteres_important, liste_criteres_peu_important);
-    console.log(liste_criteres_triee);
     return(liste_criteres_triee);
   }
 
@@ -475,8 +437,7 @@
 
   function update_favori(){
     if(localStorage.getItem("cookies-accepted")){
-      const nom = document.getElementById('popin_nom_latin').innerText
-      console.log(nom)
+      const nom = document.getElementById('popin_nom_latin').innerText;
       if(!localStorage.getItem("arbres_favori")){
         localStorage.setItem("arbres_favori", JSON.stringify([nom]))
         document.getElementById("etoile_favori").style.filter="invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%)"
@@ -492,7 +453,6 @@
           fav.push(nom)
           document.getElementById("etoile_favori").style.filter="invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%)"
         }
-        console.log(fav)
         localStorage.setItem("arbres_favori", JSON.stringify(fav))
       }
     }

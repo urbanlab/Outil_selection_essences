@@ -44,12 +44,21 @@ app.get('/recherche', (req, res) => {
     res.status(200).sendFile(__dirname + '/templates/recherche.html');
 });
 
+app.get('/comparaison', (req, res) => {
+    res.status(200).sendFile(__dirname + '/templates/comparaison.html');
+});
+
 app.get('/styles/style.css', (req, res) => {
     res.status(200).sendFile(__dirname + '/styles/style.css');
 });
 
 app.get('/styles/style_recherche.css', (req, res) => {
     res.status(200).sendFile(__dirname + '/styles/style_recherche.css');
+});
+
+
+app.get('/styles/style_comparaison.css', (req, res) => {
+    res.status(200).sendFile(__dirname + '/styles/style_comparaison.css');
 });
 
 app.post('/update_filtres', (req, res) => {
@@ -59,6 +68,7 @@ app.post('/update_filtres', (req, res) => {
     result_tri = compute_scores(mydata,description,req.body);
     res.status(200).send(result_tri);
 });
+
 
 // ========================== Filtres =============================
 app.get('/data/filtres', (req, res)=>{
@@ -73,6 +83,26 @@ app.get('/data/filtres', (req, res)=>{
 // ===================================================
 
 // ==================== /data/arbres =================
+
+app.post('/data/arbres', (req, res) => {
+    const param_page = req.query.page;
+    mydata=require('./data/arbres.json');
+    description=require('./data/filtres.json');
+    result_tri = compute_scores(mydata,description,req.body);
+    response = [];
+
+    const page = (param_page) ? parseInt(param_page) : 1;
+
+    for (let i = (page-1)*10; i < Math.min(page*10, result_tri.length); i++) {
+        let arbre = result_tri[i]
+        response.push(arbre);
+    }
+    var json = {nb_arbres_tries : result_tri.length,
+                response: response};
+    res.status(200).send(json);
+});
+
+
 app.get('/data/arbres', (req, res)=>{
     const param_id = req.query.id;
     const param_page = req.query.page;
