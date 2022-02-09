@@ -1,3 +1,5 @@
+const fs = require('fs')
+
 function columnToLetter(column)
 {
   var temp, letter = '';
@@ -39,7 +41,8 @@ function binSearch(arr, e, comp=(a,b)=>{
     return -1
   }
 }
-module.exports ={
+
+module.exports = {
     columnToLetter: columnToLetter,
     binSearch: binSearch
 }

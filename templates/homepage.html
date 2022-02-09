@@ -345,7 +345,7 @@
       arbre_popin = JSON.parse(xhttp_popin.responseText)[0];
       console.log(arbre_popin);
       var popin_photo = document.getElementById('popin_photo');
-      popin_photo.setAttribute("src", (arbre_popin["Image Id"]!='') ? 'https://drive.google.com/uc?export=view&id='+arbre_popin["Image Id"] : '/assets/arbre_template.png');
+      popin_photo.setAttribute("src", (arbre_popin["Image Id"]!='') ? `/image/${arbre_popin["Image Id"]}` : '/assets/arbre_template.png');
 
       var popin_nom_latin = document.getElementById('popin_nom_latin');
       popin_nom_latin.innerHTML= arbre_popin['Genre'] + ' ' + arbre_popin['Espèce'] ;

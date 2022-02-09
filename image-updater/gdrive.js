@@ -2,6 +2,7 @@ const {google} = require('googleapis')
 const keys = require('./image-updater-keys.json')
 const fs = require('fs')
 const config = require('./config.json')
+const mime = require('./mime_type.json')
 const utils = require('./utils')
 const async = require('async')
 
@@ -19,7 +20,7 @@ function getImages(cl, pageToken){
         auth: cl
     })
     const opt = {
-        fields: 'nextPageToken, files(parents, name, id)',
+        fields: 'nextPageToken, files(parents, name, id, mimeType)',
         corpora: 'user',
         drive: 'image',
         pageSize: 100,
@@ -95,80 +96,121 @@ function getData(cl, range){
     return promise
 }
 
-function main(pageToken){
-    const imagePromise = getImages(client, pageToken)
-    imagePromise
-    .then((value)=>{
-        images = value[0]
-        pageToken = value[1]
-        getData(client, `'${config.data_spreadsheet}'!${config.data_row_offset}${config.data_column_names_row}:${config.data_column_names_row}`)
-        .then((columns)=>{
-            const imageColumnIndex = columns[0].indexOf(config.image_column_name)
-            const genreColumnIndex = columns[0].indexOf(config.genre_column_name)
-            const especeColumnIndex = columns[0].indexOf(config.espece_column_name)
+function main(pageToken, callback){
+    return new Promise((resolve, reject)=>{
+        getImages(client, pageToken)
+        .then((value)=>{
+            images = value[0]
+            pageToken = value[1]
+            getData(client, `'${config.data_spreadsheet}'!${config.data_row_offset}${config.data_column_names_row}:${config.data_column_names_row}`)
+            .then((columns)=>{
+                const imageColumnIndex = columns[0].indexOf(config.image_column_name)
+                const genreColumnIndex = columns[0].indexOf(config.genre_column_name)
+                const especeColumnIndex = columns[0].indexOf(config.espece_column_name)
 
-            if(imageColumnIndex==-1){
-                throw "Colonne Image non trouvée, vérifier la configuration"
-            }
-            const lastColumn = utils.columnToLetter(columns[0].length)
-            getData(client, `${config.data_spreadsheet}!${config.data_column_offset}${config.data_start_row}:${lastColumn}`)
-            .then((data)=>{
-                const compfunc = (a,b)=>{
-                    if(a.name==b.name) return 0
-                    else if(a.name<b.name) return -1
-                    else if(a.name>b.name) return 1 
+                if(imageColumnIndex==-1){
+                    throw "Colonne Image non trouvée, vérifier la configuration"
                 }
-                images = images.sort(compfunc)
-                for(let i=0; i<data.length; i++){
-                    let name = `${data[i][genreColumnIndex].trim()}_${data[i][especeColumnIndex].trim()}`
-                    treeIndex = utils.binSearch(images, {name:name}, compfunc)
-                    if(treeIndex!=-1){
-                        data[i][imageColumnIndex] = images[treeIndex]["id"]
+                const lastColumn = utils.columnToLetter(columns[0].length)
+                getData(client, `${config.data_spreadsheet}!${config.data_column_offset}${config.data_start_row}:${lastColumn}`)
+                .then((data)=>{
+                    const compfunc = (a,b)=>{
+                        if(a.name==b.name) return 0
+                        else if(a.name<b.name) return -1
+                        else if(a.name>b.name) return 1 
                     }
-                }
-                imageIndexes = []
-                for(let i=0; i<data.length; i++){
-                    imageIndexes.push([data[i][imageColumnIndex]])
-                }
-                updateImages(client, imageIndexes, `${utils.columnToLetter(imageColumnIndex+1)}${config.data_start_row}:${utils.columnToLetter(imageColumnIndex+1)}`)
-                .then((res)=>{
-                    if(pageToken){
-                        main(pageToken)
+                    images = images.sort(compfunc)
+                    for(let i=0; i<data.length; i++){
+                        let name = `${data[i][genreColumnIndex].trim()}_${data[i][especeColumnIndex].trim()}`
+                        treeIndex = utils.binSearch(images, {name:name}, compfunc)
+                        if(treeIndex!=-1){
+                            data[i][imageColumnIndex] = images[treeIndex]["id"]
+                        }
                     }
-                    else{
-                        console.log("Mise à jour terminée")
+                    imageIndexes = []
+                    for(let i=0; i<data.length; i++){
+                        imageIndexes.push([data[i][imageColumnIndex]])
                     }
+                    updateImages(client, imageIndexes, `${utils.columnToLetter(imageColumnIndex+1)}${config.data_start_row}:${utils.columnToLetter(imageColumnIndex+1)}`)
+                    .then((res)=>{
+                        if(pageToken){
+                            main(pageToken, callback)
+                        }
+                        else{
+                            console.log("Mise à jour terminée")
+                            resolve(2)
+                        }
+                    })
+                })
+                .catch((err)=>{
+                    console.log(err)
                 })
             })
             .catch((err)=>{
                 console.log(err)
             })
         })
-        .catch((err)=>{
-            console.log(err)
-        })
     })
-    .catch((err)=>{
-        console.log(err)
+    .then((res)=>{
+        callback()
     })
-    return imagePromise
 }
 
-function refreshPictures(){
-    const refreshPromise = new Promise((resolve, reject)=>{
-        client.authorize(function(err, token){
-            if(err){
-                console.log(err)
-            }
-            else{
-                let prom = main(null) 
-                prom.then(()=>{
+function refreshPictures(callback){
+    client.authorize(function(err, token){
+        if(err){
+            console.log(err)
+        }
+        else{
+            main(null, callback) 
+        }
+    })
+}
+
+function main_images(cl, fileId){
+    const gdapi = google.drive({
+        version: 'v3',
+        auth: cl
+    })
+    return new Promise(resolve=>{
+        gdapi.files.get({
+            fileId: fileId,
+            alt: 'media'
+        }, 
+        {responseType: 'stream'})
+        .then(res=>{
+            const mimeType = res.headers['content-type']
+            if(mime[mimeType]){
+                let dest = fs.createWriteStream(`./assets/images/${fileId}.${mime[mimeType]}`)
+                let progress = 0
+                console.log(`downloading ${fileId}`)
+                res.data 
+                .on('error', err => {
+                console.error('Error downloading file.');
+                })  
+                .on('end', ()=>{
+                    console.log(mimeType)
+                    console.log(`Downloaded as ./assets/images/${fileId}.${mime[mimeType]}`)
                     resolve()
                 })
+                .pipe(dest);
             }
         })
     })
-    return refreshPromise
 }
 
-module.exports = refreshPictures
+function download_images(fileId){
+    return new Promise((resolve, reject)=>{
+        client.authorize(function(err, token){
+            main_images(client, fileId)
+            .then(()=>{
+                resolve()
+            })
+        })
+    })
+}
+
+module.exports = {
+    refreshPictures: refreshPictures,
+    downloadImages: download_images
+}
