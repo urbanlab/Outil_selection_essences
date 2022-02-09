@@ -1,0 +1,155 @@
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Outil de sélection d'essences</title>
+    <link rel="stylesheet" type="text/css" href="/styles/style_comparaison.css">
+    <link href='https://fonts.googleapis.com/css?family=Eczar' rel='stylesheet'>
+  </head>
+  
+  <header>
+    <h1 id="titre_page">Comparer deux arbres</h1>
+    <nav id="nav_pages">
+      <a href="/">Trouver un arbre approprié</a>
+    </nav>
+  </header>
+
+
+  <nav id="barre_recherche">
+    <label for="recherche_arbre">Rechercher un arbre : </label>
+    <input type="text" id="recherche_arbre" list="all_arbres" name="recherche_arbre" size="50" placeholder="Nom de l'arbre" value="">
+    <datalist id="all_arbres">
+    </datalist>
+    <label for="recherche_arbre2">Rechercher un arbre : </label>
+    <input type="text" id="recherche_arbre2" list="all_arbres" name="recherche_arbre" size="50" placeholder="Nom de l'arbre" value="">
+  </nav>
+
+  <section>
+    <table id="tableau_compare">
+        
+    </table>
+  </section>
+
+  <script>
+        var caracteristiques = [];
+        var arbres = [];
+        var legendes = [];
+
+        var xhttp_arbres = new XMLHttpRequest();
+        xhttp_arbres.open('GET', '/data/arbres');
+        xhttp_arbres.setRequestHeader('Content-type', 'application/json');
+        xhttp_arbres.send();
+
+        xhttp_arbres.onload = function () {
+            arbres = JSON.parse(xhttp_arbres.responseText);
+            var compare_list = document.getElementById('all_arbres');
+            for (var i = 0; i < arbres.length; i++) {
+                var option = document.createElement('option');
+                option.value = arbres[i]['Nom commun'];
+                compare_list.appendChild(option);
+            }
+        }
+
+        var xhttp_legendes = new XMLHttpRequest();
+        xhttp_legendes.open('GET', '/data/legendes');
+        xhttp_legendes.setRequestHeader('Content-type', 'application/json');
+        xhttp_legendes.send();
+
+        xhttp_legendes.onload = function () {
+            legendes = JSON.parse(xhttp_legendes.responseText);
+        }
+
+        var xhttp_legende = new XMLHttpRequest();
+        xhttp_legende.open('GET', `/data/arbres?page=1`);
+        xhttp_legende.setRequestHeader('Content-type', 'application/json');
+        xhttp_legende.send()
+
+        xhttp_legende.onload = function() {
+            arbres_result = JSON.parse(xhttp_legende.responseText);
+            const colonnes = Object.keys(arbres_result[0]);
+            for (var i = 0; i < colonnes.length; i++) {
+                if (colonnes[i]!='Nom commun' && colonnes[i]!='Image Id') {
+                    caracteristiques.push(colonnes[i]);
+
+                    var tr_titre = document.createElement('tr');
+                    var th = document.createElement('th');
+                    th.setAttribute('colspan', '2');
+                    th.style.border = 'solid';
+                    th.style.borderColor = '#BB8271';
+                    th.innerHTML=colonnes[i];
+                    tr_titre.appendChild(th);
+
+
+                    var tr_donnees = document.createElement('tr');
+                    var col1 = document.createElement('td');
+                    col1.setAttribute('id', colonnes[i]+'_arbre1');
+                    col1.style.width = '30%';
+                    col1.style.textAlign = 'center';
+                    col1.style.color = '#294F8D';
+                    col1.style.backgroundColor = '#FCE5D2';
+                    col1.style.borderColor = '#FCE5D2';
+                    col1.style.marginLeft = '20%';
+                    col1.style.marginRight = '20%';
+                    
+
+                    var col2 = document.createElement('td');
+                    col2.setAttribute('id', colonnes[i]+'_arbre2');
+                    col2.style.width = '30%';
+                    col2.style.textAlign = 'center';
+                    col2.style.color = '#294F8D';
+                    col2.style.backgroundColor = '#FCE5D2';
+                    col2.style.borderColor = '#FCE5D2';
+                    col2.style.marginLeft = '20%';
+                    col2.style.marginRight = '20%';
+
+                    tr_donnees.appendChild(col1);
+                    tr_donnees.appendChild(col2);
+                    tableau_compare.appendChild(tr_titre);
+                    tableau_compare.appendChild(tr_donnees);
+
+                }
+            }
+        }
+
+        function chercher_arbre(nom_commun) {
+            for (let i = 0; i < arbres.length; i++) {
+                if (nom_commun==arbres[i]['Nom commun']) {
+                    return(arbres[i]);
+                } 
+            }
+            return(undefined);
+        }
+
+        recherche_arbre.addEventListener('change', update_compare_arbre);
+        recherche_arbre2.addEventListener('change', update_compare_arbre);
+
+        function update_compare_arbre(event) {
+            console.log(event.currentTarget.id);
+            var nom_commun_arbre = event.currentTarget.value;
+            var arbre = chercher_arbre(nom_commun_arbre);
+            var num_colonne = (event.currentTarget.id=='recherche_arbre') ? 1: 2;
+            if (arbre){
+                for (let i = 0; i < caracteristiques.length; i++) {
+                    const id_elt = caracteristiques[i] + '_arbre' + num_colonne;
+                    var td = document.getElementById(id_elt);
+
+                    if (caracteristiques[i] == "Indice de potentiel d'adaptation") {
+                        var keys_adaptation = Object.keys(legendes[caracteristiques[i]]["values"]);
+                        correspondance_legende = arbre[caracteristiques[i]].replace(',', '.');
+                        for (let j = 0; j < keys_adaptation.length; j++) {
+                            var condition = keys_adaptation[j].replace(',', '.');
+                            var boom = condition.split('<');
+                            if (parseFloat(boom[0])<=parseFloat(correspondance_legende) && parseFloat(correspondance_legende)<parseFloat(boom[2])) {
+                                td.innerHTML = legendes[caracteristiques[i]]["values"][keys_adaptation[j]];
+                            }
+                        }
+                    } else {
+                        correspondance_legende = arbre[caracteristiques[i]];
+                        td.innerHTML = (legendes[caracteristiques[i]]) ? legendes[caracteristiques[i]]["values"][correspondance_legende]: correspondance_legende;
+                    }
+                }
+            }
+            
+        }
+
+  </script>
