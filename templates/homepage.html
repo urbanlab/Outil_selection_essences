@@ -225,7 +225,7 @@
 
     article.appendChild(div);
     if (arbre["Image Id"]!=""){
-      article.style.backgroundImage = 'url(https://drive.google.com/uc?export=view&id='+arbre["Image Id"]+')';
+      article.style.backgroundImage = `url(/image/${arbre["Image Id"]})`;
     }
 
     section.appendChild(article);
