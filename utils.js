@@ -69,5 +69,6 @@ function deleteFiles(files, callback){
 module.exports ={
     columnToLetter: columnToLetter,
     letterToColumn: letterToColumn,
-    deleteFiles: deleteFiles
+    deleteFiles: deleteFiles,
+    binSearch: binSearch
 }
