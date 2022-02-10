@@ -137,8 +137,8 @@ function main(pageToken, callback){
                             main(pageToken, callback)
                         }
                         else{
-                            console.log("Mise à jour terminée")
-                            resolve(2)
+                            console.log("Mise à jour du fichier google sheet terminée")
+                            resolve()
                         }
                     })
                 })
@@ -183,14 +183,12 @@ function main_images(cl, fileId){
             if(mime[mimeType]){
                 let dest = fs.createWriteStream(`./assets/images/${fileId}.${mime[mimeType]}`)
                 let progress = 0
-                console.log(`downloading ${fileId}`)
                 res.data 
                 .on('error', err => {
-                console.error('Error downloading file.');
+                console.error(`Erreur téléchargement image ${fileId}`);
                 })  
                 .on('end', ()=>{
-                    console.log(mimeType)
-                    console.log(`Downloaded as ./assets/images/${fileId}.${mime[mimeType]}`)
+                    console.log(`Téléchargée sous ./assets/images/${fileId}.${mime[mimeType]}`)
                     resolve()
                 })
                 .pipe(dest);
@@ -210,6 +208,7 @@ function download_images(fileId){
     })
 }
 
+// download_images('1znBl6OwFq0MJpyUNkZ69txqnbNz3jbh2')
 module.exports = {
     refreshPictures: refreshPictures,
     downloadImages: download_images
