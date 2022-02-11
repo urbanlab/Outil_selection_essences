@@ -1,5 +1,5 @@
 const {google} = require('googleapis')
-const keys = require('./image-updater-keys.json')
+const keys = require('./image-updater/image-updater-keys.json')
 const fs = require('fs')
 const config = require('./config.json')
 const mime = require('./mime_type.json')
@@ -63,7 +63,7 @@ function updateImages(cl, values, rangeId){
             range:range,
             resource: resource
         }
-    
+
         gsapi.spreadsheets.values.update(opt, (err, res)=>{
             if(err){
                 reject(err)
@@ -117,7 +117,7 @@ function main(pageToken, callback){
                     const compfunc = (a,b)=>{
                         if(a.name==b.name) return 0
                         else if(a.name<b.name) return -1
-                        else if(a.name>b.name) return 1 
+                        else if(a.name>b.name) return 1
                     }
                     images = images.sort(compfunc)
                     for(let i=0; i<data.length; i++){
@@ -137,8 +137,8 @@ function main(pageToken, callback){
                             main(pageToken, callback)
                         }
                         else{
-                            console.log("Mise à jour terminée")
-                            resolve(2)
+                            console.log("Mise à jour du fichier google sheet terminée")
+                            resolve()
                         }
                     })
                 })
@@ -162,7 +162,7 @@ function refreshPictures(callback){
             console.log(err)
         }
         else{
-            main(null, callback) 
+            main(null, callback)
         }
     })
 }
@@ -176,21 +176,19 @@ function main_images(cl, fileId){
         gdapi.files.get({
             fileId: fileId,
             alt: 'media'
-        }, 
+        },
         {responseType: 'stream'})
         .then(res=>{
             const mimeType = res.headers['content-type']
             if(mime[mimeType]){
                 let dest = fs.createWriteStream(`./assets/images/${fileId}.${mime[mimeType]}`)
                 let progress = 0
-                console.log(`downloading ${fileId}`)
-                res.data 
+                res.data
                 .on('error', err => {
-                console.error('Error downloading file.');
-                })  
+                console.error(`Erreur téléchargement image ${fileId}`);
+                })
                 .on('end', ()=>{
-                    console.log(mimeType)
-                    console.log(`Downloaded as ./assets/images/${fileId}.${mime[mimeType]}`)
+                    console.log(`Téléchargée sous ./assets/images/${fileId}.${mime[mimeType]}`)
                     resolve()
                 })
                 .pipe(dest);
@@ -210,6 +208,7 @@ function download_images(fileId){
     })
 }
 
+// download_images('1znBl6OwFq0MJpyUNkZ69txqnbNz3jbh2')
 module.exports = {
     refreshPictures: refreshPictures,
     downloadImages: download_images

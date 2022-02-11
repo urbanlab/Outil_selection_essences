@@ -10,7 +10,7 @@
   <header>
     <h1 id="titre_page">Comparer deux arbres</h1>
     <nav id="nav_pages">
-      <a href="/">Trouver un arbre approprié</a>
+      <a href="/">Retour à la page d'accueil</a>
     </nav>
   </header>
 
@@ -24,7 +24,7 @@
     <input type="text" id="recherche_arbre2" list="all_arbres" name="recherche_arbre" size="50" placeholder="Nom de l'arbre" value="">
   </nav>
 
-  <section>
+  <section id="tableau_container">
     <table id="tableau_compare">
         
     </table>
@@ -74,8 +74,10 @@
                     var tr_titre = document.createElement('tr');
                     var th = document.createElement('th');
                     th.setAttribute('colspan', '2');
-                    th.style.border = 'solid';
-                    th.style.borderColor = '#BB8271';
+                    th.style.borderBottom = 'solid grey';
+                    th.style.paddingBottom = '0.5em';
+                    /*th.style.border = 'solid';
+                    th.style.borderColor = '#BB8271';*/
                     th.innerHTML=colonnes[i];
                     tr_titre.appendChild(th);
 
@@ -83,24 +85,27 @@
                     var tr_donnees = document.createElement('tr');
                     var col1 = document.createElement('td');
                     col1.setAttribute('id', colonnes[i]+'_arbre1');
-                    col1.style.width = '30%';
+                    col1.style.width = '50%';
+                    col1.style.paddingRight = '10%';
                     col1.style.textAlign = 'center';
                     col1.style.color = '#294F8D';
                     col1.style.backgroundColor = '#FCE5D2';
+                    /*col1.style.border = 'solid';*/
                     col1.style.borderColor = '#FCE5D2';
-                    col1.style.marginLeft = '20%';
-                    col1.style.marginRight = '20%';
+                    col1.innerHTML="-";
+                    col1.style.paddingBottom = '4em';
                     
 
                     var col2 = document.createElement('td');
                     col2.setAttribute('id', colonnes[i]+'_arbre2');
-                    col2.style.width = '30%';
+                    col2.style.width = '50%';
+                    col2.style.paddingLeft = '10%';
                     col2.style.textAlign = 'center';
                     col2.style.color = '#294F8D';
                     col2.style.backgroundColor = '#FCE5D2';
                     col2.style.borderColor = '#FCE5D2';
-                    col2.style.marginLeft = '20%';
-                    col2.style.marginRight = '20%';
+                    col2.innerHTML="-";
+                    col2.style.paddingBottom = '4em';
 
                     tr_donnees.appendChild(col1);
                     tr_donnees.appendChild(col2);

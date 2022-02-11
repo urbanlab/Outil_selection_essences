@@ -7,9 +7,7 @@ const config = require('./config.json');
 const fs = require('fs');
 const path=require('path');
 const compute_scores = require('./function1.js');
-const image_updater = require('./image-updater/gdrive.js');
-const image_downloader = require('image-downloader');
-const { resolve } = require('path');
+const image_updater = require('./gdrive.js');
 const xss = require('xss');
 const { deleteFiles } = require('./utils');
 
@@ -150,6 +148,7 @@ app.get("/secure/data/refresh", (req,res)=>{
             }
             fs.writeFile('./data/arbres.json', JSON.stringify(response), (err)=>{
                 if(err) throw err
+                console.log("Fin de mise à jour des données arbres")
             })
         })
     })
@@ -189,6 +188,7 @@ app.get("/secure/data/refresh", (req,res)=>{
         }
         fs.writeFile('./data/legendes.json', JSON.stringify(result), (err)=>{
             if(err) throw err
+            console.log("Fin de mise à jour des données légendes")
         })
     })
     .catch((err)=>{
@@ -228,6 +228,7 @@ app.get("/secure/data/refresh", (req,res)=>{
             }
             fs.writeFile('./data/filtres.json', JSON.stringify(liste_criteres), (err)=>{
                 if(err) throw err
+                console.log("Fin de mise à jour des données filtres")
             })
         })
     })
@@ -245,44 +246,57 @@ app.get('/secure/images/refresh', (req, res)=>{
     // A faire : vider le dossier des images avant
     image_updater.refreshPictures(function(){
         fs.readdir('./assets/images', (err, files)=>{
-            files = files.map(file=>`./assets/images/${file}`)
-            utils.deleteFiles(files, ()=>{
-                console.log("delete files");
-                const arbresPromise = gsheet.getData(gsheet.client, `'${config.data_spreadsheet}'!${config.data_column_offset}${config.data_column_names_row}:${config.data_column_names_row}`)
-                arbresPromise.then((colnames)=>{
-                    ncols = colnames[0].length+utils.letterToColumn(config.data_column_offset)-1
-                    lastColumn = utils.columnToLetter(ncols)
-                    gsheet.getData(gsheet.client, `'${config.data_spreadsheet}'!${config.data_column_offset}${config.data_start_row}:${lastColumn}`)
-                    .then((values)=>{
-                        let response = []
-                        console.log("processing data")
-                        const processData = async (cb)=>{
-                            for (let i = 0; i < values.length; i++) {
-                                console.log(i)
-                                let val = {}
-                                for(let j=0; j<ncols-1; j++){
-                                    val[colnames[0][j]]=values[i][j]
-                                }
-                                response.push(val)
-                                const image_id = val[config.image_id_column]
-                                if(image_id.trim() != "" && image_id.trim() != "-"){
-                                    await image_updater.downloadImages(image_id)
-                                }
+            files = files.sort()
+            // files = files.map(file=>`./assets/images/${file}`)
+            // utils.deleteFiles(files, ()=>{
+            const arbresPromise = gsheet.getData(gsheet.client, `'${config.data_spreadsheet}'!${config.data_column_offset}${config.data_column_names_row}:${config.data_column_names_row}`)
+            arbresPromise.then((colnames)=>{
+                ncols = colnames[0].length+utils.letterToColumn(config.data_column_offset)-1
+                lastColumn = utils.columnToLetter(ncols)
+                gsheet.getData(gsheet.client, `'${config.data_spreadsheet}'!${config.data_column_offset}${config.data_start_row}:${lastColumn}`)
+                .then((values)=>{
+                    let response = []
+                    const processData = async (cb)=>{
+                        for (let i = 0; i < values.length; i++) {
+                            let val = {}
+                            for(let j=0; j<ncols-1; j++){
+                                val[colnames[0][j]]=values[i][j]
                             }
+                            response.push(val)
+                            const compfunc = (a,b)=>{
+                                if(a==b.split('.')[0]) return 0
+                                else if(a<b.split('.')[0]) return -1
+                                else if(a>b.split('.')[0]) return 1
+                            }
+                            const image_id = val[config.image_id_column]
+                            const id_index = utils.binSearch(files, image_id, compfunc)
+                            if(image_id.trim() != "" && image_id.trim() != "-" && id_index == -1){
+                                console.log(`Téléchargement image ${image_id} (${i+1}/${values.length})`)
+                                await image_updater.downloadImages(image_id)
+                            }
+                            else if (id_index > -1){
+                                console.log(`Image ${image_id} existante (${i+1}/${values.length})`)
+                                files.splice(id_index, 1)
+                            }
+                        }
+                        files = files.map(file=>`./assets/images/${file}`)
+                        utils.deleteFiles(files, ()=>{
                             fs.writeFile('./data/arbres.json', JSON.stringify(response), (err)=>{
                                 if(err) throw err
                                 cb()
                             })
-                        }
-                        return new Promise((resolve, reject)=>{
-                            processData(resolve)
                         })
-                    })
-                    .then(()=>{
-                        res.send("images mises à jour")
+                    }
+                    return new Promise((resolve, reject)=>{
+                        processData(resolve)
                     })
                 })
+                .then(()=>{
+                    console.log("Fin de mise à jour des images")
+                    res.send("images mises à jour")
+                })
             })
+            // })
         })
     })
 });
