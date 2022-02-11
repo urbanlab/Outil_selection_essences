@@ -39,6 +39,8 @@
 <nav id="barre_recherche">
   <label for="recherche_arbre">Rechercher un arbre : </label>
   <input type="text" id="recherche_arbre" name="recherche_arbre" size="50" placeholder="Nom de l'arbre" value="">
+  <label for="favoris">Afficher mes favoris</label>
+  <input type="checkbox" id="favoris" name="favoris" value="favoris" onchange="afficher_favoris(event)">
 </nav>
 
 
@@ -274,6 +276,25 @@
 
   function click_hors_popin(event) {
     cacher_popin(event)
+  }
+
+  function afficher_favoris(event) {
+    if (event.currentTarget.checked === true) {
+      const id_arbres_favoris = JSON.parse(localStorage.getItem("arbres_favori"));
+      var arbres_favoris = [];
+      for (var i = 0; i < arbres.length; i++) {
+        for (var j = 0; j < id_arbres_favoris.length; j++) {
+          if (id_arbres_favoris[j] == arbres[i]['Genre'].trim() + ' ' + arbres[i]['Espèce'].trim()) {
+            arbres_favoris.push(arbres[i]);
+          }
+        }
+      }
+      update_affichage_arbres(arbres_favoris);
+    }
+    else{
+      update_affichage_arbres(arbres);
+    }
+
   }
 
 </script>

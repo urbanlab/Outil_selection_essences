@@ -12,6 +12,8 @@ const image_downloader = require('image-downloader');
 const { resolve } = require('path');
 const xss = require('xss');
 const { deleteFiles } = require('./utils');
+
+const password_update = 'baptiste';
 //-------------------------------------------------------------------------------------------------------------------------
 //-------------------------------------------- Paramétrages de base -------------------------------------------------------
 //-------------------------------------------------------------------------------------------------------------------------
@@ -19,12 +21,6 @@ const { deleteFiles } = require('./utils');
 app.use(bodyParser.json({
     extended: true
 }));
-
-app.use("/assets", express.static(path.join(__dirname, "/assets")));
-
-app.get('/', (req, res) => {
-    res.status(200).sendFile(__dirname + '/templates/homepage.html');
-});
 
 app.get("/image/:id", (req, res)=>{
     fs.readdir('./assets/images', (err, files)=>{
@@ -39,36 +35,6 @@ app.get("/image/:id", (req, res)=>{
         }
     })
 })
-
-app.get('/recherche', (req, res) => {
-    res.status(200).sendFile(__dirname + '/templates/recherche.html');
-});
-
-app.get('/comparaison', (req, res) => {
-    res.status(200).sendFile(__dirname + '/templates/comparaison.html');
-});
-
-app.get('/styles/style.css', (req, res) => {
-    res.status(200).sendFile(__dirname + '/styles/style.css');
-});
-
-app.get('/styles/style_recherche.css', (req, res) => {
-    res.status(200).sendFile(__dirname + '/styles/style_recherche.css');
-});
-
-
-app.get('/styles/style_comparaison.css', (req, res) => {
-    res.status(200).sendFile(__dirname + '/styles/style_comparaison.css');
-});
-
-app.post('/update_filtres', (req, res) => {
-    console.log(req.body);
-    mydata=require('./data/arbres.json');
-    description=require('./data/filtres.json');
-    result_tri = compute_scores(mydata,description,req.body);
-    res.status(200).send(result_tri);
-});
-
 
 // ========================== Filtres =============================
 app.get('/data/filtres', (req, res)=>{
@@ -156,7 +122,17 @@ app.get('/data/legendes', (req, res)=>{
 })
 // ================================================
 
-app.get("/data/refresh", (req,res)=>{
+app.use("/secure", (req, res, next) => {
+    password = xss(req.query.password);
+    if (password == password_update) {
+        next();
+    }
+    else{
+        res.status(403).send('Mot de passe incorrect. Veuillez réessayer.');
+    }
+})
+
+app.get("/secure/data/refresh", (req,res)=>{
     // ==== Données d'arbres ====
     const arbresPromise = gsheet.getData(gsheet.client, `'${config.data_spreadsheet}'!${config.data_column_offset}${config.data_column_names_row}:${config.data_column_names_row}`)
     arbresPromise.then((colnames)=>{
@@ -261,16 +237,17 @@ app.get("/data/refresh", (req,res)=>{
 
     Promise.all([arbresPromise, legendesPromise, filtresPromise])
     .then((values)=>{
-        res.send("Données rafraichies")
+        res.send("Update réussie");
     })
 })
 
-app.get('/images/refresh', (req, res)=>{
+app.get('/secure/images/refresh', (req, res)=>{
     // A faire : vider le dossier des images avant
     image_updater.refreshPictures(function(){
         fs.readdir('./assets/images', (err, files)=>{
             files = files.map(file=>`./assets/images/${file}`)
             utils.deleteFiles(files, ()=>{
+                console.log("delete files");
                 const arbresPromise = gsheet.getData(gsheet.client, `'${config.data_spreadsheet}'!${config.data_column_offset}${config.data_column_names_row}:${config.data_column_names_row}`)
                 arbresPromise.then((colnames)=>{
                     ncols = colnames[0].length+utils.letterToColumn(config.data_column_offset)-1
@@ -308,5 +285,20 @@ app.get('/images/refresh', (req, res)=>{
             })
         })
     })
-})
+});
+
+app.use("/assets", express.static(path.join(__dirname, "/assets")));
+
+app.use("/styles", express.static(path.join(__dirname, "/styles")));
+
+app.use('/', (req, res) => {
+  if(req.url == '/'){
+    res.status(200).sendFile(__dirname + '/templates/homepage.html');
+  }
+  else{
+    res.status(200).sendFile(__dirname + `/templates/${req.url}.html`);
+
+  }
+});
+
 module.exports = app;
