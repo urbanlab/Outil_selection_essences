@@ -159,6 +159,7 @@
   }
 
   function recherche_input(e){
+    document.getElementById('favoris').checked = false;
     arbres_trouves = recherche_trouver_arbres(e.target.value);
     update_affichage_arbres(arbres_trouves);
   }
@@ -279,6 +280,7 @@
   }
 
   function afficher_favoris(event) {
+    document.getElementById('recherche_arbre').value = "";
     if (event.currentTarget.checked === true) {
       const id_arbres_favoris = JSON.parse(localStorage.getItem("arbres_favori"));
       var arbres_favoris = [];
