@@ -63,7 +63,7 @@ function updateImages(cl, values, rangeId){
             range:range,
             resource: resource
         }
-    
+
         gsapi.spreadsheets.values.update(opt, (err, res)=>{
             if(err){
                 reject(err)
@@ -117,7 +117,7 @@ function main(pageToken, callback){
                     const compfunc = (a,b)=>{
                         if(a.name==b.name) return 0
                         else if(a.name<b.name) return -1
-                        else if(a.name>b.name) return 1 
+                        else if(a.name>b.name) return 1
                     }
                     images = images.sort(compfunc)
                     for(let i=0; i<data.length; i++){
@@ -162,7 +162,7 @@ function refreshPictures(callback){
             console.log(err)
         }
         else{
-            main(null, callback) 
+            main(null, callback)
         }
     })
 }
@@ -176,17 +176,17 @@ function main_images(cl, fileId){
         gdapi.files.get({
             fileId: fileId,
             alt: 'media'
-        }, 
+        },
         {responseType: 'stream'})
         .then(res=>{
             const mimeType = res.headers['content-type']
             if(mime[mimeType]){
                 let dest = fs.createWriteStream(`./assets/images/${fileId}.${mime[mimeType]}`)
                 let progress = 0
-                res.data 
+                res.data
                 .on('error', err => {
                 console.error(`Erreur téléchargement image ${fileId}`);
-                })  
+                })
                 .on('end', ()=>{
                     console.log(`Téléchargée sous ./assets/images/${fileId}.${mime[mimeType]}`)
                     resolve()

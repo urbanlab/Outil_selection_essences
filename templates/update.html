@@ -1,0 +1,22 @@
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Update data</title>
+  <link href='https://fonts.googleapis.com/css?family=Eczar' rel='stylesheet'>
+</head>
+
+<script type="text/javascript">
+  let person = prompt("Mot de passe :", "");
+
+  var xhttp = new XMLHttpRequest();
+  xhttp.open('GET', `/secure/data/refresh?password=${person}`);
+  xhttp.setRequestHeader('Content-type', 'application/json');
+  xhttp.send();
+
+  xhttp.onload = function(){
+    document.body.innerHTML=xhttp.responseText;
+  }
+
+
+</script>
