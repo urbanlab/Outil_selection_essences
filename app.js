@@ -7,7 +7,11 @@ const config = require('./config.json');
 const fs = require('fs');
 const path=require('path');
 const compute_scores = require('./function1.js');
-const image_updater = require('./image-updater/gdrive.js');
+const image_updater = require('./gdrive.js');
+const xss = require('xss');
+const { deleteFiles } = require('./utils');
+
+const password_update = 'baptiste';
 //-------------------------------------------------------------------------------------------------------------------------
 //-------------------------------------------- Paramétrages de base -------------------------------------------------------
 //-------------------------------------------------------------------------------------------------------------------------
@@ -16,31 +20,19 @@ app.use(bodyParser.json({
     extended: true
 }));
 
-app.use("/assets", express.static(path.join(__dirname, "/assets")));
-
-app.get('/', (req, res) => {
-    res.status(200).sendFile(__dirname + '/templates/homepage.html');
-});
-
-app.get('/recherche', (req, res) => {
-    res.status(200).sendFile(__dirname + '/templates/recherche.html');
-});
-
-app.get('/styles/style.css', (req, res) => {
-    res.status(200).sendFile(__dirname + '/styles/style.css');
-});
-
-app.get('/styles/style_recherche.css', (req, res) => {
-    res.status(200).sendFile(__dirname + '/styles/style_recherche.css');
-});
-
-app.post('/update_filtres', (req, res) => {
-    console.log(req.body);
-    mydata=require('./data/arbres.json');
-    description=require('./data/filtres.json');
-    result_tri = compute_scores(mydata,description,req.body);
-    res.status(200).send(result_tri);
-});
+app.get("/image/:id", (req, res)=>{
+    fs.readdir('./assets/images', (err, files)=>{
+        filtered = files.filter(x=>{
+            return x.split('.')[0]==xss(req.params.id)
+        })
+        if(filtered.length==0){
+            res.status(404).send()
+        }
+        else{
+            res.sendFile(path.join(__dirname,`/assets/images/${filtered[0]}`))
+        }
+    })
+})
 
 // ========================== Filtres =============================
 app.get('/data/filtres', (req, res)=>{
@@ -55,6 +47,26 @@ app.get('/data/filtres', (req, res)=>{
 // ===================================================
 
 // ==================== /data/arbres =================
+
+app.post('/data/arbres', (req, res) => {
+    const param_page = req.query.page;
+    mydata=require('./data/arbres.json');
+    description=require('./data/filtres.json');
+    result_tri = compute_scores(mydata,description,req.body);
+    response = [];
+
+    const page = (param_page) ? parseInt(param_page) : 1;
+
+    for (let i = (page-1)*10; i < Math.min(page*10, result_tri.length); i++) {
+        let arbre = result_tri[i]
+        response.push(arbre);
+    }
+    var json = {nb_arbres_tries : result_tri.length,
+                response: response};
+    res.status(200).send(json);
+});
+
+
 app.get('/data/arbres', (req, res)=>{
     const param_id = req.query.id;
     const param_page = req.query.page;
@@ -108,9 +120,19 @@ app.get('/data/legendes', (req, res)=>{
 })
 // ================================================
 
-app.get("/data/refresh", (req,res)=>{
+app.use("/secure", (req, res, next) => {
+    password = xss(req.query.password);
+    if (password == password_update) {
+        next();
+    }
+    else{
+        res.status(403).send('Mot de passe incorrect. Veuillez réessayer.');
+    }
+})
+
+app.get("/secure/data/refresh", (req,res)=>{
     // ==== Données d'arbres ====
-    let arbresPromise = gsheet.getData(gsheet.client, `'${config.data_spreadsheet}'!${config.data_column_offset}${config.data_column_names_row}:${config.data_column_names_row}`)
+    const arbresPromise = gsheet.getData(gsheet.client, `'${config.data_spreadsheet}'!${config.data_column_offset}${config.data_column_names_row}:${config.data_column_names_row}`)
     arbresPromise.then((colnames)=>{
         ncols = colnames[0].length+utils.letterToColumn(config.data_column_offset)-1
         lastColumn = utils.columnToLetter(ncols)
@@ -126,6 +148,7 @@ app.get("/data/refresh", (req,res)=>{
             }
             fs.writeFile('./data/arbres.json', JSON.stringify(response), (err)=>{
                 if(err) throw err
+                console.log("Fin de mise à jour des données arbres")
             })
         })
     })
@@ -134,7 +157,7 @@ app.get("/data/refresh", (req,res)=>{
     })
 
     // ==== Données légende ====
-    let legendesPromise = gsheet.getData(gsheet.client,`'${config.legendes_spreadsheet}'!A1:B`)
+    const legendesPromise = gsheet.getData(gsheet.client,`'${config.legendes_spreadsheet}'!A1:B`)
     legendesPromise.then((legendes)=>{
         let newAttr = true
         let curentAttr = ""
@@ -165,6 +188,7 @@ app.get("/data/refresh", (req,res)=>{
         }
         fs.writeFile('./data/legendes.json', JSON.stringify(result), (err)=>{
             if(err) throw err
+            console.log("Fin de mise à jour des données légendes")
         })
     })
     .catch((err)=>{
@@ -173,14 +197,14 @@ app.get("/data/refresh", (req,res)=>{
     })
 
     // ==== Données filtres ====
-    let filtresPromise = gsheet.getData(gsheet.client, `'${config.filter_spreadsheet}'!${config.filter_column_offset}${config.filter_row_offset}:${config.filter_row_offset}`)
+    const filtresPromise = gsheet.getData(gsheet.client, `'${config.filter_spreadsheet}'!${config.filter_column_offset}${config.filter_row_offset}:${config.filter_row_offset}`)
     .then((colnames)=>{
         ncols = colnames[0].length+utils.letterToColumn(config.filter_column_offset)
         lastColumn = utils.columnToLetter(ncols)
         gsheet.getData(gsheet.client, `'${config.filter_spreadsheet}'!${config.filter_column_offset}${config.filter_row_offset}:${lastColumn}`)
         .then((value)=>{
             liste_criteres=[];
-            for (let i = 1; i < value[0].length; i++) {
+            for (let i = 0; i < value[0].length; i++) {
                 if (value[2][i] == 'TRUE'){
                     var json = {
                         nom: value[0][i],
@@ -204,6 +228,7 @@ app.get("/data/refresh", (req,res)=>{
             }
             fs.writeFile('./data/filtres.json', JSON.stringify(liste_criteres), (err)=>{
                 if(err) throw err
+                console.log("Fin de mise à jour des données filtres")
             })
         })
     })
@@ -211,10 +236,83 @@ app.get("/data/refresh", (req,res)=>{
         res.status(500).send('Erreur Sauvegarde des filtres')
     })
 
-    const imagePromise = image_updater()
-    Promise.all([arbresPromise, legendesPromise, filtresPromise, imagePromise])
+    Promise.all([arbresPromise, legendesPromise, filtresPromise])
     .then((values)=>{
-        res.send("Données rafraichies")
+        res.send("Update réussie");
     })
 })
+
+app.get('/secure/images/refresh', (req, res)=>{
+    // A faire : vider le dossier des images avant
+    image_updater.refreshPictures(function(){
+        fs.readdir('./assets/images', (err, files)=>{
+            files = files.sort()
+            // files = files.map(file=>`./assets/images/${file}`)
+            // utils.deleteFiles(files, ()=>{
+            const arbresPromise = gsheet.getData(gsheet.client, `'${config.data_spreadsheet}'!${config.data_column_offset}${config.data_column_names_row}:${config.data_column_names_row}`)
+            arbresPromise.then((colnames)=>{
+                ncols = colnames[0].length+utils.letterToColumn(config.data_column_offset)-1
+                lastColumn = utils.columnToLetter(ncols)
+                gsheet.getData(gsheet.client, `'${config.data_spreadsheet}'!${config.data_column_offset}${config.data_start_row}:${lastColumn}`)
+                .then((values)=>{
+                    let response = []
+                    const processData = async (cb)=>{
+                        for (let i = 0; i < values.length; i++) {
+                            let val = {}
+                            for(let j=0; j<ncols-1; j++){
+                                val[colnames[0][j]]=values[i][j]
+                            }
+                            response.push(val)
+                            const compfunc = (a,b)=>{
+                                if(a==b.split('.')[0]) return 0
+                                else if(a<b.split('.')[0]) return -1
+                                else if(a>b.split('.')[0]) return 1
+                            }
+                            const image_id = val[config.image_id_column]
+                            const id_index = utils.binSearch(files, image_id, compfunc)
+                            if(image_id.trim() != "" && image_id.trim() != "-" && id_index == -1){
+                                console.log(`Téléchargement image ${image_id} (${i+1}/${values.length})`)
+                                await image_updater.downloadImages(image_id)
+                            }
+                            else if (id_index > -1){
+                                console.log(`Image ${image_id} existante (${i+1}/${values.length})`)
+                                files.splice(id_index, 1)
+                            }
+                        }
+                        files = files.map(file=>`./assets/images/${file}`)
+                        utils.deleteFiles(files, ()=>{
+                            fs.writeFile('./data/arbres.json', JSON.stringify(response), (err)=>{
+                                if(err) throw err
+                                cb()
+                            })
+                        })
+                    }
+                    return new Promise((resolve, reject)=>{
+                        processData(resolve)
+                    })
+                })
+                .then(()=>{
+                    console.log("Fin de mise à jour des images")
+                    res.send("images mises à jour")
+                })
+            })
+            // })
+        })
+    })
+});
+
+app.use("/assets", express.static(path.join(__dirname, "/assets")));
+
+app.use("/styles", express.static(path.join(__dirname, "/styles")));
+
+app.use('/', (req, res) => {
+  if(req.url == '/'){
+    res.status(200).sendFile(__dirname + '/templates/homepage.html');
+  }
+  else{
+    res.status(200).sendFile(__dirname + `/templates/${req.url}.html`);
+
+  }
+});
+
 module.exports = app;

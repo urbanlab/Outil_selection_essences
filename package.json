@@ -23,6 +23,8 @@
     "express": "^4.17.2",
     "googleapis": "^92.0.0",
     "http": "0.0.1-security",
-    "nodemon": "^2.0.15"
+    "image-downloader": "^4.0.3",
+    "nodemon": "^2.0.15",
+    "xss": "^1.0.10"
   }
 }

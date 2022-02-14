@@ -1,0 +1,22 @@
+{
+	"image/bmp" : "bmp",
+	"image/x-cmx" : "cmx",
+	"image/cis-cod" : "cod",
+	"image/gif" : "gif",
+	"image/x-icon" : "ico",
+	"image/ief" : "ief",
+	"image/pipeg" : "jfif",
+	"image/jpeg" : "jpg",
+	"image/x-portable-bitmap" : "pbm",
+	"image/x-portable-graymap" : "pgm",
+	"image/png" : "png",
+	"image/x-portable-anymap" : "pnm",
+	"image/x-portable-pixmap" : "ppm",
+	"image/x-cmu-raster" : "ras",
+	"image/x-rgb" : "rgb",
+	"image/svg+xml" : "svg",
+	"image/tiff" : "tif",
+	"image/x-xbitmap" : "xbm",
+	"image/x-xpixmap" : "xpm",
+	"image/x-xwindowdump" : "xwd"
+}
