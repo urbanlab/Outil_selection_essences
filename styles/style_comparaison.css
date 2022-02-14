@@ -13,8 +13,15 @@ p{
   width: fit-content;
 }
 
+html{
+  margin: 0;
+  padding: 0;
+}
+
 
 body{
+  min-width: fit-content;
+  min-height: 100%;
   margin:0;
   display: flex;
   flex-direction: column;
@@ -24,25 +31,11 @@ body{
   background-color: #FCE5D2;
 }
 
-#barre_recherche{
-  margin-top: 8%;
-  display: flex;
-    flex-direction: column;
-    align-items: center;
-}
 
 
-#tableau_compare{
-  width: 60%;
-}
 
-#tableau_container{
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 5%;
-}
+
+
 
 label{
   text-align: left;
@@ -82,13 +75,7 @@ header:after{
   align-self: center;
 }
 
-#nav_pages{
-  width: fit-content;
-  height: fit-content;
-  position: fixed;
-  right: 3%;
-  top: 3.5%;
-}
+
 
 footer{
   margin:0;
@@ -122,33 +109,198 @@ footer:after{
 
 
 
-@media screen and (max-width: 550px) {
+@media screen and (max-width: 750px) {
+
+  #nav_pages{
+    width: fit-content;
+    height: fit-content;
+    position: fixed;
+    right: 3%;
+    top: 7%;
+  }
   
   #barre_recherche{
-    margin-top: 30%;
-    height: 20%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin: auto;
+    border: solid black;
+    margin-top: 15%;
+    margin-bottom: 20%;
+  }
+
+
+  #tableau_compare{
+    border: solid black;
+    width: 100vw;
+  }
+
+  #tableau_container{
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 5%;
+  }
+
+
+  footer{
+    margin:0;
+    width: 100%;
+    height: 10%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    background: #bdb246;
+    position: relative;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 36px 0 64px;
+    font-size: 15px;
+    margin-top: 5%;
+  }
+  
+  footer:after{
+    content: "";
+    display: block;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -14px;
+    height: 14px;
+    background: url('http://canographia.datagora.erasme.org/wp-content/themes/canographia/assets/rough-x-secondary.svg') repeat-x transparent;
+  }
+
+}
+
+
+
+@media screen and (min-width: 751px) and (max-width: 1110px) {
+  #barre_recherche{
+    border: solid black;
+    left: 0;
+    right: 0;
+    top: 10%;
+    bottom: 25%;
+    margin-top: 10%;
+    margin-bottom: 20%;
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
   }
 
+  #tableau_compare{
+    border: solid black;
+    width: 60%;
+  }
+
+
+  #tableau_container{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 5%;
+  }
+
+  footer{
+    margin:0;
+    width: 100%;
+    height: 10%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    background: #bdb246;
+    position: relative;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 36px 0 64px;
+    font-size: 15px;
+    margin-top: 5%;
+  }
+  
+  footer:after{
+    content: "";
+    display: block;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -14px;
+    height: 14px;
+    background: url('http://canographia.datagora.erasme.org/wp-content/themes/canographia/assets/rough-x-secondary.svg') repeat-x transparent;
+  }
+
+}
+
+
+
+@media screen and (min-width: 1111px) {
+  #barre_recherche{
+    border: solid black;
+    left: 0;
+    right: 0;
+    top: 10%;
+    bottom: 25%;
+    margin-top: 10%;
+    margin-bottom: 20%;
+    position: relative;
+  }
 
   #tableau_compare{
+    border: solid black;
+    width: 60%;
+    align-items: center;
+  }
+
+  #tableau_container{
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 5%;
   }
 
-
-
-  @media screen and (min-width: 551px) and (max-width: 1000px) {
-    #barre_recherche{
-      margin-top: 30%;
-      height: 20%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
+  footer{
+    margin:0;
+    width: 100%;
+    height: 10%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    background: #bdb246;
+    position: relative;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 36px 0 64px;
+    font-size: 15px;
+    margin-top: 5%;
   }
+  
+  footer:after{
+    content: "";
+    display: block;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -14px;
+    height: 14px;
+    background: url('http://canographia.datagora.erasme.org/wp-content/themes/canographia/assets/rough-x-secondary.svg') repeat-x transparent;
+  }
+
   
 
 }
+  
+
