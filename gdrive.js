@@ -1,5 +1,5 @@
 const {google} = require('googleapis')
-const keys = require('./image-updater-keys.json')
+const keys = require('./image-updater/image-updater-keys.json')
 const fs = require('fs')
 const config = require('./config.json')
 const mime = require('./mime_type.json')
