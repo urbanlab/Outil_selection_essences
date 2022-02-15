@@ -136,6 +136,7 @@ function update_data(data1,filters){
              
 			for (const j in filters){
                 prop=filters[j];
+				
                 
 				if (prop=='Indice de potentiel d\'adaptation'){
 				
@@ -260,6 +261,31 @@ function sort_object(resultat,mydata){
 	
 	return out
 }
+
+
+function compute_score_ensoleilleiment(inputs_updated,prop,data_updated,i,weight){
+ 
+ let score=0;
+ 
+ if (data_updated[i][prop]=='N/A'){
+	 score=0
+ }
+else{
+	//data_updated[i][prop]=data_updated[i][prop].toString()
+	
+	
+	
+	if (Number.isInteger(data_updated[i][prop])){
+		score=((data_updated[i][prop]==inputs_updated[prop])? weight[prop]:0)
+	}else{
+		let parts=data_updated[i][prop].split('-');
+        score=(((parseInt(parts[0])<=inputs_updated[prop]) && (inputs_updated[prop]<=parseInt(parts[1])) )? weight[prop]:0)
+	}
+}
+
+return score;
+}
+
 function compute_scores(mydata,description,input1){	
 			let [default_inputs, weight,default_var,n_choice]=build_default_input_and_weights(description);
 			
@@ -284,6 +310,7 @@ function compute_scores(mydata,description,input1){
 
 			for (let i=0;i<n_arbre;i++){
 				let score =0;
+				
 				let bloqued=false;
 				for (const j in filters_input){
 					
@@ -294,10 +321,10 @@ function compute_scores(mydata,description,input1){
 						
 							
 						if (!(weight[fil] == 'bloquant')){
-							score+=compute_score(inputs_updated,fil,data_updated,i,weight,n_choice);
+						
 							
+							score+=((fil=='Besoin en ensoleillement')? compute_score_ensoleilleiment(inputs_updated,fil,data_updated,i,weight):compute_score(inputs_updated,fil,data_updated,i,weight,n_choice))
 							
-				
 							
 						}else{
 							bloqued=((inputs_updated[fil]!=data_updated[i][fil])? true: false)
@@ -311,7 +338,8 @@ function compute_scores(mydata,description,input1){
 				};
 				if (!(bloqued)){
 					arbre_non_bloque.push(i);
-					scores.push(score/sum_weights);
+					
+					scores.push(score);
 				}else{
 					arbre_bloque.push(i);
 				}
@@ -322,13 +350,14 @@ function compute_scores(mydata,description,input1){
 			}else{
 				let resultat=convertToObj(arbre_non_bloque,scores);
 				return (sort_object(resultat,mydata));
+				;
 			}
 			
 		};
 
-var mydata = require('./ex.json');
+var mydata = require('./data/arbres.json');
 var input1 = require('./input.json');
-var description=require('./description.json');
+var description=require('./data/filtres.json');
 //console.log(compute_scores(mydata,description,input1))
 
 
