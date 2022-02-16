@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const gsheet = require("./gsheet.js");
 const utils = require("./utils");
 const config = require('./config.json');
+const attributions = require('./data/attributions.json')
 const fs = require('fs');
 const path=require('path');
 const compute_scores = require('./function1.js');
@@ -19,7 +20,14 @@ const password_update = 'baptiste';
 app.use(bodyParser.json({
     extended: true
 }));
-
+app.get("/image_attribution/:id", (req, res)=>{
+    if(attributions[xss(req.params.id)]){
+        res.send(attributions[xss(req.params.id)])
+    }
+    else{
+        res.status(404).send()
+    }
+})
 app.get("/image/:id", (req, res)=>{
     fs.readdir('./assets/images', (err, files)=>{
         filtered = files.filter(x=>{
