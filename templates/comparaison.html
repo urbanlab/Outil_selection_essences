@@ -6,7 +6,7 @@
     <link rel="stylesheet" type="text/css" href="/styles/style_comparaison.css">
     <link href='https://fonts.googleapis.com/css?family=Eczar' rel='stylesheet'>
   </head>
-  
+
   <header>
     <h1 id="titre_page">Comparer deux arbres</h1>
     <nav id="nav_pages">
@@ -26,7 +26,7 @@
 
   <section id="tableau_container">
     <table id="tableau_compare">
-        
+
     </table>
   </section>
 
@@ -99,7 +99,7 @@
                     col1.style.borderColor = '#FCE5D2';
                     col1.innerHTML="-";
                     col1.style.paddingBottom = '4em';
-                    
+
 
                     var col2 = document.createElement('td');
                     col2.setAttribute('id', colonnes[i]+'_arbre2');
@@ -125,7 +125,7 @@
             for (let i = 0; i < arbres.length; i++) {
                 if (nom_commun==arbres[i]['Nom commun']) {
                     return(arbres[i]);
-                } 
+                }
             }
             return(undefined);
         }
@@ -153,13 +153,27 @@
                                 td.innerHTML = legendes[caracteristiques[i]]["values"][keys_adaptation[j]];
                             }
                         }
+                    } else if (caracteristiques[i] == "Besoin en ensoleillement") {
+                      if (arbre[caracteristiques[i]]=='N/A') {
+                        td.innerHTML = '-'
+                      }
+                      else {
+                        var boom = arbre[caracteristiques[i]].split('-');
+                        if (boom.length == 1) {
+                          var legende_colonne = legendes[caracteristiques[i]]["values"][boom[0].trim()];
+                        }
+                        else{
+                          var legende_colonne = `${legendes[caracteristiques[i]]["values"][boom[0].trim()]} à ${legendes[caracteristiques[i]]["values"][boom[1].trim()]}`;
+                        }
+                        td.innerHTML = legende_colonne[0].toUpperCase() + legende_colonne.substring(1);
+                      }
                     } else {
                         correspondance_legende = arbre[caracteristiques[i]];
                         td.innerHTML = (legendes[caracteristiques[i]]) ? legendes[caracteristiques[i]]["values"][correspondance_legende]: correspondance_legende;
                     }
                 }
             }
-            
+
         }
 
   </script>

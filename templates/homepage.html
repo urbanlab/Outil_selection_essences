@@ -295,9 +295,9 @@
     return(mots_clé.join("<br>"));
   }
 
- 
 
-  
+
+
 
   function afficher_popin(event){
     var xhttp_popin = new XMLHttpRequest();
@@ -350,6 +350,20 @@
                 if (parseFloat(boom[0])<=parseFloat(correspondance_legende) && parseFloat(correspondance_legende)<parseFloat(boom[2])) {
                   col2.innerHTML = legendes[colonnes[i]]["values"][keys_adaptation[j]];
                 }
+              }
+            } else if (colonnes[i] == "Besoin en ensoleillement") {
+              if (arbre_popin[colonnes[i]]=='N/A') {
+                col2.innerHTML = '-'
+              }
+              else {
+                var boom = arbre_popin[colonnes[i]].split('-');
+                if (boom.length == 1) {
+                  var legende_colonne = legendes[colonnes[i]]["values"][boom[0].trim()];
+                }
+                else{
+                  var legende_colonne = `${legendes[colonnes[i]]["values"][boom[0].trim()]} à ${legendes[colonnes[i]]["values"][boom[1].trim()]}`;
+                }
+                col2.innerHTML = legende_colonne[0].toUpperCase() + legende_colonne.substring(1);
               }
             } else {
               correspondance_legende = arbre_popin[colonnes[i]];
