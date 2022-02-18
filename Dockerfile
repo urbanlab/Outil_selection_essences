@@ -12,6 +12,6 @@ COPY keys.json /app/keys.json
 COPY image-updater-keys.json /app/image-updater-keys.json
 
 # Launch app
-EXPOSE 80
+EXPOSE 4070
 WORKDIR /app
 CMD ["node", "index.js"]
