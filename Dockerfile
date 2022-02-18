@@ -14,3 +14,4 @@ COPY image-updater-keys.json /app/image-updater-keys.json
 EXPOSE 4080
 WORKDIR /app
 CMD ["node", "index.js"]
+
