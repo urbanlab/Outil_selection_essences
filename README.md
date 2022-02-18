@@ -11,7 +11,8 @@
 
 ## Presentation
 
-todo
+This tool allows everyone to find the tree species best suited to their context. Various criteria are made available to the user allowing him to refine his search: size of the tree, need at the top, type of use, etc. Detailed tree sheets allow you to better understand each species and a species comparator has even been added!
+This tool was developed by the students of the [Central Digital Lab](https://www.ec-lyon.fr/formation/diplomes-etablissement/centrale-digital-lab), under the direction of Erasme, the open innovation laboratory of the metropolis of Lyon and its ecology department.
 
 ## Deployment
 
