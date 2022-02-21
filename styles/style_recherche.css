@@ -365,7 +365,6 @@ td{
   }
 
   body{
-    min-width: fit-content;
     min-height: 100%;
     margin: 0;
     display: flex;
