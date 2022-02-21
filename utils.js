@@ -26,6 +26,9 @@ function binSearch(arr, e, comp=(a,b)=>{
   else if(a<b) return -1
   else return 1
 }){
+  if(arr.length==0){
+    return -1
+  }
   let end = arr.length -1
   let start = 0
   if(arr[start]==e){

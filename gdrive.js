@@ -1,5 +1,5 @@
 const {google} = require('googleapis')
-const keys = require('./image-updater/image-updater-keys.json')
+const keys = require('./image-updater-keys.json')
 const fs = require('fs')
 const config = require('./config.json')
 const mime = require('./mime_type.json')
@@ -20,7 +20,7 @@ function getImages(cl, pageToken){
         auth: cl
     })
     const opt = {
-        fields: 'nextPageToken, files(parents, name, id, mimeType)',
+        fields: 'nextPageToken, files(parents, name, id, mimeType, description)',
         corpora: 'user',
         drive: 'image',
         pageSize: 100,
@@ -32,15 +32,20 @@ function getImages(cl, pageToken){
                 reject(err)
             }
             let images = []
+            let descriptions = {}
             for(let i=0; i<result.data.files.length; i++){
                 if(result.data.files[i].parents && result.data.files[i].parents[0]==config.image_folder_id){
                     images.push(result.data.files[i])
+                    descriptions[result.data.files[i].id]=result.data.files[i].description
                 }
             }
             for(let i=0; i<images.length; i++){
                 images[i].name = images[i].name.split(".")[0]
             }
-            resolve([images, result.data.nextPageToken])
+            fs.writeFile('./data/attributions.json', JSON.stringify(descriptions), (err)=>{
+                if(err){reject(err)}
+                resolve([images, result.data.nextPageToken])
+            })
         })
     })
     return promise
