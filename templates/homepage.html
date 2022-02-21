@@ -341,6 +341,7 @@
             col1.style.fontSize = '20px';
             col1.style.width = '47%';
             col1.style.borderRadius = '10px 0 0 10px';
+            console.log(arbre_popin[colonnes[i]]);
             if (colonnes[i] == "Indice de potentiel d'adaptation") {
               var keys_adaptation = Object.keys(legendes[colonnes[i]]["values"]);
               correspondance_legende = arbre_popin[colonnes[i]].replace(',', '.');
@@ -351,23 +352,13 @@
                   col2.innerHTML = legendes[colonnes[i]]["values"][keys_adaptation[j]];
                 }
               }
-            } else if (colonnes[i] == "Besoin en ensoleillement") {
-              if (arbre_popin[colonnes[i]]=='N/A') {
-                col2.innerHTML = '-'
-              }
-              else {
-                var boom = arbre_popin[colonnes[i]].split('-');
-                if (boom.length == 1) {
-                  var legende_colonne = legendes[colonnes[i]]["values"][boom[0].trim()];
-                }
-                else{
-                  var legende_colonne = `${legendes[colonnes[i]]["values"][boom[0].trim()]} à ${legendes[colonnes[i]]["values"][boom[1].trim()]}`;
-                }
-                col2.innerHTML = legende_colonne[0].toUpperCase() + legende_colonne.substring(1);
-              }
+            } else if (arbre_popin[colonnes[i]].split(' - ').length>1 && legendes[colonnes[i]]["values"][arbre_popin[colonnes[i]].split(' - ')[0].trim()] && legendes[colonnes[i]]["values"][arbre_popin[colonnes[i]].split(' - ')[1].trim()]) {
+                var boom = arbre_popin[colonnes[i]].split(' - ');
+                var legende_colonne = `${legendes[colonnes[i]]["values"][boom[0].trim()]} à ${legendes[colonnes[i]]["values"][boom[1].trim()]}`;
+                col2.innerHTML = legende_colonne[0].toUpperCase() + legende_colonne.substring(1).toLowerCase();
             } else {
               correspondance_legende = arbre_popin[colonnes[i]];
-              col2.innerHTML = (legendes[colonnes[i]]) ? legendes[colonnes[i]]["values"][correspondance_legende]: correspondance_legende;
+              col2.innerHTML = (legendes[colonnes[i]]) ? ((legendes[colonnes[i]]["values"][correspondance_legende]) ? legendes[colonnes[i]]["values"][correspondance_legende] : correspondance_legende) : correspondance_legende;
             }
             col2.style.color = '#6B6B6B';
             col2.style.fontSize = '20px';

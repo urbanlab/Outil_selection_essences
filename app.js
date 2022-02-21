@@ -27,7 +27,8 @@ app.get("/image_attribution/:id", (req, res)=>{
     else{
         res.status(404).send()
     }
-})
+});
+
 app.get("/image/:id", (req, res)=>{
     fs.readdir('./assets/images', (err, files)=>{
         filtered = files.filter(x=>{
@@ -40,7 +41,7 @@ app.get("/image/:id", (req, res)=>{
             res.sendFile(path.join(__dirname,`/assets/images/${filtered[0]}`))
         }
     })
-})
+});
 
 // ========================== Filtres =============================
 app.get('/data/filtres', (req, res)=>{
@@ -100,7 +101,7 @@ app.get('/data/arbres', (req, res)=>{
         }
         res.send(response)
     })
-})
+});
 // =====================================================
 
 // ==================== /data/columns ==================
@@ -113,7 +114,7 @@ app.get('/data/colonnes', (req, res)=>{
     .catch((err)=>{
         res.status(500).send("Erreur récupération des colonnes")
     })
-})
+});
 // ======================================================
 
 // ==================== /data/legendes ==================
@@ -125,18 +126,24 @@ app.get('/data/legendes', (req, res)=>{
         json = JSON.parse(value)
         res.send(json)
     })
-})
+});
 // ================================================
 
 app.use("/secure", (req, res, next) => {
-    password = xss(req.query.password);
-    if (password == password_update) {
-        next();
+    if (req.query.password) {
+        password = xss(req.query.password);
+        if (password == password_update) {
+            next();
+        }
+        else{
+            res.status(403).send('Mot de passe incorrect. Veuillez réessayer.');
+        }
     }
     else{
-        res.status(403).send('Mot de passe incorrect. Veuillez réessayer.');
+        var redirection = req.url.split('/')[1];
+        res.redirect(`/update/${redirection}`);
     }
-})
+});
 
 app.get("/secure/data/refresh", (req,res)=>{
     // ==== Données d'arbres ====
@@ -290,7 +297,7 @@ app.get('/secure/images/refresh', (req, res)=>{
                         files = files.map(file=>`./assets/images/${file}`)
                         utils.deleteFiles(files, ()=>{
                             fs.writeFile('./data/arbres.json', JSON.stringify(response), (err)=>{
-                                if(err) throw err
+                                if(err) console.log(err)
                                 cb()
                             })
                         })
@@ -313,14 +320,24 @@ app.use("/assets", express.static(path.join(__dirname, "/assets")));
 
 app.use("/styles", express.static(path.join(__dirname, "/styles")));
 
-app.use('/', (req, res) => {
-  if(req.url == '/'){
-    res.status(200).sendFile(__dirname + '/templates/homepage.html');
-  }
-  else{
-    res.status(200).sendFile(__dirname + `/templates/${req.url}.html`);
+app.use("/update", (req, res) => {
+  res.status(200).sendFile(__dirname + '/templates/update.html');
+});
 
-  }
+app.get("/", (req, res) => {
+  res.status(200).sendFile(__dirname + '/templates/homepage.html');
+})
+
+app.get("/comparaison", (req, res) => {
+  res.status(200).sendFile(__dirname + '/templates/comparaison.html');
+})
+
+app.get("/recherche", (req, res) => {
+  res.status(200).sendFile(__dirname + '/templates/recherche.html');
+})
+
+app.use('/', (req, res) => {
+  res.status(200).sendFile(__dirname + req.url);
 });
 
 module.exports = app;

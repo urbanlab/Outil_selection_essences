@@ -10,7 +10,9 @@
   let person = prompt("Mot de passe :", "");
 
   var xhttp = new XMLHttpRequest();
-  xhttp.open('GET', `/secure/data/refresh?password=${person}`);
+  var url = document.location.href.split('/');
+  const object = url[url.length-1];
+  xhttp.open('GET', `/secure/${object}/refresh?password=${person}`);
   xhttp.setRequestHeader('Content-type', 'application/json');
   xhttp.send();
 
