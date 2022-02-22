@@ -89,7 +89,7 @@
 </a>
 
 
-<footer id="footer">
+<footer>
   <img class = "footer_logo_erasme" src="/assets/logo_erasme_grandlyon.png" width="500" >
 </footer>
 
@@ -188,9 +188,22 @@
     }
 
     var label = document.createElement('label');
-    label.setAttribute('for', critere.nom);
-    label.innerHTML = critere.nom;
-    div.appendChild(label);
+    if(critere.commentaire ===""){ 
+      label.setAttribute('for', critere.nom);
+      label.innerHTML = critere.nom;
+	  div.appendChild(label);
+    }
+    
+    if (critere.commentaire !== ""){
+      label.setAttribute('for', critere.nom);
+      label.setAttribute('title', critere.commentaire);
+      label.setAttribute('class',"tooltip");
+      var span=document.createElement('span');
+      span.setAttribute('title',"");
+      label.appendChild(span);
+      span.innerHTML = critere.nom;
+      div.appendChild(label);
+    }
 
     var select = document.createElement('select');
     select.setAttribute('name', critere.nom);
@@ -244,15 +257,20 @@
       input.addEventListener('change', function() {update_resultats(1)});
 
       var label = document.createElement('label');
-      label.setAttribute('for', reponse.texte);
-      label.setAttribute('title', reponse.commentaire);
-      label.setAttribute('class',"tooltip");
-      var span=document.createElement('span');
-      span.setAttribute('title',"");
-      label.appendChild(span);
-
-      span.innerHTML = reponse.texte;
-
+      if (reponse.commentaire ===""){
+        label.setAttribute('for', reponse.texte);
+        label.innerHTML = reponse.texte;
+      }
+      if (reponse.commentaire !==""){
+        label.setAttribute('for', reponse.texte);
+        label.setAttribute('title', reponse.commentaire);
+        label.setAttribute('class',"tooltip");
+        var span=document.createElement('span');
+        span.setAttribute('title',"");
+        label.appendChild(span);     
+        span.innerHTML = reponse.texte;
+      }
+        
       div_checkbox.appendChild(input);
       div_checkbox.appendChild(label);
     }
