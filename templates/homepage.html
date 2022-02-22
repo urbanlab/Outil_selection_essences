@@ -10,7 +10,6 @@
 <header>
   <h1 id="titre_page">Selection d'essence d'arbre</h1>
   <nav id="nav_pages">
-    <a href="/recherche">Rechercher un arbre</a>
     <a href="/comparaison">Comparer deux arbres</a>
   </nav>
 </header>
@@ -433,7 +432,7 @@
 
         let favori_icon = document.getElementById("etoile_favori");
         const fav = JSON.parse(localStorage.getItem("arbres_favori"));
-        if(fav && fav.indexOf(arbre_popin['Genre'] + ' ' + arbre_popin['Espèce'])>-1){
+        if(fav && fav.indexOf(arbre_popin['Genre'].trim() + ' ' + arbre_popin['Espèce'].trim())>-1){
           favori_icon.style.filter = "invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%)"
         }
         else{
@@ -625,6 +624,11 @@
         localStorage.setItem("arbres_favori", JSON.stringify(fav))
       }
       arbres_favoris = favoris_into_liste_arbres(JSON.parse(localStorage.getItem("arbres_favori")));
+      if (document.getElementById('favoris').checked == true) {
+        update_affichage_favoris(arbres_favoris, (document.getElementsByClassName('arbre-grid-item').length>1) ? parseInt(document.getElementById('page_actuelle').innerHTML) : parseInt(document.getElementById('page_actuelle').innerHTML)-1);
+        var event = new Event('click');
+        cacher_popin(event);
+      }
     }
     else{
       rappel_cookies= document.getElementById('rappel_cookies')
