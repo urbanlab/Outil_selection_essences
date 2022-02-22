@@ -449,18 +449,20 @@
           favori_icon.style.filter="none"
         }
 
-        var xhttp_attribution = new XMLHttpRequest();
-        xhttp_attribution.open('GET', `/image_attribution/${arbre_popin['Image Id']}`);
-        xhttp_attribution.setRequestHeader('Content-type', 'application/json');
-        xhttp_attribution.send()
+        if(arbre_popin["Image Id"]!= ''){
+          var xhttp_attribution = new XMLHttpRequest();
+          xhttp_attribution.open('GET', `/image_attribution/${arbre_popin['Image Id']}`);
+          xhttp_attribution.setRequestHeader('Content-type', 'application/json');
+          xhttp_attribution.send()
 
-        xhttp_attribution.onload = function(){
-          attribution = xhttp_attribution.responseText
-          popin_photo.innerText = attribution
-        }
+          xhttp_attribution.onload = function(){
+            attribution = xhttp_attribution.responseText
+            popin_photo.innerText = attribution
+          }
 
-        xhttp_attribution.onerror = function(){
-          popin_photo.innerText = "image libre de droit"
+          xhttp_attribution.onerror = function(){
+            popin_photo.innerText = "image libre de droit"
+          }
         }
       }
     }
@@ -616,14 +618,14 @@
   }
 
   function accepter_cookies(e){
-    cookies_aside = e.path[1]
+    cookies_aside = document.getElementById('cookies_dialogue')
     cookies_aside.style.animation = "1.5s ease-in reverse 0.5s cookies_slidein"
     localStorage.setItem("cookies-accepted", true)
     document.getElementById('merci_dialogue').style.animation = "1.5s ease-in alternate 2 1s cookies_slidein"
   }
 
   function refuser_cookies(e){
-    cookies_aside = e.path[1]
+    cookies_aside = document.getElementById('cookies_dialogue')
     cookies_aside.style.animation = "1.5s ease-in reverse 0.5s cookies_slidein"
   }
 
