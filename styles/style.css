@@ -24,6 +24,20 @@ p.latin{
   font-weight: 500;
   font-family: Eczar;
 }
+.btn{
+  height: 50px;
+  width: 50px;
+  background: green;
+  opacity: 0.3;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  cursor: pointer;
+}
 
 p.francais{
   font-size: 20px;
