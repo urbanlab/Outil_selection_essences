@@ -59,6 +59,20 @@ body{
   justify-content: space-around;
 }
 
+.btn{
+  height: 50px;
+  width: 50px;
+  background: green;
+  opacity: 0.3;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  cursor: pointer;
+}
 .info_arbre{
   /* border: solid black 1px; */
   background-image: url('/assets/arbre_template.png');
@@ -153,6 +167,7 @@ header:after{
   right: 3%;
   top: 3.5%;
 }
+
 
 footer{
   margin:0;
@@ -424,6 +439,20 @@ td{
     margin:0;
 
   }
+  .btn{
+    height: 50px;
+    width: 50px;
+    background: green;
+    opacity: 0.3;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    cursor: pointer;
+  }
 
   footer:after{
     content: "";
@@ -479,6 +508,21 @@ td{
     font-size: 20px;
   }
 
+  .btn{
+    height: 50px;
+    width: 50px;
+    background: green;
+    opacity: 0.3;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    cursor: pointer;
+  }
+ 
   select{
     width: 55%;
   }
@@ -686,6 +730,7 @@ td{
     margin-top: 20%;
   }
 
+  
   #plus_de_filtres{
     order:100000000000;
     width: fit-content;
@@ -836,7 +881,21 @@ td{
     right: 3%;
     top: 7%;
   }
-  
+ 
+  .btn{
+    height: 50px;
+    width: 50px;
+    background: green;
+    opacity: 0.3;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    cursor: pointer;
+  }
 
   footer{
     margin:0;

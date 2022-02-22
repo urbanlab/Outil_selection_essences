@@ -1,0 +1,306 @@
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Outil de sélection d'essences</title>
+  <link rel="stylesheet" type="text/css" href="/styles/style_recherche.css">
+  <link href='https://fonts.googleapis.com/css?family=Eczar' rel='stylesheet'>
+</head>
+
+<header>
+  <h1 id="titre_page">Selection d'essence d'arbre</h1>
+  <nav id="nav_pages">
+    <a href="/">Retour à la page d'accueil</a>
+  </nav>
+</header>
+
+
+
+<div id="popin" class="modal" onclick="click_hors_popin()">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <img id="popin_photo" src="" alt="">
+    <div class="popin_titres">
+      <h1 id='popin_nom_francais'></h1>
+      <h2 id='popin_nom_latin'></h2>
+    </div>
+    <p class=popin_titre_tableau>Informations importantes</p>
+    <div id="popin_comparer">
+      <label for="comparer_arbres">Comparer à un autre arbre : </label>
+      <input type="text" id="comparer_arbres" name="comparer_arbres" list="all_arbres" value="" autocomplete="off">
+      <datalist id="all_arbres">
+      </datalist>
+      <button type="button" name="button">Comparer</button>
+    </div>
+    <table id='popin_infos'>
+
+    </table>
+    <button id="popin_close" type="button" name="button" onclick="cacher_popin()">&times</button>
+  </div>
+</div>
+
+<nav id="barre_recherche">
+  <label for="recherche_arbre">Rechercher un arbre : </label>
+  <input type="text" id="recherche_arbre" name="recherche_arbre" size="50" placeholder="Nom de l'arbre" value="">
+  <label for="favoris">Afficher mes favoris</label>
+  <input type="checkbox" id="favoris" name="favoris" value="favoris" onchange="afficher_favoris(event)">
+</nav>
+
+
+
+<section id='arbres'>
+</section>
+
+<a href="#" class="btn">
+  <img src="/assets/arrow-up-solid.svg" alt="" width="25">
+</a>
+
+
+<footer id="footer">
+  <img src="/assets/logo_erasme_grandlyon.png" width="500" >
+</footer>
+
+<script>
+
+  var arbres = [];
+
+  var xhttp_arbres = new XMLHttpRequest();
+  xhttp_arbres.open('GET', '/data/arbres');
+  xhttp_arbres.setRequestHeader('Content-type', 'application/json');
+  xhttp_arbres.send();
+
+  xhttp_arbres.onload = function () {
+    arbres = JSON.parse(xhttp_arbres.responseText);
+    update_affichage_arbres(arbres);
+    var compare_list = document.getElementById('all_arbres');
+    for (var i = 0; i < arbres.length; i++) {
+      var option = document.createElement('option');
+      option.value = arbres[i]['Nom commun'];
+      compare_list.appendChild(option);
+    }
+  }
+
+  function update_affichage_arbres(arbres) {
+    var div = document.getElementById('arbres');
+    var cloneArbres = div.cloneNode(true);
+    while (cloneArbres.children.length>0) {
+      cloneArbres.removeChild(cloneArbres.children[0]);
+    }
+    console.log(arbres);
+    for (let i = 0; i < arbres.length; i++) {
+      const arbre = arbres[i];
+      montrer_arbre(cloneArbres, arbre);
+    }
+    document.body.replaceChild(cloneArbres, div);
+  }
+
+
+  function montrer_arbre(section, arbre) {
+    const nom_latin = arbre['Genre'].trim() + ' ' + arbre['Espèce'].trim();
+    var article = document.createElement('article');
+    article.setAttribute('id', 'article '+nom_latin);
+    article.addEventListener('mouseenter', montrer_mots_cles);
+    article.addEventListener('mouseleave', cacher_mots_cles);
+    article.addEventListener('click', afficher_popin);
+    article.classList.add('info_arbre');
+
+    var p = document.createElement('p');
+    p.classList.add('mot-cle');
+    p.style.visibility='hidden';
+    p.innerHTML = mots_cles(arbre);
+    article.appendChild(p);
+
+    var div = document.createElement('div');
+    div.classList.add('text-container');
+
+    var p_latin = document.createElement('p');
+    var p_francais = document.createElement('p');
+    p_latin.classList.add('latin');
+    p_francais.classList.add('francais');
+    p_latin.innerHTML = nom_latin;
+    p_francais.innerHTML = arbre['Nom commun'];
+    div.appendChild(p_francais);
+    div.appendChild(p_latin);
+
+    article.appendChild(div);
+    if (arbre["Image Id"]!=""){
+      article.style.backgroundImage = 'url(https://drive.google.com/uc?export=view&id='+arbre["Image Id"]+')';
+    }
+
+    section.appendChild(article);
+  }
+
+  function recherche_trouver_arbres(flat_text){
+    result = [];
+    //On cherche d'abord les arbres dont le nom commun commence par le terme de la recherche
+    for (var i = 0; i < arbres.length; i++) {
+      const arbre = arbres[i];
+      text = flat_text.trim().toLowerCase();
+      if (arbre['Nom commun'].toLowerCase().startsWith(text)) {
+        result.push(arbre);
+      }
+    }
+    //On cherche ensuite les arbres dont le nom latin commence par le terme de la recherche
+    for (var i = 0; i < arbres.length; i++) {
+      const arbre = arbres[i];
+      text = flat_text.trim().toLowerCase();
+      if (arbre['Genre'].toLowerCase().startsWith(text)) {
+        if (!result.includes(arbre)) {
+          result.push(arbre);
+        }
+      }
+    }
+    //Puis on cherche les arbres dont le nom latin ou le nom commun contient juste le terme de la recherche
+    for (var i = 0; i < arbres.length; i++) {
+      const arbre = arbres[i];
+      text = flat_text.trim().toLowerCase();
+      if (arbre['Nom commun'].toLowerCase().includes(text) || arbre['Espèce'].toLowerCase().includes(text) || arbre['Genre'].toLowerCase().includes(text)) {
+        if (!result.includes(arbre)) {
+          result.push(arbre);
+        }
+      }
+    }
+    return(result);
+  }
+
+  function recherche_input(e){
+    document.getElementById('favoris').checked = false;
+    arbres_trouves = recherche_trouver_arbres(e.target.value);
+    update_affichage_arbres(arbres_trouves);
+  }
+
+  document.getElementById('recherche_arbre').addEventListener('input', recherche_input);
+
+  function mots_cles(arbre){
+    mots_clé=[];
+    if (arbre['Disponibilité en pépinière']=="4"){
+      mots_clé.push("rare");
+    }
+    if (arbre['Potentiel invasif']=="Fort"){
+      mots_clé.push("invasif");
+    }
+    if (arbre['Impact sur la biodiversité']=="Négatif"){
+      mots_clé.push("néfaste");
+    }
+    if (arbre['Pollen et potentiel allergisant']=="Fort"){
+      mots_clé.push("allergène");
+    }
+    return(mots_clé.join(", "));
+  }
+
+  function montrer_mots_cles(event){
+    event.currentTarget.children[0].style.visibility = 'visible';
+  }
+
+  function cacher_mots_cles(event){
+    event.currentTarget.children[0].style.visibility = 'hidden';
+  }
+
+  function afficher_popin(event){
+    var xhttp_popin = new XMLHttpRequest();
+    xhttp_popin.open('GET', `/data/arbres?id=${event.currentTarget.id.slice(8)}`);
+    xhttp_popin.setRequestHeader('Content-type', 'application/json');
+    xhttp_popin.send()
+
+    xhttp_popin.onload = function() {
+      var popin = document.getElementById('popin');
+      arbre_popin = JSON.parse(xhttp_popin.responseText)[0];
+      console.log(arbre_popin);
+      var popin_photo = document.getElementById('popin_photo');
+      popin_photo.setAttribute("src", (arbre_popin["Image Id"]!='') ? 'https://drive.google.com/uc?export=view&id='+arbre_popin["Image Id"] : '/assets/arbre_template.png');
+
+      var popin_nom_latin = document.getElementById('popin_nom_latin');
+      popin_nom_latin.innerHTML= arbre_popin['Genre'] + ' ' + arbre_popin['Espèce'] ;
+
+      var popin_nom_francais = document.getElementById('popin_nom_francais');
+      popin_nom_francais.innerHTML= arbre_popin['Nom commun'];
+
+      var tableau = document.getElementById('popin_infos');
+      const colonnes = Object.keys(arbre_popin);
+      while(tableau.children.length>0){
+        tableau.removeChild(tableau.children[0]);
+      }
+
+      var xhttp_legende = new XMLHttpRequest();
+      xhttp_legende.open('GET', `/data/legendes`);
+      xhttp_legende.setRequestHeader('Content-type', 'application/json');
+      xhttp_legende.send()
+
+      xhttp_legende.onload = function() {
+        console.log(JSON.parse(xhttp_legende.responseText));
+        legendes = JSON.parse(xhttp_legende.responseText);
+        for (var i = 0; i < colonnes.length; i++) {
+          if (colonnes[i]!='Nom commun' && colonnes[i]!='Genre' && colonnes[i]!='Espèce' && colonnes[i]!='Image Id') {
+            var tr = document.createElement('tr');
+            var col1 = document.createElement('td');
+            var col2 = document.createElement('td');
+            col1.innerHTML = colonnes[i];
+            col1.style.color = '#675F1E';
+            /*col1.style.textShadow = "#FCE5D2 1px 1px 2px"; */
+            col1.style.fontSize = '20px';
+            col1.style.width = '47%';
+            col1.style.borderRadius = '10px 0 0 10px';
+            if (colonnes[i] == "Indice de potentiel d'adaptation") {
+              var keys_adaptation = Object.keys(legendes[colonnes[i]]["values"]);
+              correspondance_legende = arbre_popin[colonnes[i]].replace(',', '.');
+              for (let j = 0; j < keys_adaptation.length; j++) {
+                var condition = keys_adaptation[j].replace(',', '.');
+                var boom = condition.split('<');
+                if (parseFloat(boom[0])<=parseFloat(correspondance_legende) && parseFloat(correspondance_legende)<parseFloat(boom[2])) {
+                  col2.innerHTML = legendes[colonnes[i]]["values"][keys_adaptation[j]];
+                }
+              }
+            } else {
+              correspondance_legende = arbre_popin[colonnes[i]];
+              col2.innerHTML = (legendes[colonnes[i]]) ? legendes[colonnes[i]]["values"][correspondance_legende]: correspondance_legende;
+            }
+            col2.style.color = '#6B6B6B';
+            col2.style.fontSize = '20px';
+            col2.style.width = '53%';
+            col2.style.textAlign = 'center';
+            col2.style.borderRadius = '0 10px 10px 0';
+            tr.appendChild(col1);
+            tr.appendChild(col2);
+            tableau.appendChild(tr);
+          }
+        }
+
+
+        popin.style.visibility = 'visible';
+        popin.style.opacity = "100%";
+      }
+    }
+
+
+  }
+
+  function cacher_popin(event){
+    var popin = document.getElementById('popin');
+    popin.style.visibility = 'hidden';
+    popin.style.opacity = "0%";
+  }
+
+  function click_hors_popin(event) {
+    cacher_popin(event)
+  }
+
+  function afficher_favoris(event) {
+    document.getElementById('recherche_arbre').value = "";
+    if (event.currentTarget.checked === true) {
+      const id_arbres_favoris = JSON.parse(localStorage.getItem("arbres_favori"));
+      var arbres_favoris = [];
+      for (var i = 0; i < arbres.length; i++) {
+        for (var j = 0; j < id_arbres_favoris.length; j++) {
+          if (id_arbres_favoris[j] == arbres[i]['Genre'].trim() + ' ' + arbres[i]['Espèce'].trim()) {
+            arbres_favoris.push(arbres[i]);
+          }
+        }
+      }
+      update_affichage_arbres(arbres_favoris);
+    }
+    else{
+      update_affichage_arbres(arbres);
+    }
+
+  }
+
+</script>
