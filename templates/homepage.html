@@ -31,6 +31,13 @@
     <table id='popin_infos'>
 
     </table>
+    <div id="popin_comparer">
+      <label for="comparer_arbres">Comparer à un autre arbre :&nbsp</label>
+      <input type="text" id="comparer_arbres" name="comparer_arbres" list="all_arbres" value="" autocomplete="off">
+      <datalist id="all_arbres">
+      </datalist>
+      <button type="button" name="button" onclick="document.location.href=`/comparaison?arbre1=${document.getElementById('popin_nom_francais').innerHTML}&arbre2=${document.getElementById('comparer_arbres').value}`">Comparer</button>
+    </div>
     <button id="popin_close" type="button" name="button" onclick="cacher_popin()">&times</button>
   </div>
 </div>
@@ -39,15 +46,22 @@
   <button type="button" id="plus_de_filtres" onclick="modifier_filtres()">Plus de filtres</button>
 </aside>
 
-
-
-<section id='arbres_grid'>
-  
-  <nav id="bouton_pages">
-    <button type="button" id="bouton_precedent" onclick="changer_page('precedent')">&#x2B05</button>
-    <p id=indice_page>Page <span id="page_actuelle">1</span>/<span id="nombre_pages"></span></p>
-    <button type="button" id="bouton_suivant" onclick="changer_page('suivant')">&#x27A1</button>
+<section id='right_panel'>
+  <nav id="barre_recherche">
+    <label for="recherche_arbre">Rechercher un arbre : </label>
+    <input type="text" id="recherche_arbre" name="recherche_arbre" size="50" placeholder="Nom de l'arbre" value="">
+    <label for="favoris">Afficher mes favoris</label>
+    <input type="checkbox" id="favoris" name="favoris" value="favoris" onchange="afficher_favoris(event)">
   </nav>
+  <nav id="bouton_pages">
+    <button type="button" id="bouton_debut" onclick="changer_page('debut')"><<</button>
+    <button type="button" id="bouton_precedent" onclick="changer_page('precedent')"><</button>
+    <p id=indice_page>Page <span id="page_actuelle">1</span>/<span id="nombre_pages"></span></p>
+    <button type="button" id="bouton_suivant" onclick="changer_page('suivant')">></button>
+  </nav>
+  <section id='arbres_grid'>
+
+  </section>
 </section>
 
 <aside id='cookies_dialogue'>
@@ -72,6 +86,11 @@
 </footer>
 
 <script>
+
+  let tous_les_arbres = [];
+  let arbres_trouves = [];
+  let arbres_favoris = [];
+
   var xhttp_filtres = new XMLHttpRequest();
   xhttp_filtres.open('GET', '/data/filtres');
   xhttp_filtres.setRequestHeader('Content-type', 'application/json');
@@ -91,6 +110,23 @@
       }
   }
 
+  var xhttp_arbres = new XMLHttpRequest();
+  xhttp_arbres.open('GET', '/data/arbres');
+  xhttp_arbres.setRequestHeader('Content-type', 'application/json');
+  xhttp_arbres.send();
+
+  xhttp_arbres.onload = function () {
+    var arbres = JSON.parse(xhttp_arbres.responseText);
+    tous_les_arbres = arbres;
+    arbres_favoris = favoris_into_liste_arbres(JSON.parse(localStorage.getItem("arbres_favori")));
+    var compare_list = document.getElementById('all_arbres');
+    for (var i = 0; i < arbres.length; i++) {
+      var option = document.createElement('option');
+      option.value = arbres[i]['Nom commun'];
+      compare_list.appendChild(option);
+    }
+  }
+
 
   update_resultats(1);
 
@@ -99,7 +135,10 @@
     var page_actuelle = document.getElementById('page_actuelle');
     var nombre_pages = document.getElementById('nombre_pages');
     var numero_page =parseInt(page_actuelle.innerHTML);
-    if (sens=='suivant' && nombre_pages.innerHTML!=page_actuelle.innerHTML) {
+    if (sens == 'debut'){
+      numero_page = 1;
+      page_actuelle.innerHTML=numero_page;
+    } else if (sens=='suivant' && nombre_pages.innerHTML!=page_actuelle.innerHTML) {
       numero_page++;
       page_actuelle.innerHTML=numero_page;
     } else if(sens=='precedent' && page_actuelle.innerHTML!='1') {
@@ -107,23 +146,28 @@
       page_actuelle.innerHTML=numero_page;
     }
 
-    update_resultats(numero_page);
-
+    if (document.getElementById('barre_recherche').value=='') {
+      update_resultats(numero_page);
+    } else if (document.getElementById('favoris').checked == true){
+      update_affichage_favoris(arbres_favoris, numero_page);
+    } else {
+      update_affichage_recherche(arbres_trouves, numero_page);
+    }
   }
 
 
   function update_affichage_arbres(arbres) {
     var div = document.getElementById('arbres_grid');
     var cloneArbres = div.cloneNode(true);
-    while (cloneArbres.children.length>1) {
-      cloneArbres.removeChild(cloneArbres.children[1]);
+    while (cloneArbres.children.length>0) {
+      cloneArbres.removeChild(cloneArbres.children[0]);
     }
     for (let i = 0; i < arbres.length; i++) {
       const side = i%2;
       const arbre = arbres[i];
       montrer_arbre(cloneArbres, arbre, side);
     }
-    document.body.replaceChild(cloneArbres, div);
+    document.getElementById('right_panel').replaceChild(cloneArbres, div);
   }
 
   function filtre_select(critere) {
@@ -266,6 +310,9 @@
   }
 
   function update_resultats(page){
+    document.getElementById('recherche_arbre').value="";
+    document.getElementById('favoris').checked = false;
+
     var checkboxes = document.getElementsByTagName('input');
     var selects = document.getElementsByTagName('select');
 
@@ -281,13 +328,12 @@
     xhttp.open('POST', '/data/arbres?page='+page);
     xhttp.setRequestHeader('Content-type', 'application/json');
     xhttp.send(JSON.stringify(json_filtres));
-    console.log(json_filtres);
 
     xhttp.onload = function() {
       nb_arbres_tries = JSON.parse(xhttp.responseText).nb_arbres_tries;
       arbres_tries = JSON.parse(xhttp.responseText).response;
       update_affichage_arbres(arbres_tries);
-      document.getElementById('nombre_pages').innerHTML=Math.ceil(parseInt(nb_arbres_tries)/10);
+      document.getElementById('nombre_pages').innerHTML=Math.ceil(parseInt(nb_arbres_tries)/9);
     }
   }
 
@@ -354,7 +400,6 @@
             col1.style.fontSize = '20px';
             col1.style.width = '47%';
             col1.style.borderRadius = '10px 0 0 10px';
-            console.log(arbre_popin[colonnes[i]]);
             if (colonnes[i] == "Indice de potentiel d'adaptation") {
               var keys_adaptation = Object.keys(legendes[colonnes[i]]["values"]);
               correspondance_legende = arbre_popin[colonnes[i]].replace(',', '.');
@@ -410,7 +455,113 @@
     cacher_popin(event)
   }
 
+  function recherche_trouver_arbres(flat_text){
+    result = [];
+    //On cherche d'abord les arbres dont le nom commun commence par le terme de la recherche
+    for (var i = 0; i < tous_les_arbres.length; i++) {
+      const arbre = tous_les_arbres[i];
+      text = flat_text.trim().toLowerCase();
+      if (arbre['Nom commun'].toLowerCase().startsWith(text)) {
+        result.push(arbre);
+      }
+    }
+    //On cherche ensuite les arbres dont le nom latin commence par le terme de la recherche
+    for (var i = 0; i < tous_les_arbres.length; i++) {
+      const arbre = tous_les_arbres[i];
+      text = flat_text.trim().toLowerCase();
+      if (arbre['Genre'].toLowerCase().startsWith(text)) {
+        if (!result.includes(arbre)) {
+          result.push(arbre);
+        }
+      }
+    }
+    //Puis on cherche les arbres dont le nom latin ou le nom commun contient juste le terme de la recherche
+    for (var i = 0; i < tous_les_arbres.length; i++) {
+      const arbre = tous_les_arbres[i];
+      text = flat_text.trim().toLowerCase();
+      if (arbre['Nom commun'].toLowerCase().includes(text) || arbre['Espèce'].toLowerCase().includes(text) || arbre['Genre'].toLowerCase().includes(text)) {
+        if (!result.includes(arbre)) {
+          result.push(arbre);
+        }
+      }
+    }
+    return(result);
+  }
 
+  function update_affichage_recherche(arbres_trouves, page){
+    var arbres_trouves_page = [];
+    var page_actuelle = document.getElementById('page_actuelle');
+    var nombre_pages = document.getElementById('nombre_pages');
+    page_actuelle.innerHTML = page;
+    nombre_pages.innerHTML = Math.ceil(arbres_trouves.length/9);
+    for (let i = (page-1)*9; i < Math.min(page*9, arbres_trouves.length); i++) {
+        let arbre = arbres_trouves[i];
+        arbres_trouves_page.push(arbre);
+    }
+    update_affichage_arbres(arbres_trouves_page);
+  }
+
+  function vider_filtres(){
+    var selects = document.getElementsByTagName('select');
+    for (var i = 0; i < selects.length; i++) {
+      selects[i].value = "";
+    }
+    var inputs = document.getElementsByTagName('input');
+    for (var i = 0; i < inputs.length; i++) {
+      if (inputs[i].type == 'checkbox' && inputs[i].id != 'favoris') {
+        inputs[i].checked = false;
+      }
+    }
+  }
+
+  function recherche_input(e){
+    document.getElementById('favoris').checked = false;
+    vider_filtres();
+    if (e.target.value == "") {
+      update_resultats(1);
+      arbres_trouves = [];
+    } else {
+      arbres_trouves = recherche_trouver_arbres(e.target.value);
+      update_affichage_recherche(arbres_trouves, 1);
+    }
+  }
+
+  document.getElementById('recherche_arbre').addEventListener('input', recherche_input);
+
+  function update_affichage_favoris(arbres_favoris, page){
+    var arbres_favoris_page = [];
+    var page_actuelle = document.getElementById('page_actuelle');
+    var nombre_pages = document.getElementById('nombre_pages');
+    page_actuelle.innerHTML = page;
+    nombre_pages.innerHTML = Math.ceil(arbres_favoris.length/9);
+    for (let i = (page-1)*9; i < Math.min(page*9, arbres_favoris.length); i++) {
+        let arbre = arbres_favoris[i];
+        arbres_favoris_page.push(arbre);
+    }
+    update_affichage_arbres(arbres_favoris_page);
+  }
+
+  function favoris_into_liste_arbres(id_arbres_favoris){
+    var liste_arbres = [];
+    for (var i = 0; i < tous_les_arbres.length; i++) {
+      for (var j = 0; j < id_arbres_favoris.length; j++) {
+        if (id_arbres_favoris[j] == tous_les_arbres[i]['Genre'].trim() + ' ' + tous_les_arbres[i]['Espèce'].trim()) {
+          liste_arbres.push(tous_les_arbres[i]);
+        }
+      }
+    }
+    return(liste_arbres);
+  }
+
+  function afficher_favoris(event) {
+    document.getElementById('recherche_arbre').value = "";
+    if (event.currentTarget.checked === true) {
+      update_affichage_favoris(arbres_favoris, 1);
+    }
+    else{
+      update_resultats(1);
+    }
+  }
 
   function tri(liste_criteres) {
     liste_criteres_bloquant = []
@@ -473,10 +624,12 @@
         }
         localStorage.setItem("arbres_favori", JSON.stringify(fav))
       }
+      arbres_favoris = favoris_into_liste_arbres(JSON.parse(localStorage.getItem("arbres_favori")));
     }
     else{
       rappel_cookies= document.getElementById('rappel_cookies')
       rappel_cookies.style.animation="2s ease-in normal forwards cookies_slidein"
     }
+
   }
 </script>

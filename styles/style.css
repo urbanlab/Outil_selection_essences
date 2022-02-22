@@ -64,13 +64,26 @@ body{
   text-decoration: underline;
 }
 
+#plus_de_filtres:hover{
+  color: #D82600;
+  cursor: pointer;
+}
+
+#right_panel{
+  margin-top: 10%;
+  width: 65vw;
+}
+
+#barre_recherche{
+  height: fit-content;
+}
 
 #bouton_pages{
+  margin-top: 2%;
   width: 60vw;
   height: fit-content;
   display: flex;
   align-items: center;
-  margin-top: 0;
   justify-content: flex-end;
 }
 
@@ -78,19 +91,9 @@ body{
   margin: 0;
   padding: 1vw;
   line-height: 0;
-
-}
-
-
-
-#plus_de_filtres:hover{
-  color: #D82600;
-  cursor: pointer;
 }
 
 #arbres_grid{
-  margin-top: 10%;
-  width: 65vw;
   height: fit-content;
   display: flex;
   flex-direction: row;
@@ -124,13 +127,14 @@ body{
   display: flex;
   flex-direction: column;
   justify-content:space-between;
+  align-items: center;
   width: calc(100%/3);
   height:25vw;
 }
 
 .image-arbre{
 
-  height: 15vw;
+  height: 18vw;
   width: 17vw;
   object-fit: cover;
   object-position: center;
@@ -147,6 +151,7 @@ body{
   animation-duration: 1.5s;
   animation-direction: alternate;
   animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
 }
 
 .left:hover{
@@ -397,6 +402,17 @@ footer:after{
   border: 2px solid transparent;
 }
 
+#popin_comparer{
+  position: fixed;
+  left: 40%;
+  width: 50%;
+  height: fit-content;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
 td{
   padding: 1vw;
   background-color: #d9f9da;
@@ -444,13 +460,3 @@ td{
 -o-border-image: url(./assets/frame-border.svg) 6 9 5 5 stretch stretch;
 border-image: url(./assets/frame-border.svg) 6 9 5 5 stretch stretch;
 */
-
-
-
-
-
-
-
-
-
-
