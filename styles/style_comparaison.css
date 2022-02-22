@@ -17,7 +17,20 @@ html{
   margin: 0;
   padding: 0;
 }
-
+.btn{
+  height: 50px;
+  width: 50px;
+  background: green;
+  opacity: 0.3;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  cursor: pointer;
+}
 
 body{
   min-width: fit-content;
@@ -144,7 +157,20 @@ footer:after{
     align-items: center;
     margin-top: 5%;
   }
-
+  .btn{
+    height: 50px;
+    width: 50px;
+    background: green;
+    opacity: 0.3;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    cursor: pointer;
+  }
 
   footer{
     margin:0;
@@ -199,8 +225,20 @@ footer:after{
     border: solid black;
     width: 60%;
   }
-
-
+  .btn{
+    height: 50px;
+    width: 50px;
+    background: green;
+    opacity: 0.3;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    cursor: pointer;
+  }
   #tableau_container{
     width: 100%;
     display: flex;
@@ -268,7 +306,20 @@ footer:after{
     align-items: center;
     margin-top: 5%;
   }
-
+  .btn{
+    height: 50px;
+    width: 50px;
+    background: green;
+    opacity: 0.3;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    cursor: pointer;
+  }
   footer{
     margin:0;
     width: 100%;
