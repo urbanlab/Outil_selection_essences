@@ -45,10 +45,10 @@ function binSearch(arr, e, comp=(a,b)=>{
   }
   let end = arr.length -1
   let start = 0
-  if(arr[start]==e){
+  if(comp(e, arr[start])==0){
     return start
   }
-  else if(arr[end]==e){
+  else if(comp(e, arr[end])==0){
     return end
   }
   else{
@@ -72,7 +72,7 @@ function binSearch(arr, e, comp=(a,b)=>{
   Supprime les fichiers contenus dans la liste files 
 */
 function deleteFiles(files, callback){
-  var i = files.length;
+  let i = files.length;
   if(files.length==0){
     callback(null)
   }
