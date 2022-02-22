@@ -5,6 +5,9 @@
   <title>Outil de sélection d'essences</title>
   <link rel="stylesheet" type="text/css" href="/styles/style.css">
   <link href='https://fonts.googleapis.com/css?family=Eczar' rel='stylesheet'>
+  <link href="//db.onlinewebfonts.com/c/31ed0189fe1ff1e740a652e0f75b77dc?family=Snell+Roundhand" rel="stylesheet" type="text/css"/>
+  <link href="//db.onlinewebfonts.com/c/881a787682b1823be7c0f75a607b17ab?family=DK+Crayon+Crumble" rel="stylesheet" type="text/css"/>
+  <link href="https://fr.allfont.net/allfont.css?fonts=comic-sans-ms" rel="stylesheet" type="text/css" />
 </head>
 
 <header>
@@ -27,10 +30,10 @@
       <h1 id='popin_nom_francais'></h1>
       <h2 id='popin_nom_latin'></h2>
     </div>
-    <p class=popin_titre_tableau>Informations importantes</p>
-    <table id='popin_infos'>
+    <div id="popin_infos">
 
-    </table>
+    </div>
+    
     <button id="popin_close" type="button" name="button" onclick="cacher_popin()">&times</button>
   </div>
 </div>
@@ -331,6 +334,7 @@
       popin_nom_francais.innerHTML= arbre_popin['Nom commun'];
 
       var tableau = document.getElementById('popin_infos');
+
       const colonnes = Object.keys(arbre_popin);
       while(tableau.children.length>0){
         tableau.removeChild(tableau.children[0]);
@@ -345,15 +349,13 @@
         legendes = JSON.parse(xhttp_legende.responseText);
         for (var i = 0; i < colonnes.length; i++) {
           if (colonnes[i]!='Nom commun' && colonnes[i]!='Genre' && colonnes[i]!='Espèce' && colonnes[i]!='Image Id') {
-            var tr = document.createElement('tr');
-            var col1 = document.createElement('td');
-            var col2 = document.createElement('td');
-            col1.innerHTML = colonnes[i];
-            col1.style.color = '#675F1E';
-            /*col1.style.textShadow = "#FCE5D2 1px 1px 2px"; */
-            col1.style.fontSize = '20px';
-            col1.style.width = '47%';
-            col1.style.borderRadius = '10px 0 0 10px';
+            var text_container = document.createElement('div');
+            var herbier_critere = document.createElement('p');
+            var herbier_infos = document.createElement('p');
+            text_container.classList.add('popin_herbier_text_container');
+            herbier_critere.classList.add('popin_herbier_critere');
+            herbier_infos.classList.add('popin_herbier_infos');
+            herbier_critere.innerHTML = colonnes[i];
             if (colonnes[i] == "Indice de potentiel d'adaptation") {
               var keys_adaptation = Object.keys(legendes[colonnes[i]]["values"]);
               correspondance_legende = arbre_popin[colonnes[i]].replace(',', '.');
@@ -361,12 +363,12 @@
                 var condition = keys_adaptation[j].replace(',', '.');
                 var boom = condition.split('<');
                 if (parseFloat(boom[0])<=parseFloat(correspondance_legende) && parseFloat(correspondance_legende)<parseFloat(boom[2])) {
-                  col2.innerHTML = legendes[colonnes[i]]["values"][keys_adaptation[j]];
+                  herbier_infos.innerHTML = legendes[colonnes[i]]["values"][keys_adaptation[j]];
                 }
               }
             } else if (colonnes[i] == "Besoin en ensoleillement") {
               if (arbre_popin[colonnes[i]]=='N/A') {
-                col2.innerHTML = '-'
+                herbier_infos.innerHTML = '-'
               }
               else {
                 var boom = arbre_popin[colonnes[i]].split('-');
@@ -376,20 +378,17 @@
                 else{
                   var legende_colonne = `${legendes[colonnes[i]]["values"][boom[0].trim()]} à ${legendes[colonnes[i]]["values"][boom[1].trim()]}`;
                 }
-                col2.innerHTML = legende_colonne[0].toUpperCase() + legende_colonne.substring(1);
+                herbier_infos.innerHTML = legende_colonne[0].toUpperCase() + legende_colonne.substring(1);
               }
             } else {
               correspondance_legende = arbre_popin[colonnes[i]];
-              col2.innerHTML = (legendes[colonnes[i]]) ? legendes[colonnes[i]]["values"][correspondance_legende]: correspondance_legende;
+              herbier_infos.innerHTML = (legendes[colonnes[i]]) ? legendes[colonnes[i]]["values"][correspondance_legende]: correspondance_legende;
             }
-            col2.style.color = '#6B6B6B';
-            col2.style.fontSize = '20px';
-            col2.style.width = '53%';
-            col2.style.textAlign = 'center';
-            col2.style.borderRadius = '0 10px 10px 0';
-            tr.appendChild(col1);
-            tr.appendChild(col2);
-            tableau.appendChild(tr);
+            
+            text_container.appendChild(herbier_critere);
+            text_container.appendChild(herbier_infos);
+            
+            tableau.appendChild(text_container);
           }
         }
         popin.style.visibility = 'visible';
