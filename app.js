@@ -9,9 +9,9 @@ const path=require('path');
 const compute_scores = require('./function1.js');
 const image_updater = require('./gdrive.js');
 const xss = require('xss');
-const { deleteFiles } = require('./utils');
+const crypto = require('crypto')
 
-const password_update = 'baptiste';
+const password_update = '3056849e9b6bef41c0eb17b01bfb25bb'; // Créé avec https://www.md5hashgenerator.com/
 
 app.use(bodyParser.json({
     extended: true
@@ -138,7 +138,8 @@ app.get('/data/legendes', (req, res)=>{
 app.use("/secure", (req, res, next) => {
     if (req.query.password) {
         password = xss(req.query.password);
-        if (password == password_update) {
+        const hash = crypto.createHash('md5').update(password).digest('hex')
+        if (hash == password_update) {
             next();
         }
         else{
