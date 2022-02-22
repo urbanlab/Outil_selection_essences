@@ -1,5 +1,9 @@
 const fs = require('fs')
 
+/* ----- columnToLetter -----
+  Converti un indice de colonne en la chaine de caractère représentant la colonne sous excel (28 -> AB)
+  - column : entier indice de la colonne
+*/
 function columnToLetter(column)
 {
   var temp, letter = '';
@@ -12,6 +16,10 @@ function columnToLetter(column)
   return letter;
 }
 
+/* ----- letter to column -----
+  Converti un nom de colonne excel en l'entier correspondant (AB -> 28)
+  - val : str nom de la colonne
+*/
 function letterToColumn(val){
     var base = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', i, j, result = 0;
   
@@ -21,6 +29,12 @@ function letterToColumn(val){
     return result
 }
 
+/* ----- binSearch -----
+  Recherche dichotomique dans une liste triée
+  - arr : liste d'entrée triée
+  - e : élément à rechercher
+  - comp : fonction de comparaison entre a=e et b: un élément de la liste qui renvoie 0 si a=b, -1 si a<b et 1 si a>b
+*/
 function binSearch(arr, e, comp=(a,b)=>{
   if(a==b) return 0
   else if(a<b) return -1
@@ -54,19 +68,27 @@ function binSearch(arr, e, comp=(a,b)=>{
   }
 }
 
+/* ----- deleteFiles -----
+  Supprime les fichiers contenus dans la liste files 
+*/
 function deleteFiles(files, callback){
   var i = files.length;
-  files.forEach(function(filepath){
-    fs.unlink(filepath, function(err) {
-      i--;
-      if (err) {
-        callback(err);
-        return;
-      } else if (i <= 0) {
-        callback(null);
-      }
+  if(files.length==0){
+    callback(null)
+  }
+  else{
+    files.forEach(function(filepath){
+      fs.unlink(filepath, function(err) {
+        i--;
+        if (err) {
+          callback(err);
+          return;
+        } else if (i <= 0) {
+          callback(null);
+        }
+      });
     });
-  });
+  }
 }
 
 module.exports ={

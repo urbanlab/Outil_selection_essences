@@ -1,3 +1,9 @@
+/*
+    Fonctions de gestion de l'api google drive.
+    L'api google drive est utilisée à deux fins : 
+        - Mettre à jour la colonne image ID dans le tableau des essences à partir des images sur google drive automatiquement (refreshPictures)
+        - Télécharger les images depuis google drive sur notre serveur afin de limiter les requêtes à l'api google (downloadImages)
+*/
 const {google} = require('googleapis')
 const keys = require('./image-updater-keys.json')
 const fs = require('fs')
@@ -6,6 +12,7 @@ const mime = require('./mime_type.json')
 const utils = require('./utils')
 const async = require('async')
 
+// Client de connexion à l'api google, keys est le fichier image-update-keys.json
 const client = new google.auth.JWT(
     keys.client_email,
     null,
@@ -14,6 +21,13 @@ const client = new google.auth.JWT(
     "https://www.googleapis.com/auth/spreadsheets"]
 )
 
+/* -------- getImages ----------
+Permet de lister les images contenues sur drive. google Drive ne renvoie pas tous les fichiers d'un seul coup mais seulement par
+"page", si toutes les images ne sont pas renvoyées, l'api renvoie un token puis il faut refaire la requête avec le nouveau token
+Ce qui renvoie les images de la page suivante
+- cl : client google api
+- pageToken : token renvoié par l'api (au début il vaut null)
+*/
 function getImages(cl, pageToken){
     const gdapi = google.drive({
         version: 'v3',
@@ -26,7 +40,7 @@ function getImages(cl, pageToken){
         pageSize: 100,
         pageToken: pageToken
     }
-    const promise = new Promise((resolve, reject) => {
+    const listPromise = new Promise((resolve, reject) => {
         gdapi.files.list(opt,(err, result)=>{
             if(err){
                 reject(err)
@@ -36,21 +50,22 @@ function getImages(cl, pageToken){
             for(let i=0; i<result.data.files.length; i++){
                 if(result.data.files[i].parents && result.data.files[i].parents[0]==config.image_folder_id){
                     images.push(result.data.files[i])
-                    descriptions[result.data.files[i].id]=result.data.files[i].description
                 }
             }
             for(let i=0; i<images.length; i++){
                 images[i].name = images[i].name.split(".")[0]
             }
-            fs.writeFile('./data/attributions.json', JSON.stringify(descriptions), (err)=>{
-                if(err){reject(err)}
-                resolve([images, result.data.nextPageToken])
-            })
+            resolve([images, result.data.nextPageToken])
         })
     })
-    return promise
+    return listPromise
 }
 
+/* ----- updateImages -----
+Met à jour la colonne image Id sur le tableau des essences
+- cl : client google api effectuant la requête
+- values : tableau des id ([[id1], [id2], ...])
+*/
 function updateImages(cl, values, rangeId){
     const promise = new Promise((resolve, reject)=>{
         const gsapi = google.sheets({
@@ -79,6 +94,11 @@ function updateImages(cl, values, rangeId){
     return promise
 }
 
+/*----- getData -----
+récupère les données d'une feuille google sheet
+cl : client google api
+range : séléction des colonnes sur le tableau (format A1:B8)
+*/
 function getData(cl, range){
     const gsapi = google.sheets({
         version: 'v4',
@@ -93,7 +113,7 @@ function getData(cl, range){
     const promise = new Promise((resolve, reject) => {
         gsapi.spreadsheets.values.get(opt, (err, result)=>{
             if(err){
-                throw err
+                console.log(err)
             }
             resolve(result.data.values)
         })
@@ -101,7 +121,20 @@ function getData(cl, range){
     return promise
 }
 
-function main(pageToken, callback){
+/*----- main_refresh -----
+    fonction récursive tant que le pageToken n'est pas null permettant ainsi de récupérer les images de toutes les pages et 
+    de faire coincider avec les colonnes du tableau des essences
+    Algo : 
+    - token <- null
+    - do : 
+        - on récupère les données des images avec le token puis on met à jour le token
+        - on réupère les données du tableau des essences (on commence par récupérer juste les noms des colonnes puis tout le tableau)
+        - on fait matcher les noms des images avec les colonnes espèces et nom de l'essence (tri + recherche dichotomique) pour pouvoir
+        associer l'id d'image à la bonne colonne
+        - on met à jour le tableau des essences avec les id images trouvés
+    - while token != null
+*/
+function main_refresh(pageToken, callback){
     return new Promise((resolve, reject)=>{
         getImages(client, pageToken)
         .then((value)=>{
@@ -114,22 +147,24 @@ function main(pageToken, callback){
                 const especeColumnIndex = columns[0].indexOf(config.espece_column_name)
 
                 if(imageColumnIndex==-1){
-                    throw "Colonne Image non trouvée, vérifier la configuration"
+                    console.log("Colonne Image non trouvée, vérifier la configuration")
                 }
                 const lastColumn = utils.columnToLetter(columns[0].length)
                 getData(client, `${config.data_spreadsheet}!${config.data_column_offset}${config.data_start_row}:${lastColumn}`)
                 .then((data)=>{
-                    const compfunc = (a,b)=>{
-                        if(a.name==b.name) return 0
-                        else if(a.name<b.name) return -1
-                        else if(a.name>b.name) return 1
+                    const compfunc = (image,treeColumn)=>{
+                        if(image.name==treeColumn.name) return 0
+                        else if(image.name<treeColumn.name) return -1
+                        else if(image.name>treeColumn.name) return 1
                     }
                     images = images.sort(compfunc)
+                    let descr = []
                     for(let i=0; i<data.length; i++){
                         let name = `${data[i][genreColumnIndex].trim()}_${data[i][especeColumnIndex].trim()}`
                         treeIndex = utils.binSearch(images, {name:name}, compfunc)
                         if(treeIndex!=-1){
                             data[i][imageColumnIndex] = images[treeIndex]["id"]
+                            descr[i]= images[treeIndex]["description"]
                         }
                     }
                     imageIndexes = []
@@ -138,8 +173,13 @@ function main(pageToken, callback){
                     }
                     updateImages(client, imageIndexes, `${utils.columnToLetter(imageColumnIndex+1)}${config.data_start_row}:${utils.columnToLetter(imageColumnIndex+1)}`)
                     .then((res)=>{
+                        let attr = require('./data/attributions.json')
+                        for(let i=0; i<data.length; i++){
+                            attr[data[i][imageColumnIndex]] = descr[i]
+                        }
+                        fs.writeFileSync('./data/attributions.json', JSON.stringify(attr))
                         if(pageToken){
-                            main(pageToken, callback)
+                            main_refresh(pageToken, callback)
                         }
                         else{
                             console.log("Mise à jour du fichier google sheet terminée")
@@ -161,17 +201,23 @@ function main(pageToken, callback){
     })
 }
 
+// ----- refreshPictures -----
+// Lance la fonction main_refresh avec le clien
 function refreshPictures(callback){
     client.authorize(function(err, token){
         if(err){
             console.log(err)
         }
         else{
-            main(null, callback)
+            fs.writeFileSync('./data/attributions.json', '{}')
+            main_refresh(null, callback)
         }
     })
 }
 
+/* ----- main_images -----
+    Permet de télécharger une image à partir du fileId
+*/
 function main_images(cl, fileId){
     const gdapi = google.drive({
         version: 'v3',
@@ -202,6 +248,8 @@ function main_images(cl, fileId){
     })
 }
 
+// ----- download_images -----
+// Lance le téléchargement d'une image 
 function download_images(fileId){
     return new Promise((resolve, reject)=>{
         client.authorize(function(err, token){
@@ -213,7 +261,6 @@ function download_images(fileId){
     })
 }
 
-// download_images('1znBl6OwFq0MJpyUNkZ69txqnbNz3jbh2')
 module.exports = {
     refreshPictures: refreshPictures,
     downloadImages: download_images
