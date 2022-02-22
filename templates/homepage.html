@@ -25,6 +25,8 @@
     alt="ajouter aux favori"
     onclick="update_favori()"
     />
+    <img id='popin_tape_tl' src="/assets/tape.png" alt="">
+    <img id='popin_tape_br' src="/assets/tape.png" alt="">
     <div id="popin_photo" src="" alt="">
     </div>
     <div class="popin_titres">
@@ -34,7 +36,7 @@
     <div id="popin_infos">
 
     </div>
-    
+
     <div id="popin_comparer">
       <label for="comparer_arbres">Comparer à un autre arbre :&nbsp</label>
       <input type="text" id="comparer_arbres" name="comparer_arbres" list="all_arbres" value="" autocomplete="off">
@@ -58,10 +60,10 @@
     <input type="checkbox" id="favoris" name="favoris" value="favoris" onchange="afficher_favoris(event)">
   </nav>
   <nav id="bouton_pages">
-    <button type="button" id="bouton_debut" onclick="changer_page('debut')"><<</button>
-    <button type="button" id="bouton_precedent" onclick="changer_page('precedent')"><</button>
+    <button class="bouton_nav_pages" type="button" id="bouton_debut" onclick="changer_page('debut')"><<</button>
+    <button class="bouton_nav_pages" type="button" id="bouton_precedent" onclick="changer_page('precedent')"><</button>
     <p id=indice_page>Page <span id="page_actuelle">1</span>/<span id="nombre_pages"></span></p>
-    <button type="button" id="bouton_suivant" onclick="changer_page('suivant')">></button>
+    <button class="bouton_nav_pages" type="button" id="bouton_suivant" onclick="changer_page('suivant')">></button>
   </nav>
   <section id='arbres_grid'>
 
@@ -247,8 +249,8 @@
       label.setAttribute('class',"tooltip");
       var span=document.createElement('span');
       span.setAttribute('title',"");
-      label.appendChild(span);     
-      
+      label.appendChild(span);
+
       span.innerHTML = reponse.texte;
 
       div_checkbox.appendChild(input);
@@ -428,10 +430,10 @@
               correspondance_legende = arbre_popin[colonnes[i]];
               herbier_infos.innerHTML = (legendes[colonnes[i]]) ? ((legendes[colonnes[i]]["values"][correspondance_legende]) ? legendes[colonnes[i]]["values"][correspondance_legende] : correspondance_legende) : correspondance_legende;
             }
-            
+
             text_container.appendChild(herbier_critere);
             text_container.appendChild(herbier_infos);
-            
+
             tableau.appendChild(text_container);
           }
         }
