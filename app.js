@@ -66,7 +66,7 @@ app.post('/data/arbres', (req, res) => {
 
     const page = (param_page) ? parseInt(param_page) : 1;
 
-    for (let i = (page-1)*10; i < Math.min(page*10, result_tri.length); i++) {
+    for (let i = (page-1)*9; i < Math.min(page*9, result_tri.length); i++) {
         let arbre = result_tri[i]
         response.push(arbre);
     }
@@ -88,7 +88,7 @@ app.get('/data/arbres', (req, res)=>{
         if (param_page) {
 
             const page = parseInt(param_page);
-            for (let i = (page-1)*10; i < Math.min(page*10, values.length); i++) {
+            for (let i = (page-1)*9; i < Math.min(page*9, values.length); i++) {
                 let val = values[i]
                 response.push(val);
             }
