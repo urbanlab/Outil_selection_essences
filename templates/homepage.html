@@ -193,7 +193,13 @@
 
       var label = document.createElement('label');
       label.setAttribute('for', reponse.texte);
-      label.innerHTML = reponse.texte;
+      label.setAttribute('title', reponse.commentaire);
+      label.setAttribute('class',"tooltip");
+      var span=document.createElement('span');
+      span.setAttribute('title',"");
+      label.appendChild(span);     
+      
+      span.innerHTML = reponse.texte;
 
       div_checkbox.appendChild(input);
       div_checkbox.appendChild(label);
