@@ -20,10 +20,10 @@
   "dependencies": {
     "async": "^3.2.3",
     "body-parser": "^1.19.1",
+    "crypto": "^1.0.1",
     "express": "^4.17.2",
     "googleapis": "^92.0.0",
     "http": "0.0.1-security",
-    "image-downloader": "^4.0.3",
     "nodemon": "^2.0.15",
     "xss": "^1.0.10"
   }

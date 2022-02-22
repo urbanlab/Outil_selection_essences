@@ -4,30 +4,37 @@ const bodyParser = require("body-parser");
 const gsheet = require("./gsheet.js");
 const utils = require("./utils");
 const config = require('./config.json');
-const attributions = require('./data/attributions.json')
 const fs = require('fs');
 const path=require('path');
 const compute_scores = require('./function1.js');
 const image_updater = require('./gdrive.js');
 const xss = require('xss');
-const { deleteFiles } = require('./utils');
+const crypto = require('crypto')
 
-const password_update = 'baptiste';
-//-------------------------------------------------------------------------------------------------------------------------
-//-------------------------------------------- Paramétrages de base -------------------------------------------------------
-//-------------------------------------------------------------------------------------------------------------------------
+const password_update = '3056849e9b6bef41c0eb17b01bfb25bb'; // Créé avec https://www.md5hashgenerator.com/
 
 app.use(bodyParser.json({
     extended: true
 }));
+
+// 
 app.get("/image_attribution/:id", (req, res)=>{
-    if(attributions[xss(req.params.id)]){
-        res.send(attributions[xss(req.params.id)])
-    }
-    else{
-        res.status(404).send()
-    }
-});
+    fs.readFile('./data/attributions.json', (err, data)=>{
+        if(err){
+            console.log(err)
+            res.status(500).send("aucune données d'attributions")
+        }
+        else{
+            data = JSON.parse(data)
+            if(data[xss(req.params.id)]){
+                res.send(data[xss(req.params.id)])
+            }
+            else{
+                res.send()
+            }
+        }
+    })
+})
 
 app.get("/image/:id", (req, res)=>{
     fs.readdir('./assets/images', (err, files)=>{
@@ -56,7 +63,6 @@ app.get('/data/filtres', (req, res)=>{
 // ===================================================
 
 // ==================== /data/arbres =================
-
 app.post('/data/arbres', (req, res) => {
     const param_page = req.query.page;
     mydata=require('./data/arbres.json');
@@ -132,7 +138,8 @@ app.get('/data/legendes', (req, res)=>{
 app.use("/secure", (req, res, next) => {
     if (req.query.password) {
         password = xss(req.query.password);
-        if (password == password_update) {
+        const hash = crypto.createHash('md5').update(password).digest('hex')
+        if (hash == password_update) {
             next();
         }
         else{
@@ -166,9 +173,12 @@ app.get("/secure/data/refresh", (req,res)=>{
                 console.log("Fin de mise à jour des données arbres")
             })
         })
+        .catch((err)=>{
+            res.status(500).send("Erreur Sauvegarde des arbres")
+        })
     })
     .catch((err)=>{
-        res.status(500).send("Erreur Sauvegarde des arbres")
+        res.status(500).send("Erreur Récupération des arbres")
     })
 
     // ==== Données légende ====
@@ -246,9 +256,12 @@ app.get("/secure/data/refresh", (req,res)=>{
                 console.log("Fin de mise à jour des données filtres")
             })
         })
+        .catch((err)=>{
+            res.status(500).send("Erreur Sauvegarde des filtres")
+        })
     })
     .catch((err)=>{
-        res.status(500).send('Erreur Sauvegarde des filtres')
+        res.status(500).send('Erreur Récupération des données')
     })
 
     Promise.all([arbresPromise, legendesPromise, filtresPromise])
@@ -258,12 +271,9 @@ app.get("/secure/data/refresh", (req,res)=>{
 })
 
 app.get('/secure/images/refresh', (req, res)=>{
-    // A faire : vider le dossier des images avant
     image_updater.refreshPictures(function(){
         fs.readdir('./assets/images', (err, files)=>{
             files = files.sort()
-            // files = files.map(file=>`./assets/images/${file}`)
-            // utils.deleteFiles(files, ()=>{
             const arbresPromise = gsheet.getData(gsheet.client, `'${config.data_spreadsheet}'!${config.data_column_offset}${config.data_column_names_row}:${config.data_column_names_row}`)
             arbresPromise.then((colnames)=>{
                 ncols = colnames[0].length+utils.letterToColumn(config.data_column_offset)-1
@@ -310,8 +320,10 @@ app.get('/secure/images/refresh', (req, res)=>{
                     console.log("Fin de mise à jour des images")
                     res.send("images mises à jour")
                 })
+                .catch((err)=>{
+                    res.status(500).send("Erreur récupération des données")
+                })
             })
-            // })
         })
     })
 });
@@ -336,8 +348,8 @@ app.get("/recherche", (req, res) => {
   res.status(200).sendFile(__dirname + '/templates/recherche.html');
 })
 
-app.use('/', (req, res) => {
-  res.status(200).sendFile(__dirname + req.url);
-});
+// app.use('/', (req, res) => {
+//   res.status(200).sendFile(__dirname + req.url);
+// });
 
 module.exports = app;
