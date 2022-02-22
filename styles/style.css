@@ -15,28 +15,30 @@ p{
 
 p.latin{
   font-style: italic;
-  color:#BDB246;
-  text-shadow: black 2px 1px 3px;
-  font-size: 16px;
   margin-top: 0;
   margin-bottom: 1px;
   text-align: center;
-  line-height: 100%;
+  color: var(--dark-70);
+  font-size: 14px;
+  line-height: 1.3;
+  font-weight: 500;
+  font-family: Eczar;
 }
 
 p.francais{
   font-size: 20px;
-  color:white;
-  text-shadow: black 2px 1px 3px;
+  color:#BDB246;
   margin-top: 0;
   margin-bottom: 0;
   text-align: center;
   line-height: 100%;
+  
 }
 
 body{
   min-width: fit-content;
-  margin:0;
+  margin-left:5vw;
+  margin-right: 5vw;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -63,13 +65,26 @@ body{
   text-decoration: underline;
 }
 
+#plus_de_filtres:hover{
+  color: #D82600;
+  cursor: pointer;
+}
+
+#right_panel{
+  margin-top: 10%;
+  width: 65vw;
+}
+
+#barre_recherche{
+  height: fit-content;
+}
 
 #bouton_pages{
-  width: 70vw;
+  margin-top: 2%;
+  width: 60vw;
   height: fit-content;
   display: flex;
   align-items: center;
-  margin-top: 0;
   justify-content: flex-end;
 }
 
@@ -77,19 +92,9 @@ body{
   margin: 0;
   padding: 1vw;
   line-height: 0;
-
 }
 
-
-
-#plus_de_filtres:hover{
-  color: #D82600;
-  cursor: pointer;
-}
-
-#arbres{
-  margin-top: 10%;
-  width: 70vw;
+#arbres_grid{
   height: fit-content;
   display: flex;
   flex-direction: row;
@@ -111,45 +116,100 @@ body{
   margin:5px;
 }
 
-.info_arbre{
-  /* border: solid black 1px; */
-  background-image: url('/assets/arbre_template.png');
-  background-size: cover;
-  background-position: center;
-  border-radius: 0.5vw;
+.arbre-grid-item{
+  /*max-width: 80%;
+  max-height: 300px;
+  padding: 0;
+  transform: rotateZ(-2deg);
+  margin: 0px auto 0;
+  display: block;
+  box-shadow: 0 10px 20px #f2d7c7;*/
+
   display: flex;
   flex-direction: column;
   justify-content:space-between;
-  width: 12.7vw;
-  height:20vw;
-  margin: 15px 5px;
-  animation-duration: 0.7s;
-  animation-fill-mode: forwards;
+  align-items: center;
+  width: calc(100%/3);
+  height:25vw;
 }
 
+.image-arbre{
 
-.info_arbre:hover{
-  animation-name: zoom-in;
+  height: 18vw;
+  width: 17vw;
+  object-fit: cover;
+  object-position: center;
+  border-style: solid;
+  border-width: 10px 10px 10px 10px;
+  -moz-border-image: url(/assets/frame-border.svg) 6 9 5 5 stretch stretch;
+  -webkit-border-image: url(/assets/frame-border.svg) 6 9 5 5 stretch stretch;
+  -o-border-image: url(/assets/frame-border.svg) 6 9 5 5 stretch stretch;
+  border-image: url(/assets/frame-border.svg) 6 9 5 5 stretch stretch;
+}
+
+.left{
+  transform: rotateZ(-2deg);
+  animation-duration: 1.5s;
+  animation-direction: alternate;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+}
+
+.left:hover{
+  animation-name: rotate-right;
   cursor: pointer;
 }
 
-@keyframes zoom-in {
-  from{transform: scale(100%);}
-  to{transform: scale(102%);}
+.right{
+  transform: rotateZ(3deg);
+  animation-duration: 1.5s;
+  animation-direction: alternate;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+}
+
+.right:hover{
+  animation-name: rotate-left;
+  cursor: pointer;
+}
+
+@keyframes rotate-right{
+  from{transform: rotateZ(-2deg);}
+  to{transform: rotateZ(1deg);}
+}
+
+@keyframes rotate-left {
+  from{transform: rotateZ(3deg);}
+  to{transform: rotateZ(0deg);}
 }
 
 .text-container{
+  /*text-align: center;
+  width: inherit;
+  min-width: 300px;
+  margin: 0 auto;
+  margin-top: -48px;
+  position: relative;
+  z-index: 10;
+  padding: 12px 24px;
+  box-shadow: 0 10px 20px #f2d7c7;*/
+  width: 85%;
   padding:2px;
   display: flex;
+  margin-top: -48px;
+  z-index: 10;
   flex-direction: column;
   justify-content: flex-end;
   align-items: center;
   height: fit-content;
-  background: linear-gradient(#55555500 10%, #555);
-  border-radius: 0.5vw;
+  background-color: white !important;
+  background-clip: padding-box !important;
+  border-style: solid;
+  border-width: 10px 10px 10px 10px;
+  border-image: url(/assets/frame-border.svg) 6 9 5 5 stretch stretch;
 }
 
-#mot-cle{
+.mot-cle{
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -157,6 +217,8 @@ body{
   color : red;
   width: 50%;
   height: fit-content;
+  top: 50%;
+  left: 2%;
   font-size : 16px;
   text-shadow : black 1px 1px 1px;
   line-height: 100%;
@@ -257,16 +319,16 @@ footer:after{
 }
 
 .modal-content{
-  background-color: #faeb65;
   padding: 10px;
+  background-color: white;
   width: 80%;
   height: 80%;
 }
 
 #popin_close{
-  background-color: #faeb65;
   position: fixed;
   text-align: center;
+  background-color: white;
   margin:0;
   width: 2.5em;
   height: 2.5em;
@@ -301,7 +363,9 @@ footer:after{
   text-align: center;
   line-height: 100%;
   margin-bottom: 2%;
-  color: white;
+  color: #294F8D;
+  font-family: Snell Roundhand;
+  font-variant: normal;
 }
 
 #popin_nom_latin{
@@ -311,44 +375,64 @@ footer:after{
   text-align: center;
   line-height: 100%;
   margin-bottom: 2%;
-  color: #4A494A;
+  font-family: 'Comic Sans MS';
+  color: #294F8D;
+  font-size: 15px;
 }
 
+
 #popin_infos{
+  border: black solid ;
   margin:0;
   position: fixed;
-  display: inline-block;
-  overflow: auto;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
   left: 40%;
   width: 50%;
-  height: 55%;
-  top: 30%;
+  height: 75%;
+  top: 10%;
   background-color: transparent;
-  border-radius: 0.5vw;
-  line-height: 125%;
+  overflow-y: auto;
   border-spacing: 0;
   scrollbar-color: #c1e7c3 #85c58c ;
   scrollbar-width: thin;
 }
 
-#popin_infos::-webkit-scrollbar{
-  width: 10px;
-  margin-left: 5px;
-  background: #a2e3a8;
+.popin_herbier_text_container{
+  border: black solid;
+  max-width: 190px;
+  max-height: fit-content;
+  font-size: 16px;
+  line-height: 20px;
+  
 }
 
-#popin_infos::-webkit-scrollbar-thumb {
-  background-color: #85c58c;
-  background-clip: content-box;
-  border: 2px solid transparent;
+.popin_herbier_critere{
+  font-family: DK Crayon Crumble;
+  color: #294F8D;
+  font-size: 22px;
+
 }
 
-td{
-  padding: 1vw;
-  background-color: #d9f9da;
-    border-bottom: solid 1px #85c58c;
-    border-top: solid 1px #85c58c;
-  margin: 0;
+
+.popin_herbier_infos{
+  font-family: 'Comic Sans MS';
+  color: #294F8D;
+  font-size: 15px;
+}
+
+
+#popin_comparer{
+  position: fixed;
+  left: 40%;
+  width: 50%;
+  height: fit-content;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 
@@ -384,338 +468,39 @@ td{
   background-color: rgba(125,125,125,0.3);
 }
 
+/*
+-moz-border-image: url(./assets/frame-border.svg) 6 9 5 5 stretch stretch;
+-webkit-border-image: url(./assets/frame-border.svg) 6 9 5 5 stretch stretch;
+-o-border-image: url(./assets/frame-border.svg) 6 9 5 5 stretch stretch;
+border-image: url(./assets/frame-border.svg) 6 9 5 5 stretch stretch;
+*/
 
 
-
-
-
-
-
-
-@media screen and (max-width: 750px) {
-
-  #nav_pages{
-    right: 5%;
-    top: 7%;
-  }
-
-  #cookies_dialogue{
-    position: fixed;
-    bottom: 0;
-    background-color: rgba(255,255,255,0.5);
-    z-index: 1000;
-    width: 100%;
-    border-radius: 0.5vw;
-    text-align: center;
-    color: #294F8D;
-    max-height:0;
-    animation: 2s ease-in forwards 1s cookies_slidein;
-  }
-
-
-
-
-  html{
-    min-width: 100%;
-    min-height: 100%;
-    margin: 0;
-  }
-
-  body{
-    min-width: fit-content;
-    min-height: 100%;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    background-color: #FCE5D2;
-  }
-
-  header{
-    width: 100%;
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
-    height: 10%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background-color: white;
-    z-index: 999;
-  }
-
-  header:after{
-    content: "";
-    display: block;
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: -13px;
-    height: 14px;
-    background: url('http://canographia.datagora.erasme.org/wp-content/themes/canographia/assets/rough-x-white.svg') repeat-x transparent;
-  }
-
-  footer{
-    width: 100%;
-    height: 2%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 999;
-    background: #bdb246;
-    position: relative;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    margin-top: 10%;
-    padding-left: 10%;
-    padding-right: 10%;
-  }
-
-  .footer_logo_erasme{
-    width: 70vw;
-    height: 10vw;
-    position: absolute;
-    margin:0;
-
-  }
-
-  footer:after{
-    content: "";
-    display: block;
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: -13px;
-    height: 14px;
-    background: url('http://canographia.datagora.erasme.org/wp-content/themes/canographia/assets/rough-x-secondary.svg') repeat-x transparent;
-  }
-
-
-  .text-container{
-    padding:2px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    align-items: center;
-    height: fit-content;
-    background: linear-gradient(#55555500 10%, #555);
-    border-radius: 0.5vw;
-  }
-
-
-  #mot-cle{
-    color : red;
-    margin : auto;
-    margin-top : 3.5vw;
-    font-size: 22px;
-    font-weight : bold;
-    font-style : italic;
-    text-align : left;
-    text-shadow : black 1px 1px 1px;
-    line-height: 100%;
-  }
-
-
-
-
-
-  #filtres{
-    width: 100vw;
-    display: flex;
-    flex-direction: column;
-    padding-left: 20%;
-    padding-right: 1%;
-    padding-bottom: 6px;
-    height: fit-content;
-    margin-top: 30%;
-    justify-content: center;
-    font-size: 20px;
-  }
-
-  select{
-    width: 55%;
-  }
-
-  #plus_de_filtres{
-    order:100000000000;
-    width: fit-content;
-    margin: auto;
-    border: none;
-    background: none;
-    text-decoration: underline;
-  }
-
-  #arbres{
-    margin-top: 10%;
-    width: 100vw;
-    display: flex;
-    flex-direction: column;
-    align-items: left;
-    justify-content: center;
-    padding-left: 10%;
-    padding-right: 10%;
-  }
-
-
-  #bouton_pages{
-    width: 100vw;
-    height: fit-content;
-    display: flex;
-    align-items: center;
-    margin-top: 0;
-    justify-content: center;
-  }
-
-
-  .info_arbre{
-    background-image: url('/assets/arbre_template.png');
-    background-size: cover;
-    background-position: center;
-    border-radius: 0.5vw;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 100%;
-    height:120vw;
-    animation-duration: 0.7s;
-    animation-fill-mode: forwards;
-  }
-
-  .filtre{
-    display: flex;
-    flex-direction: column;
-    text-align: center;
-    justify-content: center;
-    margin:0;
-  }
-
-  .filtre_checkbox{
-    display: grid;
-    grid-template-columns: 15% 30%;
-    align-items: left;
-    white-space:nowrap;
-  }
-
-  p.latin{
-    font-style: italic;
-    color:#BDB246;
-    text-shadow: black 2px 1px 3px;
-    font-size: 22px;
-    margin-top: 0;
-    margin-bottom: 1px;
-    text-align: center;
-    line-height: 100%;
-  }
-
-  p.francais{
-    font-size: 26px;
-    color:white;
-    text-shadow: black 2px 1px 3px;
-    margin-top: 0;
-    margin-bottom: 0;
-    text-align: center;
-    line-height: 100%;
-  }
-
-
-
-  .modal{
-    visibility: hidden;
-    opacity: 0%;
-    position: fixed;
-    right: 0;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    z-index: 9999;
-    background-color: #77777777;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .modal-content{
-    background-color: #85c58c;
-    padding: 0px;
-    width: 100%;
-    height: 90%;
-  }
-
-  #popin_close{
-    background-color: #85c58c;
-    position: fixed;
-    text-align: center;
-    margin:0;
-    width: 2.5em;
-    height: 2.5em;
-    left: 91%;
-    top: 6%;
-    cursor: pointer;
-  }
-
-
-  .popin_titres{
-    left: 6%;
-    top: 7%;
-    width: 45%;
-    height: 23%;
-  }
-
-  #popin_photo{
-    width: 35%;
-    height: 23%;
-    object-fit: cover;
-    position: fixed;
-    top : 7%;
-    left: 53%;
-  }
-
-  #popin_infos{
-    margin:0;
-    position: fixed;
-    display: inline-block;
-    overflow: auto;
-    left: 5%;
-    width: 90%;
-    height: 60%;
-    top: 33%;
-    background-color: transparent;
-    border-radius: 0.5vw;
-    line-height: 125%;
-    border-spacing: 0;
-    scrollbar-color: #c1e7c3 #85c58c ;
-    scrollbar-width: thin;
-  }
-
-  #popin_infos::-webkit-scrollbar{
-    width: 10px;
-    margin-left: 5px;
-    background: #85c58c;
-  }
-
-  #popin_infos::-webkit-scrollbar-thumb {
-    background-color: #c1e7c3;
-    background-clip: content-box;
-    border: 2px solid transparent;
-  }
-
-  td{
-    padding: 1vw;
-    background-color: #c1e7c3;
-    border-bottom: solid 1px #85c58c;
-    border-top: solid 1px #85c58c;
-    margin: 0;
-  }
-
-
-
-  .popin_titre_tableau{
-    display: none;
-  }
+.tooltip{
+display:flex;
+position: relative;
+}
+.tooltip:hover:after{
+background: #bdb246;
+border-radius: 5px;
+bottom: 26px;
+color: #fff;
+content: attr(title);
+left: -25%;
+padding: 5px 15px;
+position: absolute;
+z-index: 98;
+width: 400px;
+}
+.tooltip:hover:before{
+border: solid;
+border-color: #bdb246 transparent;
+border-width: 6px 6px 0 6px;
+bottom: 20px;
+content: "";
+left: 10%;
+position: absolute;
+z-index: 99;
 }
 
 
@@ -724,449 +509,3 @@ td{
 
 
 
-
-
-@media screen and (min-width: 751px) and (max-width: 1110px) {
-
-  body{
-    min-width: fit-content;
-    margin:0;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    background-color: #FCE5D2;
-  }
-
-  #filtres{
-    width: 30vw;
-    display: flex;
-    flex-direction: column;
-    padding: 2px;
-    padding-bottom: 6px;
-    height: fit-content;
-    margin-top: 15%;
-  }
-
-  #plus_de_filtres{
-    order:100000000000;
-    width: fit-content;
-    margin: auto;
-    border: none;
-    background: none;
-    text-decoration: underline;
-  }
-
-
-  #bouton_pages{
-    width: 60vw;
-    height: fit-content;
-    display: flex;
-    align-items: center;
-    margin-top: 0;
-    justify-content: flex-end;
-  }
-
-  #indice_page{
-    margin: 0;
-    padding: 1vw;
-    line-height: 0;
-
-  }
-
-
-
-  #plus_de_filtres:hover{
-    color: #D82600;
-    cursor: pointer;
-  }
-
-  #arbres{
-    margin-top: 15%;
-    width: 65vw;
-    height: fit-content;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-around;
-  }
-
-  .filtre{
-    display: flex;
-    flex-direction: column;
-    align-items: left;
-    margin:5px;
-  }
-
-  .filtre_checkbox{
-    display: grid;
-    grid-template-columns: 11% 24%;
-    align-items: left;
-    white-space:nowrap;
-  }
-
-  .info_arbre{
-    /* border: solid black 1px; */
-    background-image: url('/assets/arbre_template.png');
-    background-size: cover;
-    background-position: center;
-    border-radius: 0.5vw;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    width: 30vw;
-    height:40vw;
-    margin: 15px 5px;
-    animation-duration: 0.7s;
-    animation-fill-mode: forwards;
-  }
-
-
-  .info_arbre:hover{
-    animation-name: zoom-in;
-    cursor: pointer;
-  }
-
-  @keyframes zoom-in {
-    from{transform: scale(100%);}
-    to{transform: scale(102%);}
-  }
-
-  .text-container{
-    padding:2px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    align-items: center;
-    height: fit-content;
-    background: linear-gradient(#55555500 10%, #555);
-    border-radius: 0.5vw;
-  }
-
-  #mot-cle{
-    color : red;
-    margin : auto;
-    margin-top : 3.5vw;
-    font-size : 14px;
-    font-weight : bold;
-    font-style : italic;
-    text-align : left;
-    text-shadow : black 1px 1px 1px;
-    line-height: 100%;
-  }
-
-  label{
-    text-align: left;
-    margin-bottom: 4px;
-    color:#294F8D;
-  }
-
-  select{
-    width: 20vw;
-  }
-
-  header{
-    width: 100%;
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
-    height: 10%;
-    display: flex;
-    background-color: white;
-    z-index: 999;
-  }
-
-  header:after{
-    content: "";
-    display: block;
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: -14px;
-    height: 14px;
-    background: url('http://canographia.datagora.erasme.org/wp-content/themes/canographia/assets/rough-x-white.svg') repeat-x transparent;
-  }
-
-  #titre_page{
-    margin: auto;
-    width: fit-content;
-    align-self: center;
-  }
-
-  #nav_pages{
-    width: fit-content;
-    height: fit-content;
-    position: fixed;
-    right: 3%;
-    top: 7%;
-  }
-
-  footer{
-    margin:0;
-    width: 100%;
-    height: 2%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    z-index: 999;
-    background: #bdb246;
-    position: relative;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    padding: 36px 0 64px;
-    font-size: 15px;
-    margin-top: 5%;
-  }
-
-  .footer_logo_erasme{
-    width: 65vw;
-    height: 8vw;
-    position: absolute;
-    margin: 0;
-  }
-
-  footer:after{
-    content: "";
-    display: block;
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: -13px;
-    height: 14px;
-    background: url('http://canographia.datagora.erasme.org/wp-content/themes/canographia/assets/rough-x-secondary.svg') repeat-x transparent;
-  }
-
-  .modal{
-    visibility: hidden;
-    opacity: 0%;
-    position: fixed;
-    right: 0;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    z-index: 9999;
-    background-color: #77777777;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .modal-content{
-    background-color: #85c58c;
-    padding: 10px;
-    width: 80%;
-    height: 80%;
-  }
-
-  #popin_close{
-    background-color: #85c58c;
-    position: fixed;
-    text-align: center;
-    margin:0;
-    width: 2.5em;
-    height: 2.5em;
-    left: 86%;
-    top: 10%;
-    cursor: pointer;
-  }
-
-
-  .popin_titres{
-    left: 16%;
-    top: 11%;
-    width: 35%;
-    height: 20%;
-  }
-
-  #popin_nom_francais{
-    font-size: 34px;
-  }
-
-  #popin_photo{
-    width: 32%;
-    height: 20%;
-    object-fit: cover;
-    position: fixed;
-    top : 11%;
-    left: 53%;
-  }
-
-  #popin_infos{
-    margin:0;
-    position: fixed;
-    display: inline-block;
-    overflow: auto;
-    left: 16%;
-    width: 70%;
-    height: 55%;
-    top: 33%;
-    background-color: transparent;
-    border-radius: 0.5vw;
-    line-height: 125%;
-    border-spacing: 0;
-    scrollbar-color: #c1e7c3 #85c58c ;
-    scrollbar-width: thin;
-  }
-
-
-  #popin_nom_francais{
-    margin:0;
-    width:100%;
-    text-align: center;
-    line-height: 100%;
-    margin-bottom: 2%;
-    color: white;
-  }
-
-  #popin_nom_latin{
-    margin:0;
-    width:100%;
-    font-style: italic;
-    text-align: center;
-    line-height: 100%;
-    margin-bottom: 2%;
-    color: #4A494A;
-  }
-
-
-  #popin_infos::-webkit-scrollbar{
-    width: 10px;
-    margin-left: 5px;
-    background: #85c58c;
-  }
-
-  #popin_infos::-webkit-scrollbar-thumb {
-    background-color: #c1e7c3;
-    background-clip: content-box;
-    border: 2px solid transparent;
-  }
-
-  td{
-    padding: 1vw;
-    background-color: #c1e7c3;
-    border-bottom: solid 1px #85c58c;
-    border-top: solid 1px #85c58c;
-    margin: 0;
-  }
-
-  .popin_titre_tableau{
-    display: none;
-  }
-
-}
-
-
-
-
-@media screen and (min-width: 1111px) {
-
-  select{
-    width: 75%;
-  }
-
-  header:after{
-    content: "";
-    display: block;
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: -13px;
-    height: 14px;
-    background: url('http://canographia.datagora.erasme.org/wp-content/themes/canographia/assets/rough-x-white.svg') repeat-x transparent;
-  }
-
-  footer:after{
-    content: "";
-    display: block;
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: -13px;
-    height: 14px;
-    background: url('http://canographia.datagora.erasme.org/wp-content/themes/canographia/assets/rough-x-secondary.svg') repeat-x transparent;
-  }
-
-  #arbres{
-    margin-top: 10%;
-    width: 70%;
-    height: fit-content;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-around;
-  }
-
-  #filtres{
-    width: 20%;
-    display: flex;
-    flex-direction: column;
-    padding: 2px;
-    padding-bottom: 6px;
-    height: fit-content;
-    margin-top: 10%;
-  }
-
-
-  .modal-content{
-    background-color: #85c58c;
-    padding: 10px;
-    width: 80%;
-    height: 80%;
-  }
-
-  #popin_close{
-    background-color: #85c58c;
-    position: fixed;
-    text-align: center;
-    margin:0;
-    width: 2.5em;
-    height: 2.5em;
-    left: 86%;
-    top: 10%;
-    cursor: pointer;
-  }
-
-
-  #popin_infos::-webkit-scrollbar{
-    width: 10px;
-    margin-left: 5px;
-    background: #85c58c;
-  }
-
-  #popin_infos::-webkit-scrollbar-thumb {
-    background-color: #c1e7c3;
-    background-clip: content-box;
-    border: 2px solid transparent;
-  }
-
-
-  td{
-    padding: 1vw;
-    background-color: #c1e7c3;
-    border-bottom: solid 1px #85c58c;
-    border-top: solid 1px #85c58c;
-    margin: 0;
-  }
-
-
-  
-
-  .popin_titre_tableau{
-    margin:0;
-    position: fixed;
-    left: 40%;
-    width: 50%;
-    top: 20%;
-    text-align: center;
-    margin-bottom: 2%;
-    padding: .1vw;
-    color: #4A494A;
-    /*text-shadow: #FCE5D2 1px 1px 2px;*/
-    font-size: 23px;
-    border-radius: 0.5vw;
-  }
-
-}

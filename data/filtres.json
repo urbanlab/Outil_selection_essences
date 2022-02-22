@@ -1,1 +1,426 @@
+<<<<<<< HEAD
 [{"nom":"Taille des arbres","importance":"Bloquant","type_question":"Select","reponses":[{"valeur":"1","texte":"Plus de 20m"},{"valeur":"2","texte":"Entre 15 et 20m"},{"valeur":"3","texte":"Entre 8 et 15m"},{"valeur":"4","texte":"Moins de 8m"}]},{"nom":"Largeur houpier","importance":"Bloquant","type_question":"Select","reponses":[{"valeur":"1","texte":"Plus de 12m"},{"valeur":"2","texte":"Entre 8 et 12m"},{"valeur":"3","texte":"Entre 5 et 8m"},{"valeur":"4","texte":"Moins de 5m"}]},{"nom":"Longévité de l'espèce","importance":"Peu important","type_question":"","reponses":[{"valeur":"1","texte":"Elevée"},{"valeur":"2","texte":"Moyenne"},{"valeur":"3","texte":"Faible"}]},{"nom":"Tolérance pour le pH du sol","importance":"Bloquant","type_question":"Select","reponses":[{"valeur":"2","texte":" Sol neutre à basique (tolérance au calcaire)"},{"valeur":"3","texte":"Sols neutres (légérement acides à légèrement basiques)"},{"valeur":"4","texte":"Sols neutres à acide, tolère mal le calcaire "},{"valeur":"5","texte":"Sols acides (calcifuge stricte)"}]},{"nom":"Besoin en eau et humidité","importance":"Bloquant","type_question":"Select","reponses":[{"valeur":"1","texte":"Sol frais à humide"},{"valeur":"2","texte":"Sol variable"},{"valeur":"3","texte":"Sol modérément sec"},{"valeur":"4","texte":"Sol très sec"}]},{"nom":"Feuillage","importance":"Peu important","type_question":"Select","reponses":[{"valeur":"Persistant","texte":"Persistant (toujours vert)"},{"valeur":"Semi Per","texte":"Semi persistant"},{"valeur":"Marcescent","texte":"Marcescent"},{"valeur":"caduc","texte":"Caduc"}]},{"nom":"Impact ornemental saisonnier","importance":"Peu important","type_question":"Select","reponses":[{"valeur":"1","texte":"Fort"},{"valeur":"2","texte":"Moyen"},{"valeur":"3","texte":"Limité"}]},{"nom":"Pollen et potentiel allergisant","importance":"Peu important","type_question":"Select","reponses":[{"valeur":"1","texte":"Fort"},{"valeur":"2","texte":"Modéré"},{"valeur":"3","texte":"Faible"}]},{"nom":"Disponibilité en pépinière","importance":"Peu important","type_question":"","reponses":[{"valeur":"1","texte":"Fréquent"},{"valeur":"2","texte":"Présent"},{"valeur":"3","texte":"Rare"},{"valeur":"4","texte":" Absent"}]},{"nom":"Indice de potentiel d'adaptation","importance":"Important","type_question":"","reponses":[{"valeur":"1","texte":"Essence présentant un fort potentiel sur Lyon face au changement climatique, à promouvoir"},{"valeur":"2","texte":"Essences présentant un bon potentiel, mais à tester davantage, et à adapter à certaines situations."},{"valeur":"3","texte":"Essences présentant un certain potentiel, mais seulement dans certaines situations, mais à éviter dans d'autres."},{"valeur":"4","texte":"Essences peu adaptées, à restreindre, et à limiter à certaines situations favorables."},{"valeur":"5","texte":"Essences inadaptées à proscrire, ou à fortement limiter"}]},{"nom":"Potentiel Canopée","importance":"Important","type_question":"Select","reponses":[{"valeur":"1","texte":"Grand potentiel d'ombrage >120m2,feuillage dense…"},{"valeur":"2","texte":"Grande hauteur mais port fastigié, feuillage peu ombrageant, surface moyenne…"},{"valeur":"3","texte":"Faible hauteur et diamètre de couronne <20m2 à maturité"}]},{"nom":"Indice de confiance","importance":"Peu important","type_question":"","reponses":[{"valeur":"5","texte":"Confiance maximum."},{"valeur":"4","texte":"Confiance très bonne."},{"valeur":"3","texte":"Confiance assez bonne."},{"valeur":"2","texte":"Confiance moyenne. "},{"valeur":"1","texte":"Confiance faible. "},{"valeur":"0","texte":"Confiance nulle."}]},{"nom":"Provenance","importance":"Peu important","type_question":"Select","reponses":[{"valeur":"Indigène","texte":"Indigène"},{"valeur":"Europe","texte":"Europe"},{"valeur":"Méditerranée","texte":"Méditerranée"},{"valeur":"Asie","texte":"Asie"},{"valeur":"Amérique","texte":"Amérique"},{"valeur":"Océanie","texte":"Océanie"},{"valeur":"Horticole","texte":"Horticole"}]},{"nom":"Potentiel invasif","importance":"Important","type_question":"","reponses":[{"valeur":"1","texte":"Fort"},{"valeur":"2","texte":"Modéré"},{"valeur":"3","texte":"Faible"}]},{"nom":"Impact sur la biodiversité","importance":"Important","type_question":"","reponses":[{"valeur":"1","texte":"Positif"},{"valeur":"2","texte":"Neutre"},{"valeur":"3","texte":"Négatif"}]},{"nom":"Type d'usage","importance":"Bloquant","type_question":"Checkbox","reponses":[{"valeur":"Alignement routier","texte":"Alignement routier"},{"valeur":"Autre situation urbaine","texte":"Autre situation urbaine"},{"valeur":"Petit Jardin","texte":"Petit Jardin"},{"valeur":"Parc et grand jardin","texte":"Parc et grand jardin"},{"valeur":"Foret gourmande","texte":"Foret gourmande"},{"valeur":"Haie","texte":"Haie"},{"valeur":"Noue et jardin de pluie","texte":"Noue et jardin de pluie"},{"valeur":"Ripisylve","texte":"Ripisylve"},{"valeur":"Boisement","texte":"Boisement"}]},{"nom":"Besoin en ensoleillement","importance":"Important","type_question":"Select","reponses":[{"valeur":"1","texte":"Ombre"},{"valeur":"2","texte":"Mi-ombre"},{"valeur":"3","texte":"Soleil"},{"valeur":"4","texte":"Plein soleil"}]}]
+=======
+[
+    {
+        "nom": "Taille des arbres",
+        "importance": "Bloquant",
+        "type_question": "Select",
+        "reponses": [
+            {
+                "valeur": "1",
+                "texte": "Plus de 20m"
+            },
+            {
+                "valeur": "2",
+                "texte": "Entre 15 et 20m"
+            },
+            {
+                "valeur": "3",
+                "texte": "Entre 8 et 15m"
+            },
+            {
+                "valeur": "4",
+                "texte": "Moins de 8m"
+            }
+        ]
+    },
+    {
+        "nom": "Largeur houpier",
+        "importance": "Bloquant",
+        "type_question": "Select",
+        "reponses": [
+            {
+                "valeur": "1",
+                "texte": "Plus de 12m"
+            },
+            {
+                "valeur": "2",
+                "texte": "Entre 8 et 12m"
+            },
+            {
+                "valeur": "3",
+                "texte": "Entre 5 et 8m"
+            },
+            {
+                "valeur": "4",
+                "texte": "Moins de 5m"
+            }
+        ]
+    },
+    {
+        "nom": "Longévité de l'espèce",
+        "importance": "Peu important",
+        "type_question": "",
+        "reponses": [
+            {
+                "valeur": "1",
+                "texte": "Elevée"
+            },
+            {
+                "valeur": "2",
+                "texte": "Moyenne"
+            },
+            {
+                "valeur": "3",
+                "texte": "Faible"
+            }
+        ]
+    },
+    {
+        "nom": "Tolérance pour le pH du sol",
+        "importance": "Bloquant",
+        "type_question": "Select",
+        "reponses": [
+            {
+                "valeur": "2",
+                "texte": " Sol neutre à basique (tolérance au calcaire)"
+            },
+            {
+                "valeur": "3",
+                "texte": "Sols neutres (légérement acides à légèrement basiques)"
+            },
+            {
+                "valeur": "4",
+                "texte": "Sols neutres à acide, tolère mal le calcaire "
+            },
+            {
+                "valeur": "5",
+                "texte": "Sols acides (calcifuge stricte)"
+            }
+        ]
+    },
+    {
+        "nom": "Besoin en eau et humidité",
+        "importance": "Bloquant",
+        "type_question": "Select",
+        "reponses": [
+            {
+                "valeur": "1",
+                "texte": "Sol frais à humide"
+            },
+            {
+                "valeur": "2",
+                "texte": "Sol variable"
+            },
+            {
+                "valeur": "3",
+                "texte": "Sol modérément sec"
+            },
+            {
+                "valeur": "4",
+                "texte": "Sol très sec"
+            }
+        ]
+    },
+    {
+        "nom": "Feuillage",
+        "importance": "Peu important",
+        "type_question": "Select",
+        "reponses": [
+            {
+                "valeur": "Persistant",
+                "texte": "Persistant (toujours vert)"
+            },
+            {
+                "valeur": "Semi Per",
+                "texte": "Semi persistant"
+            },
+            {
+                "valeur": "Marcescent",
+                "texte": "Marcescent"
+            },
+            {
+                "valeur": "caduc",
+                "texte": "Caduc"
+            }
+        ]
+    },
+    {
+        "nom": "Impact ornemental saisonnier",
+        "importance": "Peu important",
+        "type_question": "Select",
+        "reponses": [
+            {
+                "valeur": "1",
+                "texte": "Fort"
+            },
+            {
+                "valeur": "2",
+                "texte": "Moyen"
+            },
+            {
+                "valeur": "3",
+                "texte": "Limité"
+            }
+        ]
+    },
+    {
+        "nom": "Pollen et potentiel allergisant",
+        "importance": "Peu important",
+        "type_question": "Select",
+        "reponses": [
+            {
+                "valeur": "1",
+                "texte": "Peu sensible au pollen et potentiel allergisant"
+            },
+            {
+                "valeur": "2",
+                "texte": "Sensible au pollen et potentiel allergisant"
+            },
+            {
+                "valeur": "3",
+                "texte": "Très sensible au pollen et potentiel allergisant "
+            }
+        ]
+    },
+    {
+        "nom": "Disponibilité en pépinière",
+        "importance": "Peu important",
+        "type_question": "",
+        "reponses": [
+            {
+                "valeur": "1",
+                "texte": "Fréquent"
+            },
+            {
+                "valeur": "2",
+                "texte": "Présent"
+            },
+            {
+                "valeur": "3",
+                "texte": "Rare"
+            },
+            {
+                "valeur": "4",
+                "texte": " Absent"
+            }
+        ]
+    },
+    {
+        "nom": "Indice de potentiel d'adaptation",
+        "importance": "Important",
+        "type_question": "",
+        "reponses": [
+            {
+                "valeur": "1",
+                "texte": "Essence présentant un fort potentiel sur Lyon face au changement climatique, à promouvoir"
+            },
+            {
+                "valeur": "2",
+                "texte": "Essences présentant un bon potentiel, mais à tester davantage, et à adapter à certaines situations."
+            },
+            {
+                "valeur": "3",
+                "texte": "Essences présentant un certain potentiel, mais seulement dans certaines situations, mais à éviter dans d'autres."
+            },
+            {
+                "valeur": "4",
+                "texte": "Essences peu adaptées, à restreindre, et à limiter à certaines situations favorables."
+            },
+            {
+                "valeur": "5",
+                "texte": "Essences inadaptées à proscrire, ou à fortement limiter"
+            }
+        ]
+    },
+    {
+        "nom": "Potentiel Canopée",
+        "importance": "Important",
+        "type_question": "Select",
+        "reponses": [
+            {
+                "valeur": "1",
+                "texte": "Grand potentiel d'ombrage >120m2,feuillage dense…"
+            },
+            {
+                "valeur": "2",
+                "texte": "Grande hauteur mais port fastigié, feuillage peu ombrageant, surface moyenne…"
+            },
+            {
+                "valeur": "3",
+                "texte": "Faible hauteur et diamètre de couronne <20m2 à maturité"
+            }
+        ]
+    },
+    {
+        "nom": "Indice de confiance",
+        "importance": "Peu important",
+        "type_question": "",
+        "reponses": [
+            {
+                "valeur": "5",
+                "texte": "Confiance maximum."
+            },
+            {
+                "valeur": "4",
+                "texte": "Confiance très bonne."
+            },
+            {
+                "valeur": "3",
+                "texte": "Confiance assez bonne."
+            },
+            {
+                "valeur": "2",
+                "texte": "Confiance moyenne. "
+            },
+            {
+                "valeur": "1",
+                "texte": "Confiance faible. "
+            },
+            {
+                "valeur": "0",
+                "texte": "Confiance nulle."
+            }
+        ]
+    },
+    {
+        "nom": "Provenance",
+        "importance": "Peu important",
+        "type_question": "Select",
+        "reponses": [
+            {
+                "valeur": "Indigène",
+                "texte": "Indigène"
+            },
+            {
+                "valeur": "Europe",
+                "texte": "Europe"
+            },
+            {
+                "valeur": "Méditerranée",
+                "texte": "Méditerranée"
+            },
+            {
+                "valeur": "Asie",
+                "texte": "Asie"
+            },
+            {
+                "valeur": "Amérique",
+                "texte": "Amérique"
+            },
+            {
+                "valeur": "Océanie",
+                "texte": "Océanie"
+            },
+            {
+                "valeur": "Horticole",
+                "texte": "Horticole"
+            }
+        ]
+    },
+    {
+        "nom": "Potentiel invasif",
+        "importance": "Important",
+        "type_question": "",
+        "reponses": [
+            {
+                "valeur": "1",
+                "texte": "Fort"
+            },
+            {
+                "valeur": "2",
+                "texte": "Modéré"
+            },
+            {
+                "valeur": "3",
+                "texte": "Faible"
+            }
+        ]
+    },
+    {
+        "nom": "Impact sur la biodiversité",
+        "importance": "Important",
+        "type_question": "",
+        "reponses": [
+            {
+                "valeur": "1",
+                "texte": "Positif"
+            },
+            {
+                "valeur": "2",
+                "texte": "Neutre"
+            },
+            {
+                "valeur": "3",
+                "texte": "Négatif"
+            }
+        ]
+    },
+    {
+        "nom": "Type d'usage",
+        "importance": "Bloquant",
+        "type_question": "Checkbox",
+        "reponses": [
+            {
+                "valeur": "Alignement routier",
+                "texte": "Alignement routier",
+                "commentaire":""
+            },
+            {
+                "valeur": "Autre situation urbaine",
+                "texte": "Autre situation urbaine",
+                "commentaire":""
+            },
+            {
+                "valeur": "Petit Jardin",
+                "texte": "Petit Jardin",
+                "commentaire":""
+            },
+            {
+                "valeur": "Parc et grand jardin",
+                "texte": "Parc et grand jardin",
+                "commentaire":""
+            },
+            {
+                "valeur": "Foret gourmande",
+                "texte": "Foret gourmande",
+                "commentaire":""
+            },
+            {
+                "valeur": "Haie",
+                "texte": "Haie",
+                "commentaire":""
+            },
+            {
+                "valeur": "Noue et jardin de pluie",
+                "texte": "Noue et jardin de pluie",
+                "commentaire":"Il s’agit d’un aménagement végétalisé qui allie espace de nature et d’agrément avec la gestion de l’eau pluviale. Il comprend ainsi des végétaux qui supportent des taux d’humidités plus sou moins importants et pour des durées plus ou moins longues. Ce type d’aménagement permet d’infiltrer l’eau à la parcelle (en lien avec les eaux de toitures des bâtiments par exemple), forme des zones humides en milieux urbains particulièrement intéressant pour la biodiversité et participe aux rafraichissements des espaces."
+            },
+            {
+                "valeur": "Ripisylve",
+                "texte": "Ripisylve",
+                "commentaire":"Ces formations végétales (formées notamment par les strates arbustives à arborées) dépendent des variations des niveaux d’eaux. Ces milieux sont aux abords ou en connexion souterraines avec des cours d’eau. Ce sont donc des milieux qui accueillent une faune et une flore particulière. Ils représentent une interface entre trame verte et trame bleue indispensables pour le maintien des continuités écologiques à l’échelle des territoires (déplacements, habitats et ressources en nourriture pour la faune). "
+            },
+            {
+                "valeur": "Boisement",
+                "texte": "Boisement",
+                "commentaire":"boisement"
+            }
+        ]
+    },
+    {
+        "nom": "Besoin en ensoleillement",
+        "importance": "Important",
+        "type_question": "Select",
+        "reponses": [
+            {
+                "valeur": "1",
+                "texte": "Ombre"
+            },
+            {
+                "valeur": "2",
+                "texte": "Mi-ombre"
+            },
+            {
+                "valeur": "3",
+                "texte": "Soleil"
+            },
+            {
+                "valeur": "4",
+                "texte": "Plein soleil"
+            }
+        ]
+    }
+]
+>>>>>>> cf9c6d91bbbb82c0ef0e7db47761ea8147164103
