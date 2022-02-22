@@ -146,12 +146,12 @@
       page_actuelle.innerHTML=numero_page;
     }
 
-    if (document.getElementById('barre_recherche').value=='') {
-      update_resultats(numero_page);
-    } else if (document.getElementById('favoris').checked == true){
+    if (document.getElementById('favoris').checked == true) {
       update_affichage_favoris(arbres_favoris, numero_page);
-    } else {
+    } else if (document.getElementById('recherche_arbre').value!=''){
       update_affichage_recherche(arbres_trouves, numero_page);
+    } else {
+      update_resultats(numero_page);
     }
   }
 
