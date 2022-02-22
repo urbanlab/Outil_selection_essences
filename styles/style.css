@@ -32,7 +32,7 @@ p.francais{
   margin-bottom: 0;
   text-align: center;
   line-height: 100%;
-  
+
 }
 
 body{
@@ -79,6 +79,17 @@ body{
   height: fit-content;
 }
 
+#recherche_arbre{
+  background-color: white !important;
+  background-clip: padding-box !important;
+  border-style: solid;
+  border-width: 10px 10px 10px 10px;
+  -moz-border-image: url(/assets/frame-border.svg) 6 9 5 5 stretch stretch;
+  -webkit-border-image: url(/assets/frame-border.svg) 6 9 5 5 stretch stretch;
+  -o-border-image: url(/assets/frame-border.svg) 6 9 5 5 stretch stretch;
+  border-image: url(/assets/frame-border.svg) 6 9 5 5 stretch stretch;
+}
+
 #bouton_pages{
   margin-top: 2%;
   width: 60vw;
@@ -87,6 +98,34 @@ body{
   align-items: center;
   justify-content: flex-end;
 }
+
+.bouton_nav_pages{
+  width: 3vw;
+  height: 3vw;
+  margin-right: 0.2%;
+  margin-left: 0.2%;
+  background-color: white !important;
+  background-clip: padding-box !important;
+  border-style: solid;
+  border-width: 8px 8px 8px 8px;
+  -moz-border-image: url(/assets/frame-border.svg) 6 9 5 5 stretch stretch;
+  -webkit-border-image: url(/assets/frame-border.svg) 6 9 5 5 stretch stretch;
+  -o-border-image: url(/assets/frame-border.svg) 6 9 5 5 stretch stretch;
+  border-image: url(/assets/frame-border.svg) 6 9 5 5 stretch stretch;
+  animation-duration: 0.5s;
+  animation-fill-mode: forwards;
+}
+
+@keyframes button-hover-anim{
+  from{transform: scale(100%);}
+  to{transform: scale(107%);}
+}
+
+.bouton_nav_pages:hover{
+  animation-name: button-hover-anim;
+  cursor: pointer;
+}
+
 
 #indice_page{
   margin: 0;
@@ -134,7 +173,6 @@ body{
 }
 
 .image-arbre{
-
   height: 18vw;
   width: 17vw;
   object-fit: cover;
@@ -231,7 +269,15 @@ label{
 }
 
 select{
-  width: 12vw;
+  width: 85%;
+  background-color: white !important;
+  background-clip: padding-box !important;
+  border-style: solid;
+  border-width: 10px 10px 10px 10px;
+  -moz-border-image: url(/assets/frame-border.svg) 6 9 5 5 stretch stretch;
+  -webkit-border-image: url(/assets/frame-border.svg) 6 9 5 5 stretch stretch;
+  -o-border-image: url(/assets/frame-border.svg) 6 9 5 5 stretch stretch;
+  border-image: url(/assets/frame-border.svg) 6 9 5 5 stretch stretch;
 }
 
 header{
@@ -323,6 +369,14 @@ footer:after{
   background-color: white;
   width: 80%;
   height: 80%;
+  background-color: white !important;
+  background-clip: padding-box !important;
+  border-style: solid;
+  border-width: 15px 15px 15px 15px;
+  -moz-border-image: url(/assets/frame-border.svg) 6 9 5 5 stretch stretch;
+  -webkit-border-image: url(/assets/frame-border.svg) 6 9 5 5 stretch stretch;
+  -o-border-image: url(/assets/frame-border.svg) 6 9 5 5 stretch stretch;
+  border-image: url(/assets/frame-border.svg) 6 9 5 5 stretch stretch;
 }
 
 #popin_close{
@@ -406,7 +460,7 @@ footer:after{
   max-height: fit-content;
   font-size: 16px;
   line-height: 20px;
-  
+
 }
 
 .popin_herbier_critere{
@@ -435,7 +489,23 @@ footer:after{
   flex-wrap: wrap;
 }
 
+#popin_tape_tl{
+  position: fixed;
+  height: 14%;
+  top: 26%;
+  left: 9.5%;
+  z-index: 10000;
+  transform: rotateZ(-5deg);
+}
 
+#popin_tape_br{
+  position: fixed;
+  height: 14%;
+  top: 75%;
+  left: 32%;
+  z-index: 10000;
+  transform: rotateZ(8deg);
+}
 
 #cookies_dialogue, #merci_dialogue, #rappel_cookies{
   position: fixed;
@@ -502,10 +572,3 @@ left: 10%;
 position: absolute;
 z-index: 99;
 }
-
-
-
-
-
-
-
