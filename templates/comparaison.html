@@ -18,10 +18,10 @@
   <nav id="barre_recherche">
     <label for="recherche_arbre">Rechercher un arbre : </label>
     <input type="text" id="recherche_arbre" list="all_arbres" name="recherche_arbre" size="50" placeholder="Nom de l'arbre" value="">
-    <datalist id="all_arbres">
-    </datalist>
     <label for="recherche_arbre2">Rechercher un arbre : </label>
     <input type="text" id="recherche_arbre2" list="all_arbres" name="recherche_arbre" size="50" placeholder="Nom de l'arbre" value="">
+    <datalist id="all_arbres">
+    </datalist>
   </nav>
 
   <section id="tableau_container">
@@ -53,73 +53,92 @@
                 option.value = arbres[i]['Nom commun'];
                 compare_list.appendChild(option);
             }
-        }
 
-        var xhttp_legendes = new XMLHttpRequest();
-        xhttp_legendes.open('GET', '/data/legendes');
-        xhttp_legendes.setRequestHeader('Content-type', 'application/json');
-        xhttp_legendes.send();
+            var xhttp_legendes = new XMLHttpRequest();
+            xhttp_legendes.open('GET', '/data/legendes');
+            xhttp_legendes.setRequestHeader('Content-type', 'application/json');
+            xhttp_legendes.send();
 
-        xhttp_legendes.onload = function () {
-            legendes = JSON.parse(xhttp_legendes.responseText);
-        }
+            xhttp_legendes.onload = function () {
+                legendes = JSON.parse(xhttp_legendes.responseText);
 
-        var xhttp_legende = new XMLHttpRequest();
-        xhttp_legende.open('GET', `/data/arbres?page=1`);
-        xhttp_legende.setRequestHeader('Content-type', 'application/json');
-        xhttp_legende.send()
+                var xhttp_legende = new XMLHttpRequest();
+                xhttp_legende.open('GET', `/data/arbres?page=1`);
+                xhttp_legende.setRequestHeader('Content-type', 'application/json');
+                xhttp_legende.send()
 
-        xhttp_legende.onload = function() {
-            arbres_result = JSON.parse(xhttp_legende.responseText);
-            const colonnes = Object.keys(arbres_result[0]);
-            for (var i = 0; i < colonnes.length; i++) {
-                if (colonnes[i]!='Nom commun' && colonnes[i]!='Image Id') {
-                    caracteristiques.push(colonnes[i]);
+                xhttp_legende.onload = function() {
+                    arbres_result = JSON.parse(xhttp_legende.responseText);
+                    const colonnes = Object.keys(arbres_result[0]);
+                    for (var i = 0; i < colonnes.length; i++) {
+                        if (colonnes[i]!='Nom commun' && colonnes[i]!='Image Id') {
+                            caracteristiques.push(colonnes[i]);
 
-                    var tr_titre = document.createElement('tr');
-                    var th = document.createElement('th');
-                    th.setAttribute('colspan', '2');
-                    th.style.borderBottom = 'solid grey';
-                    th.style.paddingBottom = '0.5em';
-                    /*th.style.border = 'solid';
-                    th.style.borderColor = '#BB8271';*/
-                    th.innerHTML=colonnes[i];
-                    tr_titre.appendChild(th);
+                            var tr_titre = document.createElement('tr');
+                            var th = document.createElement('th');
+                            th.setAttribute('colspan', '2');
+                            th.style.borderBottom = 'solid grey';
+                            th.style.paddingBottom = '0.5em';
+                            /*th.style.border = 'solid';
+                            th.style.borderColor = '#BB8271';*/
+                            th.innerHTML=colonnes[i];
+                            tr_titre.appendChild(th);
 
 
-                    var tr_donnees = document.createElement('tr');
-                    var col1 = document.createElement('td');
-                    col1.setAttribute('id', colonnes[i]+'_arbre1');
-                    col1.style.width = '50%';
-                    col1.style.paddingRight = '10%';
-                    col1.style.textAlign = 'center';
-                    col1.style.color = '#294F8D';
-                    col1.style.backgroundColor = '#FCE5D2';
-                    /*col1.style.border = 'solid';*/
-                    col1.style.borderColor = '#FCE5D2';
-                    col1.innerHTML="-";
-                    col1.style.paddingBottom = '4em';
+                            var tr_donnees = document.createElement('tr');
+                            var col1 = document.createElement('td');
+                            col1.setAttribute('id', colonnes[i]+'_arbre1');
+                            col1.style.width = '50%';
+                            col1.style.paddingRight = '10%';
+                            col1.style.textAlign = 'center';
+                            col1.style.color = '#294F8D';
+                            col1.style.backgroundColor = '#FCE5D2';
+                            /*col1.style.border = 'solid';*/
+                            col1.style.borderColor = '#FCE5D2';
+                            col1.innerHTML="-";
+                            col1.style.paddingBottom = '4em';
 
 
-                    var col2 = document.createElement('td');
-                    col2.setAttribute('id', colonnes[i]+'_arbre2');
-                    col2.style.width = '50%';
-                    col2.style.paddingLeft = '10%';
-                    col2.style.textAlign = 'center';
-                    col2.style.color = '#294F8D';
-                    col2.style.backgroundColor = '#FCE5D2';
-                    col2.style.borderColor = '#FCE5D2';
-                    col2.innerHTML="-";
-                    col2.style.paddingBottom = '4em';
+                            var col2 = document.createElement('td');
+                            col2.setAttribute('id', colonnes[i]+'_arbre2');
+                            col2.style.width = '50%';
+                            col2.style.paddingLeft = '10%';
+                            col2.style.textAlign = 'center';
+                            col2.style.color = '#294F8D';
+                            col2.style.backgroundColor = '#FCE5D2';
+                            col2.style.borderColor = '#FCE5D2';
+                            col2.innerHTML="-";
+                            col2.style.paddingBottom = '4em';
 
-                    tr_donnees.appendChild(col1);
-                    tr_donnees.appendChild(col2);
-                    tableau_compare.appendChild(tr_titre);
-                    tableau_compare.appendChild(tr_donnees);
+                            tr_donnees.appendChild(col1);
+                            tr_donnees.appendChild(col2);
+                            tableau_compare.appendChild(tr_titre);
+                            tableau_compare.appendChild(tr_donnees);
 
+                        }
+                    }
+                    recherche_arbre.addEventListener('change', update_compare_arbre);
+                    recherche_arbre2.addEventListener('change', update_compare_arbre);
+
+                    var url = decodeURI(document.location.href);
+                    var boom1 = url.split('?');
+                    if (boom1.length>1){
+                      var boom2 = boom1[1].split('&');
+                      var arbre1 = boom2[0].split('=')[1];
+                      var arbre2 = boom2[1].split('=')[1];
+                      recherche_arbre.value=arbre1;
+                      recherche_arbre2.value=arbre2;
+                      var event = new Event('change');
+                      recherche_arbre.dispatchEvent(event);
+                      recherche_arbre2.dispatchEvent(event);
+                    }
                 }
             }
         }
+
+
+
+
 
         function chercher_arbre(nom_commun) {
             for (let i = 0; i < arbres.length; i++) {
@@ -130,11 +149,7 @@
             return(undefined);
         }
 
-        recherche_arbre.addEventListener('change', update_compare_arbre);
-        recherche_arbre2.addEventListener('change', update_compare_arbre);
-
         function update_compare_arbre(event) {
-            console.log(event.currentTarget.id);
             var nom_commun_arbre = event.currentTarget.value;
             var arbre = chercher_arbre(nom_commun_arbre);
             var num_colonne = (event.currentTarget.id=='recherche_arbre') ? 1: 2;
@@ -153,23 +168,13 @@
                                 td.innerHTML = legendes[caracteristiques[i]]["values"][keys_adaptation[j]];
                             }
                         }
-                    } else if (caracteristiques[i] == "Besoin en ensoleillement") {
-                      if (arbre[caracteristiques[i]]=='N/A') {
-                        td.innerHTML = '-'
-                      }
-                      else {
-                        var boom = arbre[caracteristiques[i]].split('-');
-                        if (boom.length == 1) {
-                          var legende_colonne = legendes[caracteristiques[i]]["values"][boom[0].trim()];
-                        }
-                        else{
-                          var legende_colonne = `${legendes[caracteristiques[i]]["values"][boom[0].trim()]} à ${legendes[caracteristiques[i]]["values"][boom[1].trim()]}`;
-                        }
-                        td.innerHTML = legende_colonne[0].toUpperCase() + legende_colonne.substring(1);
-                      }
+                    } else if (arbre[caracteristiques[i]].split(' - ').length>1 && legendes[caracteristiques[i]]["values"][arbre[caracteristiques[i]].split(' - ')[0].trim()] && legendes[caracteristiques[i]]["values"][arbre[caracteristiques[i]].split(' - ')[1].trim()]) {
+                        var boom = arbre[caracteristiques[i]].split(' - ');
+                        var legende_colonne = `${legendes[caracteristiques[i]]["values"][boom[0].trim()]} à ${legendes[caracteristiques[i]]["values"][boom[1].trim()]}`;
+                        td.innerHTML = legende_colonne[0].toUpperCase() + legende_colonne.substring(1).toLowerCase();
                     } else {
                         correspondance_legende = arbre[caracteristiques[i]];
-                        td.innerHTML = (legendes[caracteristiques[i]]) ? legendes[caracteristiques[i]]["values"][correspondance_legende]: correspondance_legende;
+                        td.innerHTML = (legendes[caracteristiques[i]]) ? ((legendes[caracteristiques[i]]["values"][correspondance_legende]) ? legendes[caracteristiques[i]]["values"][correspondance_legende] : correspondance_legende): correspondance_legende;
                     }
                 }
             }
