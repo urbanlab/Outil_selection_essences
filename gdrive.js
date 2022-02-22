@@ -173,9 +173,9 @@ function main_refresh(pageToken, callback){
                     }
                     updateImages(client, imageIndexes, `${utils.columnToLetter(imageColumnIndex+1)}${config.data_start_row}:${utils.columnToLetter(imageColumnIndex+1)}`)
                     .then((res)=>{
-                        let attr = require('./data/attributions.json')
+                        let attr = JSON.parse(fs.readFileSync('./data/attributions.json'))
                         for(let i=0; i<data.length; i++){
-                            attr[data[i][imageColumnIndex]] = descr[i]
+                            if(descr[i]!== undefined) attr[data[i][imageColumnIndex]] = descr[i]
                         }
                         fs.writeFileSync('./data/attributions.json', JSON.stringify(attr))
                         if(pageToken){

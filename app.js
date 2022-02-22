@@ -19,17 +19,18 @@ app.use(bodyParser.json({
 
 // 
 app.get("/image_attribution/:id", (req, res)=>{
-    fs.readFile('./data/attributions.json', (data, err)=>{
+    fs.readFile('./data/attributions.json', (err, data)=>{
         if(err){
             console.log(err)
             res.status(500).send("aucune données d'attributions")
         }
         else{
+            data = JSON.parse(data)
             if(data[xss(req.params.id)]){
                 res.send(data[xss(req.params.id)])
             }
             else{
-                res.status(404).send()
+                res.send()
             }
         }
     })
@@ -346,8 +347,8 @@ app.get("/recherche", (req, res) => {
   res.status(200).sendFile(__dirname + '/templates/recherche.html');
 })
 
-app.use('/', (req, res) => {
-  res.status(200).sendFile(__dirname + req.url);
-});
+// app.use('/', (req, res) => {
+//   res.status(200).sendFile(__dirname + req.url);
+// });
 
 module.exports = app;
