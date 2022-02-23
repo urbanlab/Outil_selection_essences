@@ -359,12 +359,8 @@ app.get("/comparaison", (req, res) => {
   res.status(200).sendFile(__dirname + '/templates/comparaison.html');
 })
 
-app.get("/recherche", (req, res) => {
-  res.status(200).sendFile(__dirname + '/templates/recherche.html');
-})
-
-// app.use('/', (req, res) => {
-//   res.status(200).sendFile(__dirname + req.url);
-// });
+app.use(function (req, res, next) {
+    res.status(404).sendFile(path.join(__dirname, '/templates/404.html'));
+});
 
 module.exports = app;
