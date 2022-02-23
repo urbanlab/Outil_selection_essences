@@ -170,7 +170,7 @@ body{
 
 .filtre_checkbox{
   display: grid;
-  grid-template-columns: 2vw 15vw;
+  grid-template-columns: 2vw 14vw;
   align-items: left;
   margin:5px;
 }
@@ -507,35 +507,40 @@ footer:after{
   padding: 4px;
 }
 
-
+.label-info{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
 
 .tooltip{
-display:flex;
-position: relative;
+  width: fit-content;
+  height: fit-content;
+  margin-left: 2px;
 }
 
 .tooltip:hover:after{
-background: #bdb246;
-border-radius: 5px;
-bottom: 26px;
-color: #fff;
-content: attr(title);
-left: -25%;
-padding: 5px 15px;
-position: absolute;
-z-index: 98;
-width: 400px;
+  background: #bdb246;
+  border-radius: 5px;
+  bottom: 26px;
+  color: #fff;
+  content: attr(title);
+  left: -25%;
+  padding: 5px 15px;
+  position: absolute;
+  z-index: 98;
+  width: 400px;
 }
 
 .tooltip:hover:before{
-border: solid;
-border-color: #bdb246 transparent;
-border-width: 6px 6px 0 6px;
-bottom: 20px;
-content: "";
-left: 10%;
-position: absolute;
-z-index: 99;
+  border: solid;
+  border-color: #bdb246 transparent;
+  border-width: 6px 6px 0 6px;
+  bottom: 20px;
+  content: "";
+  left: 10%;
+  position: absolute;
+  z-index: 99;
 }
 
 
@@ -1046,7 +1051,7 @@ z-index: 99;
 
   .filtre_checkbox{
     display: grid;
-    grid-template-columns: 2vw 15vw;
+    grid-template-columns: 2vw 13vw;
     align-items: left;
     margin:5px;
   }
@@ -1410,32 +1415,40 @@ z-index: 99;
   border-image: url(./assets/frame-border.svg) 6 9 5 5 stretch stretch;
   */
 
+  .label-info{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+  }
 
   .tooltip{
-  display:flex;
-  position: relative;
+    width: fit-content;
+    height: fit-content;
+    margin-left: 2px;
   }
+
   .tooltip:hover:after{
-  background: #bdb246;
-  border-radius: 5px;
-  bottom: 26px;
-  color: #fff;
-  content: attr(title);
-  left: -25%;
-  padding: 5px 15px;
-  position: absolute;
-  z-index: 98;
-  width: 400px;
+    background: #bdb246;
+    border-radius: 5px;
+    bottom: 26px;
+    color: #fff;
+    content: attr(title);
+    left: -25%;
+    padding: 5px 15px;
+    position: absolute;
+    z-index: 98;
+    width: 400px;
   }
+
   .tooltip:hover:before{
-  border: solid;
-  border-color: #bdb246 transparent;
-  border-width: 6px 6px 0 6px;
-  bottom: 20px;
-  content: "";
-  left: 10%;
-  position: absolute;
-  z-index: 99;
+    border: solid;
+    border-color: #bdb246 transparent;
+    border-width: 6px 6px 0 6px;
+    bottom: 20px;
+    content: "";
+    left: 10%;
+    position: absolute;
+    z-index: 99;
   }
 
 

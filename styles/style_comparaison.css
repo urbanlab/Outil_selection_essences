@@ -133,7 +133,7 @@ footer:after{
 }
 
 #tableau_compare{
-  width: 80%;
+  width: 70%;
   align-items: center;
 }
 
@@ -153,4 +153,26 @@ footer:after{
   -webkit-border-image: url(/assets/frame-border.svg) 6 9 5 5 stretch stretch;
   -o-border-image: url(/assets/frame-border.svg) 6 9 5 5 stretch stretch;
   border-image: url(/assets/frame-border.svg) 6 9 5 5 stretch stretch;
+}
+
+.th-compare{
+  background-color: white !important;
+  background-clip: padding-box !important;
+  border-style: solid;
+  border-width: 10px 10px 10px 10px;
+  -moz-border-image: url(/assets/frame-border.svg) 6 9 5 5 stretch stretch;
+  -webkit-border-image: url(/assets/frame-border.svg) 6 9 5 5 stretch stretch;
+  -o-border-image: url(/assets/frame-border.svg) 6 9 5 5 stretch stretch;
+  border-image: url(/assets/frame-border.svg) 6 9 5 5 stretch stretch;
+  width: fit-content;
+  font-size: 1.2em;
+}
+
+.td-compare{
+  width: 50%;
+  text-align: center;
+  color: #294F8D;
+  background-color: #FCE5D2;
+  padding: 0.8% 0 3% 0;
+  font-size: 1.1em;
 }

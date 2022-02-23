@@ -114,19 +114,18 @@
 
   xhttp_filtres.onload = function () {
       const data = tri(JSON.parse(xhttp_filtres.responseText));
-      critere1 = data[0];
       for (let i = 0; i < data.length; i++) {
         const critere = data[i];
         if (critere.type_question == "Select") {
-          filtre_select(critere);
+            filtre_select(critere);
         }
         else if (critere.type_question == "Checkbox") {
-          filtre_checkbox(critere);
-          var liste_reponses = [];
-          for (var j = 0; j < critere.reponses.length; j++) {
-            liste_reponses.push(critere.reponses[j].valeur);
-          }
-          question_checkboxes[critere.nom]=liste_reponses;
+            filtre_checkbox(critere);
+            var liste_reponses = [];
+            for (var j = 0; j < critere.reponses.length; j++) {
+                liste_reponses.push(critere.reponses[j].valeur);
+            }
+            question_checkboxes[critere.nom]=liste_reponses;
         }
       }
   }
@@ -209,12 +208,13 @@
 
     if (critere.commentaire !== ""){
       label.setAttribute('for', critere.nom);
-      label.setAttribute('title', critere.commentaire);
-      label.setAttribute('class',"tooltip");
+      label.innerHTML = critere.nom;
+      label.classList.add('label-info');
       var span=document.createElement('span');
-      span.setAttribute('title',"");
-      label.appendChild(span);
-      span.innerHTML = critere.nom;
+      span.setAttribute('title', critere.commentaire);
+      span.classList.add("tooltip");
+      span.innerHTML = "&#x2753";
+      label.insertAdjacentElement('beforeend', span);
       div.appendChild(label);
     }
 
@@ -264,24 +264,26 @@
       const reponse = critere.reponses[i];
       var input = document.createElement('input');
       input.setAttribute('type', "checkbox");
-      input.setAttribute('id', reponse.texte);
-      input.setAttribute('name', reponse.texte);
+      input.setAttribute('id', reponse.valeur);
+      input.setAttribute('name', reponse.valeur);
       input.setAttribute('value', reponse.valeur);
       input.addEventListener('change', function() {update_resultats(1)});
 
       var label = document.createElement('label');
-      if (reponse.commentaire ===""){
-        label.setAttribute('for', reponse.texte);
-        label.innerHTML = reponse.texte;
+      if (reponse.texte ===""){
+        label.setAttribute('for', reponse.valeur);
+        label.innerHTML = reponse.valeur;
       }
-      if (reponse.commentaire !==""){
-        label.setAttribute('for', reponse.texte);
-        label.setAttribute('title', reponse.commentaire);
-        label.setAttribute('class',"tooltip");
+      if (reponse.texte !==""){
+        label.setAttribute('for', reponse.valeur);
+        label.innerHTML = reponse.valeur;
+        label.classList.add('label-info');
         var span=document.createElement('span');
-        span.setAttribute('title',"");
-        label.appendChild(span);
-        span.innerHTML = reponse.texte;
+        span.setAttribute('title', reponse.texte);
+        span.classList.add("tooltip");
+        span.innerHTML = "&#x2753";
+        console.log(span);
+        label.insertAdjacentElement('beforeend', span);
       }
 
       div_checkbox.appendChild(input);
