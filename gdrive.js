@@ -11,6 +11,7 @@ const config = require('./config.json')
 const mime = require('./mime_type.json')
 const utils = require('./utils')
 const async = require('async')
+const { doesNotMatch } = require('assert')
 
 // Client de connexion à l'api google, keys est le fichier image-update-keys.json
 const client = new google.auth.JWT(
@@ -236,11 +237,11 @@ function main_images(cl, fileId){
                 let progress = 0
                 res.data
                 .on('error', err => {
-                console.error(`Erreur téléchargement image ${fileId}`);
+                    console.error(`Erreur téléchargement image ${fileId}`);
                 })
                 .on('end', ()=>{
-                    console.log(`Téléchargée sous ./assets/images/${fileId}.${mime[mimeType]}`)
                     resolve()
+                    console.log(`Téléchargée sous ./assets/images/${fileId}.${mime[mimeType]}`)
                 })
                 .pipe(dest);
             }
@@ -260,7 +261,6 @@ function download_images(fileId){
         })
     })
 }
-
 module.exports = {
     refreshPictures: refreshPictures,
     downloadImages: download_images
