@@ -176,3 +176,23 @@ footer:after{
   padding: 0.8% 0 3% 0;
   font-size: 1.1em;
 }
+
+
+
+.feuille-remonter{
+  height: 100px;
+  width: 100px;
+  opacity: 60%;
+  position: fixed;
+  right: 0%;
+  bottom: 2%;
+  z-index: 1000;
+}
+
+.fleche-remonter{
+  z-index: 1001;
+  position: fixed;
+  right: 2.8%;
+  bottom: 6%;
+  cursor: pointer;
+}

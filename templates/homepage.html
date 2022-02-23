@@ -87,9 +87,8 @@
   <button type="button" onclick="refuser_cookies(event)">Refuser</button>
 </aside>
 <aside id="merci_dialogue">Merci</aside>
-<a href="#" class="bouton-remonter">
-  <img src="/assets/arrow-up-solid.svg" alt="" width="25">
-</a>
+<img class="feuille-remonter" src="/assets/feuille-svg.svg" alt="">
+<img class="fleche-remonter" src="/assets/arrow-up-solid.svg" alt="" width="25" onclick="document.location.href='#'">
 
 
 <footer>
@@ -278,7 +277,6 @@
         span.setAttribute('title', reponse.texte);
         span.classList.add("tooltip");
         span.innerHTML = "&#x1F342";
-        console.log(span);
         label.insertAdjacentElement('beforeend', span);
       }
 

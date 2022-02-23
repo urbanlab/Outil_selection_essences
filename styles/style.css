@@ -1131,22 +1131,23 @@ p.francais{
     cursor: pointer;
   }
 
-  .bouton-remonter{
-    height: 50px;
-    width: 50px;
-    background-color: grey;
-    opacity: 0.3;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  .feuille-remonter{
+    height: 100px;
+    width: 100px;
+    opacity: 60%;
     position: fixed;
-    right: 20px;
-    bottom: 20px;
-    cursor: pointer;
+    right: 0%;
+    bottom: 2%;
     z-index: 1000;
   }
 
+  .fleche-remonter{
+    z-index: 1001;
+    position: fixed;
+    right: 2.8%;
+    bottom: 6%;
+    cursor: pointer;
+  }
 
   .bouton_pages{
     margin-top: 2%;
