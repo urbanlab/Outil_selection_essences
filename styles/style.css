@@ -517,10 +517,12 @@ p.francais{
     position: relative;
     width: fit-content;
     height: fit-content;
-    margin-left: 2px;
+    margin-left: 5px;
+    font-size: 1.1em;
   }
 
   .tooltip:hover:after{
+    font-size: 0.9em;
     background: #bdb246;
     border-radius: 5px;
     bottom: 26px;
@@ -993,10 +995,12 @@ p.francais{
     position: relative;
     width: fit-content;
     height: fit-content;
-    margin-left: 2px;
+    margin-left: 5px;
+    font-size: 1.1em;
   }
 
   .tooltip:hover:after{
+    font-size: 0.9em;
     background: #bdb246;
     border-radius: 5px;
     bottom: 26px;
@@ -1595,6 +1599,7 @@ p.francais{
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
+    align-items: center;
   }
 
   .tooltip{
@@ -1602,10 +1607,12 @@ p.francais{
     position: relative;
     width: fit-content;
     height: fit-content;
-    margin-left: 2px;
+    margin-left: 5px;
+    font-size: 1.1em;
   }
 
   .tooltip:hover:after{
+    font-size: 0.9em;
     background: #bdb246;
     border-radius: 5px;
     bottom: 26px;
@@ -1647,7 +1654,7 @@ p.francais{
       padding: 0.5em 5em 0.4em 5em;
       text-shadow: 0 0 0.75em #444;
       box-shadow: 0 0 0.5em rgba(0,0,0,0.5);
-      font: bold 16px/1.2em Arial, Sans-Serif;
+      font: bold 16px/1.2em 'Eczar', arial;
       -webkit-text-shadow: 0 0 0.75em #444;
       -webkit-box-shadow: 0 0 0.5em rgba(0,0,0,0.5);
       -webkit-transform: rotate(-45deg) scale(0.75,1);
