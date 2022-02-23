@@ -8,18 +8,22 @@
   </head>
 
   <header>
-    <h1 id="titre_page">Comparer deux arbres</h1>
+    <h1 id="titre_page">Je compare deux arbres</h1>
     <nav id="nav_pages">
-      <a href="/">Retour à la page d'accueil</a>
+      <a href="/">Accueil</a>
     </nav>
   </header>
 
 
   <nav id="barre_recherche">
-    <label for="recherche_arbre">Rechercher un arbre : </label>
-    <input type="text" id="recherche_arbre" list="all_arbres" name="recherche_arbre" size="50" placeholder="Nom de l'arbre" value="">
-    <label for="recherche_arbre2">Rechercher un arbre : </label>
-    <input type="text" id="recherche_arbre2" list="all_arbres" name="recherche_arbre" size="50" placeholder="Nom de l'arbre" value="">
+    <div class="recherche-container">
+      <label for="recherche_arbre">Je choisis un premier arbre </label>
+      <input type="text" class="recherche" id="recherche_arbre" list="all_arbres" name="recherche_arbre" size="50" placeholder="Nom de l'arbre" value="">
+    </div>
+    <div class="recherche-container">
+      <label for="recherche_arbre2">Je choisis un second arbre </label>
+      <input type="text" class="recherche" id="recherche_arbre2" list="all_arbres" name="recherche_arbre" size="50" placeholder="Nom de l'arbre" value="">
+    </div>
     <datalist id="all_arbres">
     </datalist>
   </nav>
@@ -29,10 +33,10 @@
 
     </table>
   </section>
-  
-  <a href="#" class="btn">
+
+  <a href="#" class="bouton-remonter">
     <img src="/assets/arrow-up-solid.svg" alt="" width="25">
-  </a>  
+  </a>
 
   <footer id="footer">
     <img src="/assets/logo_erasme_grandlyon.png" width="500" >

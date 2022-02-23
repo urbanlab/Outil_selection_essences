@@ -11,9 +11,9 @@
 </head>
 
 <header>
-  <h1 id="titre_page">Selection d'essence d'arbre</h1>
+  <h1 id="titre_page">Je trouve mon essence d'arbre</h1>
   <nav id="nav_pages">
-    <a href="/comparaison">Comparer deux arbres</a>
+    <a href="/comparaison">Je compare</a>
   </nav>
 </header>
 
@@ -38,11 +38,11 @@
     </div>
 
     <div id="popin_comparer">
-      <label for="comparer_arbres">Comparer à un autre arbre :&nbsp</label>
+      <label for="comparer_arbres">Je compare :&nbsp</label>
       <input type="text" id="comparer_arbres" name="comparer_arbres" list="all_arbres" value="" autocomplete="off">
       <datalist id="all_arbres">
       </datalist>
-      <button type="button" name="button" onclick="document.location.href=`/comparaison?arbre1=${document.getElementById('popin_nom_francais').innerHTML}&arbre2=${document.getElementById('comparer_arbres').value}`">Comparer</button>
+      &nbsp<button type="button" name="button" onclick="document.location.href=`/comparaison?arbre1=${document.getElementById('popin_nom_francais').innerHTML}&arbre2=${document.getElementById('comparer_arbres').value}`">Comparer</button>
     </div>
     <button id="popin_close" type="button" name="button" onclick="cacher_popin()">&times</button>
   </div>
@@ -54,9 +54,9 @@
 
 <section id='right_panel'>
   <nav id="barre_recherche">
-    <label for="recherche_arbre">Rechercher un arbre : </label>
+    <label for="recherche_arbre">Je&nbspcherche&nbspun&nbsparbre&nbsp:&nbsp</label>
     <input type="text" id="recherche_arbre" name="recherche_arbre" size="50" placeholder="Nom de l'arbre" value="">
-    <label for="favoris">Afficher mes favoris</label>
+    <label for="favoris">Voir&nbspmon&nbspherbier&nbsp</label>
     <input type="checkbox" id="favoris" name="favoris" value="favoris" onchange="afficher_favoris(event)">
   </nav>
   <nav id="bouton_pages">
@@ -84,13 +84,13 @@
   <button type="button" onclick="refuser_cookies(event)">Refuser</button>
 </aside>
 <aside id="merci_dialogue">Merci</aside>
-<a href="#" class="btn">
+<a href="#" class="bouton-remonter">
   <img src="/assets/arrow-up-solid.svg" alt="" width="25">
 </a>
 
 
 <footer>
-  <img class = "footer_logo_erasme" src="/assets/logo_erasme_grandlyon.png" width="500" >
+  <img class="footer_logo_erasme" src="/assets/logo_erasme_grandlyon.png" width="500">
 </footer>
 
 <script>
@@ -98,6 +98,7 @@
   let tous_les_arbres = [];
   let arbres_trouves = [];
   let arbres_favoris = [];
+  let question_checkboxes = {};
 
   var xhttp_filtres = new XMLHttpRequest();
   xhttp_filtres.open('GET', '/data/filtres');
@@ -114,6 +115,11 @@
         }
         else if (critere.type_question == "Checkbox") {
           filtre_checkbox(critere);
+          var liste_reponses = [];
+          for (var j = 0; j < critere.reponses.length; j++) {
+            liste_reponses.push(critere.reponses[j].valeur);
+          }
+          question_checkboxes[critere.nom]=liste_reponses;
         }
       }
   }
@@ -188,12 +194,12 @@
     }
 
     var label = document.createElement('label');
-    if(critere.commentaire ===""){ 
+    if(critere.commentaire ===""){
       label.setAttribute('for', critere.nom);
       label.innerHTML = critere.nom;
 	  div.appendChild(label);
     }
-    
+
     if (critere.commentaire !== ""){
       label.setAttribute('for', critere.nom);
       label.setAttribute('title', critere.commentaire);
@@ -212,7 +218,7 @@
 
     var option = document.createElement('option');
     option.setAttribute('value','');
-    option.innerHTML = "Choisissez une option";
+    option.innerHTML = "Je choisis une option";
     select.appendChild(option);
 
     for (let i = 0; i < critere.reponses.length; i++) {
@@ -267,10 +273,10 @@
         label.setAttribute('class',"tooltip");
         var span=document.createElement('span');
         span.setAttribute('title',"");
-        label.appendChild(span);     
+        label.appendChild(span);
         span.innerHTML = reponse.texte;
       }
-        
+
       div_checkbox.appendChild(input);
       div_checkbox.appendChild(label);
     }
@@ -287,7 +293,6 @@
     const nom_latin = arbre['Genre'].trim() + ' ' + arbre['Espèce'].trim();
     var article = document.createElement('article');
     article.setAttribute('id', 'article '+nom_latin);
-    article.addEventListener('click', afficher_popin);
     article.classList.add('arbre-grid-item');
 
     var p = document.createElement('p');
@@ -298,6 +303,7 @@
     var img = document.createElement('img');
     img.setAttribute('id', 'img '+nom_latin);
     img.setAttribute('src', (arbre["Image Id"]!="")? `/image/${arbre["Image Id"]}` : '/assets/arbre_template.png');
+    img.addEventListener('click', afficher_popin);
     img.classList.add('image-arbre');
     img.classList.add((side===0)? 'right' : 'left');
 
@@ -365,7 +371,7 @@
       nb_arbres_tries = JSON.parse(xhttp.responseText).nb_arbres_tries;
       arbres_tries = JSON.parse(xhttp.responseText).response;
       update_affichage_arbres(arbres_tries);
-      document.getElementById('nombre_pages').innerHTML=Math.ceil(parseInt(nb_arbres_tries)/9);
+      document.getElementById('nombre_pages').innerHTML=Math.max(Math.ceil(parseInt(nb_arbres_tries)/9), 1);
     }
   }
 
@@ -387,12 +393,20 @@
   }
 
 
-
+  function critere_dans_checkboxes(critere){
+    var titres_checkboxes = Object.keys(question_checkboxes);
+    for (var i = 0; i < titres_checkboxes.length; i++) {
+      if (question_checkboxes[titres_checkboxes[i]].includes(critere)) {
+        return(true);
+      }
+    }
+    return(false);
+  }
 
 
   function afficher_popin(event){
     var xhttp_popin = new XMLHttpRequest();
-    xhttp_popin.open('GET', `/data/arbres?id=${event.currentTarget.id.slice(8)}`);
+    xhttp_popin.open('GET', `/data/arbres?id=${event.currentTarget.id.slice(4)}`);
     xhttp_popin.setRequestHeader('Content-type', 'application/json');
     xhttp_popin.send()
 
@@ -422,7 +436,7 @@
       xhttp_legende.onload = function() {
         legendes = JSON.parse(xhttp_legende.responseText);
         for (var i = 0; i < colonnes.length; i++) {
-          if (colonnes[i]!='Nom commun' && colonnes[i]!='Genre' && colonnes[i]!='Espèce' && colonnes[i]!='Image Id') {
+          if (colonnes[i]!='Nom commun' && colonnes[i]!='Genre' && colonnes[i]!='Espèce' && colonnes[i]!='Image Id' && !critere_dans_checkboxes(colonnes[i])) {
             var text_container = document.createElement('div');
             var herbier_critere = document.createElement('p');
             var herbier_infos = document.createElement('p');
@@ -441,9 +455,9 @@
                 }
               }
             } else if (arbre_popin[colonnes[i]].split(' - ').length>1 && legendes[colonnes[i]]["values"][arbre_popin[colonnes[i]].split(' - ')[0].trim()] && legendes[colonnes[i]]["values"][arbre_popin[colonnes[i]].split(' - ')[1].trim()]) {
-                var boom = arbre_popin[colonnes[i]].split(' - ');
-                var legende_colonne = `${legendes[colonnes[i]]["values"][boom[0].trim()]} à ${legendes[colonnes[i]]["values"][boom[1].trim()]}`;
-                herbier_infos.innerHTML = legende_colonne[0].toUpperCase() + legende_colonne.substring(1).toLowerCase();
+              var boom = arbre_popin[colonnes[i]].split(' - ');
+              var legende_colonne = `${legendes[colonnes[i]]["values"][boom[0].trim()]} à ${legendes[colonnes[i]]["values"][boom[1].trim()]}`;
+              herbier_infos.innerHTML = legende_colonne[0].toUpperCase() + legende_colonne.substring(1).toLowerCase();
             } else {
               correspondance_legende = arbre_popin[colonnes[i]];
               herbier_infos.innerHTML = (legendes[colonnes[i]]) ? ((legendes[colonnes[i]]["values"][correspondance_legende]) ? legendes[colonnes[i]]["values"][correspondance_legende] : correspondance_legende) : correspondance_legende;
@@ -454,6 +468,31 @@
 
             tableau.appendChild(text_container);
           }
+        }
+        var titres_checkboxes = Object.keys(question_checkboxes);
+        for (var i = 0; i < titres_checkboxes.length; i++) {
+          var text_container = document.createElement('div');
+          var herbier_critere = document.createElement('p');
+          var herbier_infos = document.createElement('p');
+          text_container.classList.add('popin_herbier_text_container');
+          herbier_critere.classList.add('popin_herbier_critere');
+          herbier_infos.classList.add('popin_herbier_infos');
+          herbier_critere.innerHTML = titres_checkboxes[i];
+
+          var criteres_valides = []
+          for (var j = 0; j < question_checkboxes[titres_checkboxes[i]].length; j++) {
+            var critere = question_checkboxes[titres_checkboxes[i]][j];
+            if (arbre_popin[critere] == 'X'){
+              criteres_valides.push(critere.toLowerCase());
+            }
+          }
+          var texte_brut = criteres_valides.join(', ');
+          herbier_infos.innerHTML = texte_brut[0].toUpperCase() + texte_brut.slice(1);
+
+          text_container.appendChild(herbier_critere);
+          text_container.appendChild(herbier_infos);
+
+          tableau.appendChild(text_container);
         }
         popin.style.visibility = 'visible';
         popin.style.opacity = "100%";
@@ -470,15 +509,31 @@
         var xhttp_attribution = new XMLHttpRequest();
         xhttp_attribution.open('GET', `/image_attribution/${arbre_popin['Image Id']}`);
         xhttp_attribution.setRequestHeader('Content-type', 'application/json');
-        xhttp_attribution.send()
+        xhttp_attribution.send();
+
+        while(popin_photo.children.length>0){
+          popin_photo.removeChild(popin_photo.children[0]);
+        }
+
+        var mots_clé = mots_cles(arbre_popin);
+        var p = document.createElement('p');
+        p.innerHTML = mots_clé;
+        p.classList.add('mot-cle');
+        popin_photo.appendChild(p);
 
         xhttp_attribution.onload = function(){
-          attribution = xhttp_attribution.responseText
-          popin_photo.innerText = attribution
+          var p = document.createElement('p');
+          attribution = xhttp_attribution.responseText;
+          p.innerText = attribution;
+          p.classList.add('copyrights');
+          popin_photo.appendChild(p);
         }
 
         xhttp_attribution.onerror = function(){
-          popin_photo.innerText = "image libre de droit"
+          var p = document.createElement('p');
+          p.innerText = "image libre de droit";
+          p.classList.add('copyrights');
+          popin_photo.appendChild(p);
         }
       }
     }
@@ -534,7 +589,7 @@
     var page_actuelle = document.getElementById('page_actuelle');
     var nombre_pages = document.getElementById('nombre_pages');
     page_actuelle.innerHTML = page;
-    nombre_pages.innerHTML = Math.ceil(arbres_trouves.length/9);
+    nombre_pages.innerHTML = Math.max(Math.ceil(arbres_trouves.length/9), 1);
     for (let i = (page-1)*9; i < Math.min(page*9, arbres_trouves.length); i++) {
         let arbre = arbres_trouves[i];
         arbres_trouves_page.push(arbre);
@@ -574,7 +629,7 @@
     var page_actuelle = document.getElementById('page_actuelle');
     var nombre_pages = document.getElementById('nombre_pages');
     page_actuelle.innerHTML = page;
-    nombre_pages.innerHTML = Math.ceil(arbres_favoris.length/9);
+    nombre_pages.innerHTML = Math.max(Math.ceil(arbres_favoris.length/9), 1);
     for (let i = (page-1)*9; i < Math.min(page*9, arbres_favoris.length); i++) {
         let arbre = arbres_favoris[i];
         arbres_favoris_page.push(arbre);
