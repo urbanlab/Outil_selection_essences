@@ -9,7 +9,9 @@ const path=require('path');
 const compute_scores = require('./function1.js');
 const image_updater = require('./gdrive.js');
 const xss = require('xss');
-const crypto = require('crypto')
+const crypto = require('crypto');
+const gdrive = require('./gdrive.js');
+const { resolve } = require('path');
 
 const password_update = '3056849e9b6bef41c0eb17b01bfb25bb'; // Créé avec https://www.md5hashgenerator.com/
 
@@ -270,6 +272,18 @@ app.get("/secure/data/refresh", (req,res)=>{
     })
 })
 
+app.get('/secure/images/manual_download/:id', (req, res)=>{
+    let id = xss(req.params["id"])
+    const promise = new Promise((resolve, reject)=>{return image_updater.downloadImages(id)})
+    .then(()=>{
+        res.send("Images téléchargée")
+        resolve()
+    })
+    .catch((err)=>{
+        res.status(500).send("Erreur lors du téléchargement")
+    })
+})
+
 app.get('/secure/images/refresh', (req, res)=>{
     image_updater.refreshPictures(function(){
         fs.readdir('./assets/images', (err, files)=>{
@@ -295,6 +309,7 @@ app.get('/secure/images/refresh', (req, res)=>{
                             }
                             const image_id = val[config.image_id_column]
                             const id_index = utils.binSearch(files, image_id, compfunc)
+                            
                             if(image_id.trim() != "" && image_id.trim() != "-" && id_index == -1){
                                 console.log(`Téléchargement image ${image_id} (${i+1}/${values.length})`)
                                 await image_updater.downloadImages(image_id)
