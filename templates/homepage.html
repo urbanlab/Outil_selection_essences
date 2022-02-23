@@ -25,7 +25,10 @@
     alt="ajouter aux favori"
     onclick="update_favori()"
     />
-    <img id="popin_photo" src="" alt="">
+    <img id='popin_tape_tl' src="/assets/tape.png" alt="">
+    <img id='popin_tape_br' src="/assets/tape.png" alt="">
+    <div id="popin_photo" src="" alt="">
+    </div>
     <div class="popin_titres">
       <h1 id='popin_nom_francais'></h1>
       <h2 id='popin_nom_latin'></h2>
@@ -33,7 +36,7 @@
     <div id="popin_infos">
 
     </div>
-    
+
     <div id="popin_comparer">
       <label for="comparer_arbres">Comparer à un autre arbre :&nbsp</label>
       <input type="text" id="comparer_arbres" name="comparer_arbres" list="all_arbres" value="" autocomplete="off">
@@ -56,15 +59,22 @@
     <label for="favoris">Afficher mes favoris</label>
     <input type="checkbox" id="favoris" name="favoris" value="favoris" onchange="afficher_favoris(event)">
   </nav>
-  <nav id="bouton_pages">
-    <button type="button" id="bouton_debut" onclick="changer_page('debut')"><<</button>
-    <button type="button" id="bouton_precedent" onclick="changer_page('precedent')"><</button>
-    <p id=indice_page>Page <span id="page_actuelle">1</span>/<span id="nombre_pages"></span></p>
-    <button type="button" id="bouton_suivant" onclick="changer_page('suivant')">></button>
+  <span id = "nombre_arbre_trouves"></span>
+  <nav class="bouton_pages">
+    <button class="bouton_nav_pages" type="button" id="bouton_debut" onclick="changer_page('debut')"><<</button>
+    <button class="bouton_nav_pages" type="button" id="bouton_precedent" onclick="changer_page('precedent')"><</button>
+    <p class=indice_page>Page <span class="page_actuelle">1</span>/<span class="nombre_pages"></span></p>
+    <button class="bouton_nav_pages" type="button" id="bouton_suivant" onclick="changer_page('suivant')">></button>
   </nav>
   <section id='arbres_grid'>
 
   </section>
+  <nav class="bouton_pages">
+    <button class="bouton_nav_pages" type="button" onclick="changer_page('debut')"><<</button>
+    <button class="bouton_nav_pages" type="button" onclick="changer_page('precedent')"><</button>
+    <p class=indice_page>Page <span class="page_actuelle">1</span>/<span class="nombre_pages"></span></p>
+    <button class="bouton_nav_pages" type="button" onclick="changer_page('suivant')">></button>
+  </nav>
 </section>
 
 <aside id='cookies_dialogue'>
@@ -86,7 +96,7 @@
 </a>
 
 
-<footer id="footer">
+<footer>
   <img class = "footer_logo_erasme" src="/assets/logo_erasme_grandlyon.png" width="500" >
 </footer>
 
@@ -137,18 +147,18 @@
 
 
   function changer_page(sens) {
-    var page_actuelle = document.getElementById('page_actuelle');
-    var nombre_pages = document.getElementById('nombre_pages');
-    var numero_page =parseInt(page_actuelle.innerHTML);
+    var page_actuelle = document.getElementsByClassName('page_actuelle');
+    var nombre_pages = document.getElementsByClassName('nombre_pages');
+    var numero_page =parseInt(page_actuelle[0].innerHTML);
     if (sens == 'debut'){
       numero_page = 1;
-      page_actuelle.innerHTML=numero_page;
-    } else if (sens=='suivant' && nombre_pages.innerHTML!=page_actuelle.innerHTML) {
+    } else if (sens=='suivant' && nombre_pages[0].innerHTML!=page_actuelle[0].innerHTML) {
       numero_page++;
-      page_actuelle.innerHTML=numero_page;
-    } else if(sens=='precedent' && page_actuelle.innerHTML!='1') {
+    } else if(sens=='precedent' && page_actuelle[0].innerHTML!='1') {
       numero_page--;
-      page_actuelle.innerHTML=numero_page;
+    }
+    for(let i=0; i< page_actuelle.length; i++){
+      page_actuelle[i].innerHTML=numero_page;
     }
 
     if (document.getElementById('favoris').checked == true) {
@@ -185,9 +195,22 @@
     }
 
     var label = document.createElement('label');
-    label.setAttribute('for', critere.nom);
-    label.innerHTML = critere.nom;
-    div.appendChild(label);
+    if(critere.commentaire ===""){ 
+      label.setAttribute('for', critere.nom);
+      label.innerHTML = critere.nom;
+	  div.appendChild(label);
+    }
+    
+    if (critere.commentaire !== ""){
+      label.setAttribute('for', critere.nom);
+      label.setAttribute('title', critere.commentaire);
+      label.setAttribute('class',"tooltip");
+      var span=document.createElement('span');
+      span.setAttribute('title',"");
+      label.appendChild(span);
+      span.innerHTML = critere.nom;
+      div.appendChild(label);
+    }
 
     var select = document.createElement('select');
     select.setAttribute('name', critere.nom);
@@ -241,15 +264,20 @@
       input.addEventListener('change', function() {update_resultats(1)});
 
       var label = document.createElement('label');
-      label.setAttribute('for', reponse.texte);
-      label.setAttribute('title', reponse.commentaire);
-      label.setAttribute('class',"tooltip");
-      var span=document.createElement('span');
-      span.setAttribute('title',"");
-      label.appendChild(span);     
-      
-      span.innerHTML = reponse.texte;
-
+      if (reponse.commentaire ===""){
+        label.setAttribute('for', reponse.texte);
+        label.innerHTML = reponse.texte;
+      }
+      if (reponse.commentaire !==""){
+        label.setAttribute('for', reponse.texte);
+        label.setAttribute('title', reponse.commentaire);
+        label.setAttribute('class',"tooltip");
+        var span=document.createElement('span');
+        span.setAttribute('title',"");
+        label.appendChild(span);     
+        span.innerHTML = reponse.texte;
+      }
+        
       div_checkbox.appendChild(input);
       div_checkbox.appendChild(label);
     }
@@ -342,9 +370,13 @@
 
     xhttp.onload = function() {
       nb_arbres_tries = JSON.parse(xhttp.responseText).nb_arbres_tries;
+      document.getElementById("nombre_arbre_trouves").innerText = `${nb_arbres_tries} essence(s) trouvés`
       arbres_tries = JSON.parse(xhttp.responseText).response;
       update_affichage_arbres(arbres_tries);
-      document.getElementById('nombre_pages').innerHTML=Math.ceil(parseInt(nb_arbres_tries)/9);
+      nombres_pages = document.getElementsByClassName('nombre_pages')
+      for(let i=0; i<nombres_pages.length; i++){
+        nombres_pages[i].innerHTML=Math.ceil(parseInt(nb_arbres_tries)/9);
+      }
     }
   }
 
@@ -379,8 +411,7 @@
       var popin = document.getElementById('popin');
       arbre_popin = JSON.parse(xhttp_popin.responseText)[0];
       var popin_photo = document.getElementById('popin_photo');
-      popin_photo.setAttribute("src", (arbre_popin["Image Id"]!='') ? `/image/${arbre_popin["Image Id"]}` : '/assets/arbre_template.png');
-
+      popin_photo.style.backgroundImage = `url(${arbre_popin["Image Id"]!='' ? `/image/${arbre_popin["Image Id"]}` : '/assets/arbre_template.png'})`
       var popin_nom_latin = document.getElementById('popin_nom_latin');
       popin_nom_latin.innerHTML= arbre_popin['Genre'] + ' ' + arbre_popin['Espèce'] ;
 
@@ -428,10 +459,10 @@
               correspondance_legende = arbre_popin[colonnes[i]];
               herbier_infos.innerHTML = (legendes[colonnes[i]]) ? ((legendes[colonnes[i]]["values"][correspondance_legende]) ? legendes[colonnes[i]]["values"][correspondance_legende] : correspondance_legende) : correspondance_legende;
             }
-            
+
             text_container.appendChild(herbier_critere);
             text_container.appendChild(herbier_infos);
-            
+
             tableau.appendChild(text_container);
           }
         }
@@ -445,6 +476,22 @@
         }
         else{
           favori_icon.style.filter="none"
+        }
+
+        if(arbre_popin["Image Id"]!= ''){
+          var xhttp_attribution = new XMLHttpRequest();
+          xhttp_attribution.open('GET', `/image_attribution/${arbre_popin['Image Id']}`);
+          xhttp_attribution.setRequestHeader('Content-type', 'application/json');
+          xhttp_attribution.send()
+
+          xhttp_attribution.onload = function(){
+            attribution = xhttp_attribution.responseText
+            popin_photo.innerText = attribution
+          }
+
+          xhttp_attribution.onerror = function(){
+            popin_photo.innerText = "image libre de droit"
+          }
         }
       }
     }
@@ -497,14 +544,19 @@
 
   function update_affichage_recherche(arbres_trouves, page){
     var arbres_trouves_page = [];
-    var page_actuelle = document.getElementById('page_actuelle');
-    var nombre_pages = document.getElementById('nombre_pages');
-    page_actuelle.innerHTML = page;
-    nombre_pages.innerHTML = Math.ceil(arbres_trouves.length/9);
+    var page_actuelle = document.getElementsByClassName('page_actuelle');
+    var nombre_pages = document.getElementsByClassName('nombre_pages');
+    for(let i=0; i<page_actuelle.length; i++){
+      page_actuelle[i].innerHTML = page;
+    }
+    for(let i=0; i<nombre_pages.length; i++){
+      nombre_pages[i].innerHTML = Math.ceil(arbres_trouves.length/9);
+    }
     for (let i = (page-1)*9; i < Math.min(page*9, arbres_trouves.length); i++) {
         let arbre = arbres_trouves[i];
         arbres_trouves_page.push(arbre);
     }
+    document.getElementById("nombre_arbre_trouves").innerText = `${arbres_trouves.length} essence(s) trouvées`
     update_affichage_arbres(arbres_trouves_page);
   }
 
@@ -537,14 +589,19 @@
 
   function update_affichage_favoris(arbres_favoris, page){
     var arbres_favoris_page = [];
-    var page_actuelle = document.getElementById('page_actuelle');
-    var nombre_pages = document.getElementById('nombre_pages');
-    page_actuelle.innerHTML = page;
-    nombre_pages.innerHTML = Math.ceil(arbres_favoris.length/9);
+    var page_actuelle = document.getElementsByClassName('page_actuelle');
+    var nombre_pages = document.getElementsByClassName('nombre_pages');
+    for(let i=0; i<page_actuelle.length; i++){
+      page_actuelle[i].innerHTML = page;
+    }
+    for(let i=0; i<nombre_pages.length; i++){
+      nombre_pages[i].innerHTML = Math.ceil(arbres_favoris.length/9);
+    }
     for (let i = (page-1)*9; i < Math.min(page*9, arbres_favoris.length); i++) {
         let arbre = arbres_favoris[i];
         arbres_favoris_page.push(arbre);
     }
+    document.getElementById("nombre_arbre_trouves").innerText = `${arbres_favoris.length} essence(s) trouvées`
     update_affichage_arbres(arbres_favoris_page);
   }
 
@@ -600,14 +657,14 @@
   }
 
   function accepter_cookies(e){
-    cookies_aside = e.path[1]
+    cookies_aside = document.getElementById('cookies_dialogue')
     cookies_aside.style.animation = "1.5s ease-in reverse 0.5s cookies_slidein"
     localStorage.setItem("cookies-accepted", true)
     document.getElementById('merci_dialogue').style.animation = "1.5s ease-in alternate 2 1s cookies_slidein"
   }
 
   function refuser_cookies(e){
-    cookies_aside = e.path[1]
+    cookies_aside = document.getElementById('cookies_dialogue')
     cookies_aside.style.animation = "1.5s ease-in reverse 0.5s cookies_slidein"
   }
 
@@ -633,12 +690,12 @@
       }
       arbres_favoris = favoris_into_liste_arbres(JSON.parse(localStorage.getItem("arbres_favori")));
       if (document.getElementById('favoris').checked == true) {
-        update_affichage_favoris(arbres_favoris, (document.getElementsByClassName('arbre-grid-item').length>1) ? parseInt(document.getElementById('page_actuelle').innerHTML) : parseInt(document.getElementById('page_actuelle').innerHTML)-1);
+        update_affichage_favoris(arbres_favoris, (document.getElementsByClassName('arbre-grid-item').length>1) ? parseInt(document.getElementsByClassName('page_actuelle')[0].innerHTML) : parseInt(document.getElementsByClassName('page_actuelle')[0].innerHTML)-1);
         var event = new Event('click');
         cacher_popin(event);
       }
     }
-    else{
+    else if (document.getElementById('cookies_dialogue').style.animation = "1.5s ease-in reverse 0.5s cookies_slidein"){
       rappel_cookies= document.getElementById('rappel_cookies')
       rappel_cookies.style.animation="2s ease-in normal forwards cookies_slidein"
     }

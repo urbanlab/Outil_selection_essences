@@ -1,25 +1,16 @@
-// const p = new Promise((resolve, reject)=>{
-//     console.log("début promesse")
-//     setTimeout(resolve, 2*1000)
-// })
-// .then(()=>{
-//     console.log("c'est bon")
-//     return new Promise((resolve, reject)=>{
-//         setTimeout(resolve, 1*1000)
-//     })
-// })
-// .then(()=>{
-//     console.log("c'est rebon")
-// })
+const fs = require('fs')
+const utils = require('./utils.js')
 
-function returnPromise(){
-    return new Promise((resolve, reject)=>{
-        console.log("salut")
-        setTimeout(resolve, 1*1000)
-    })
-}
+fs.readdir('./assets/images', (err, files)=>{
+    files=files.sort()
+    console.log(files)
+    const compfunc = (a,b)=>{
+        if(a==b.split('.')[0]) return 0
+        else if(a<b.split('.')[0]) return -1
+        else if(a>b.split('.')[0]) return 1
+    }
 
-returnPromise()
-.then(()=>{
-    console.log("bonjour")
+    const id_index = utils.binSearch(files, "1-IzYRUy1osTVDjDtoF6YS_ctXDbWJ-SR", compfunc)
+    console.log(id_index)
 })
+
