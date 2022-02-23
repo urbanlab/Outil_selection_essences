@@ -298,10 +298,11 @@
     article.setAttribute('id', 'article '+nom_latin);
     article.classList.add('arbre-grid-item');
 
-    var p = document.createElement('p');
-    p.innerHTML = mots_cles(arbre);
-    p.classList.add('mot-cle');
-    article.appendChild(p);
+    
+    //var p = document.createElement('p');
+    //p.innerHTML = mots_cles(arbre);
+    //p.classList.add('mot-cle');
+    //article.appendChild(p);
 
     var img = document.createElement('img');
     img.setAttribute('id', 'img '+nom_latin);
@@ -309,9 +310,22 @@
     img.addEventListener('click', afficher_popin);
     img.classList.add('image-arbre');
     img.classList.add((side===0)? 'right' : 'left');
+    
 
-    article.appendChild(img);
-
+    //article.appendChild(img);
+    let val = mots_cles(arbre);
+    if (val!==""){
+      var div1 = document.createElement('div');
+      div1.setAttribute('class', 'img__wrapper')
+      var a1=document.createElement('a');
+      a1.setAttribute('class', 'attention');
+      div1.appendChild(img);
+      a1.innerHTML = val;
+      div1.appendChild(a1);
+      article.appendChild(div1);
+    } else {
+      article.appendChild(img)
+    };
     var div = document.createElement('div');
     div.classList.add('text-container');
 
@@ -396,6 +410,7 @@
     if (arbre['Pollen et potentiel allergisant']=="Fort"){
       mots_clé.push("allergène");
     }
+
     return(mots_clé.join("<br>"));
   }
 
