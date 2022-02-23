@@ -19,6 +19,7 @@ p.latin{
   margin-bottom: 1px;
   text-align: center;
   color: var(--dark-70);
+  font-weight: lighter;
   font-size: 14px;
   line-height: 1.3;
   font-weight: 500;
@@ -63,9 +64,16 @@ p.francais{
 
 @media screen and (max-width: 750px) {
 
+  #titre_page{
+    text-align: center;
+  }
+
   #nav_pages{
+    width: fit-content;
+    height: fit-content;
+    position: fixed;
     right: 5%;
-    top: 7%;
+    top: 6%;
   }
 
   #cookies_dialogue{
@@ -94,7 +102,7 @@ p.francais{
     min-height: 100%;
     margin: 0;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     flex-wrap: wrap;
     background-color: #FCE5D2;
   }
@@ -108,7 +116,6 @@ p.francais{
     height: 10%;
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
     background-color: white;
     z-index: 999;
@@ -127,7 +134,7 @@ p.francais{
 
   footer{
     width: 100%;
-    height: 2%;
+    height: 10%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -162,25 +169,34 @@ p.francais{
     background: url('http://canographia.datagora.erasme.org/wp-content/themes/canographia/assets/rough-x-secondary.svg') repeat-x transparent;
   }
 
-  .text-container{
-    text-align: center;
-    width: 50%;
-    min-width: 300px;
-    margin: 0 auto;
-    margin-top: -48px;
-    position: relative;
-    z-index: 10;
-    padding: 12px 24px;
-    box-shadow: 0 10px 20px #f2d7c7;
 
-    /*padding:2px;
+
+  #barre_recherche{
+    height: fit-content;
+    text-align: center;
+    border-left: 5%;
+    border-right: 5%;
+    margin-top: 10%;
+    margin-bottom: 5%;
+    font-size: 20px;
+  }
+
+
+  .text-container{
+    width: 85%;
+    padding:2px;
     display: flex;
+    margin-top: -48px;
+    z-index: 10;
     flex-direction: column;
     justify-content: flex-end;
     align-items: center;
     height: fit-content;
-    background: linear-gradient(#55555500 10%, #555);
-    border-radius: 0.5vw;*/
+    background-color: white !important;
+    background-clip: padding-box !important;
+    border-style: solid;
+    border-width: 10px 10px 10px 10px;
+    border-image: url(/assets/frame-border.svg) 6 9 5 5 stretch stretch;
   }
 
   #mot-cle{
@@ -201,8 +217,68 @@ p.francais{
     justify-content:space-between;
     align-items: center;
     width: 100vw;
-    height:25vw;
+    height:100vw;
+    margin-bottom: 10px;
   }
+
+  #arbres_grid{
+    height: fit-content;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+
+
+  .image-arbre{
+    height: 90vw;
+    width: 64vw;
+    object-fit: cover;
+    object-position: center;
+    border-style: solid;
+    border-width: 10px 10px 10px 10px;
+    -moz-border-image: url(/assets/frame-border.svg) 6 9 5 5 stretch stretch;
+    -webkit-border-image: url(/assets/frame-border.svg) 6 9 5 5 stretch stretch;
+    -o-border-image: url(/assets/frame-border.svg) 6 9 5 5 stretch stretch;
+    border-image: url(/assets/frame-border.svg) 6 9 5 5 stretch stretch;
+  }
+
+  .left{
+    transform: rotateZ(-2deg);
+    animation-duration: 1.5s;
+    animation-direction: alternate;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+  }
+
+  .left:hover{
+    animation-name: rotate-right;
+    cursor: pointer;
+  }
+
+  .right{
+    transform: rotateZ(3deg);
+    animation-duration: 1.5s;
+    animation-direction: alternate;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+  }
+
+  .right:hover{
+    animation-name: rotate-left;
+    cursor: pointer;
+  }
+
+  @keyframes rotate-right{
+    from{transform: rotateZ(-2deg);}
+    to{transform: rotateZ(1deg);}
+  }
+
+  @keyframes rotate-left {
+    from{transform: rotateZ(3deg);}
+    to{transform: rotateZ(0deg);}
+  }
+
 
 
   #filtres{
@@ -218,17 +294,31 @@ p.francais{
     font-size: 20px;
   }
 
+
+  label{
+    text-align: left;
+    margin-bottom: 4px;
+    color:#294F8D;
+  }
+
   select{
     width: 55%;
   }
 
   #plus_de_filtres{
+    border: black solid;
     order:100000000000;
     width: fit-content;
     margin: auto;
     border: none;
     background: none;
     text-decoration: underline;
+    align-items: center;
+  }
+
+  #plus_de_filtres:hover{
+    color: #D82600;
+    cursor: pointer;
   }
 
   #arbres{
@@ -243,11 +333,12 @@ p.francais{
   }
 
   #bouton_pages{
-    width: 100vw;
+    width: 100%;
     height: fit-content;
     display: flex;
     align-items: center;
-    margin-top: 0;
+    margin-top: 5%;
+    margin-bottom: 5%;
     justify-content: center;
   }
 
@@ -277,7 +368,6 @@ p.francais{
   .filtre{
     display: flex;
     flex-direction: column;
-    text-align: center;
     justify-content: center;
     margin:0;
   }
@@ -289,26 +379,7 @@ p.francais{
     white-space:nowrap;
   }
 
-  p.latin{
-    font-style: italic;
-    color:#BDB246;
-    text-shadow: black 2px 1px 3px;
-    font-size: 22px;
-    margin-top: 0;
-    margin-bottom: 1px;
-    text-align: center;
-    line-height: 100%;
-  }
-
-  p.francais{
-    font-size: 26px;
-    color:white;
-    text-shadow: black 2px 1px 3px;
-    margin-top: 0;
-    margin-bottom: 0;
-    text-align: center;
-    line-height: 100%;
-  }
+  
 
 
   .modal{
@@ -390,6 +461,28 @@ p.francais{
     border: 2px solid transparent;
   }
 
+
+  
+  #cookies_dialogue, #merci_dialogue, #rappel_cookies{
+    position: fixed;
+    bottom: 0;
+    background-color: rgba(255,255,255,0.5);
+    z-index: 1000;
+    width: auto;
+    border-radius: 0.5vw 0.5vw 0 0;
+    text-align: center;
+    color: #294F8D;
+    max-height:0;
+  }
+
+  @keyframes cookies_slidein {
+    from {
+      max-height: 0;
+    }
+    to {
+      max-height:100%;
+    }
+  }
   
 
 
@@ -508,14 +601,6 @@ p.francais{
   }
 
   .arbre-grid-item{
-    /*max-width: 80%;
-    max-height: 300px;
-    padding: 0;
-    transform: rotateZ(-2deg);
-    margin: 0px auto 0;
-    display: block;
-    box-shadow: 0 10px 20px #f2d7c7;*/
-
     display: flex;
     flex-direction: column;
     justify-content:space-between;
@@ -525,7 +610,6 @@ p.francais{
   }
 
   .image-arbre{
-
     height: 18vw;
     width: 17vw;
     object-fit: cover;
@@ -575,15 +659,6 @@ p.francais{
   }
 
   .text-container{
-    /*text-align: center;
-    width: inherit;
-    min-width: 300px;
-    margin: 0 auto;
-    margin-top: -48px;
-    position: relative;
-    z-index: 10;
-    padding: 12px 24px;
-    box-shadow: 0 10px 20px #f2d7c7;*/
     width: 85%;
     padding:2px;
     display: flex;
