@@ -1302,12 +1302,13 @@ z-index: 99;
   }
 
   #etoile_favori{
-    width:5%;
-    height:5%;
+    position: relative;
+    width: auto;
     border-radius: 5em;
   }
 
   #etoile_favori:hover{
+    cursor: pointer;
     background-color: rgba(125,125,125,0.3);
   }
 
