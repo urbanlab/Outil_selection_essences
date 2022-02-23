@@ -20,11 +20,6 @@
 
 <div id="popin" class="modal" onclick="click_hors_popin()">
   <div class="modal-content" onclick="event.stopPropagation()">
-    <img id="etoile_favori"
-    src="/assets/star-svgrepo-com.svg"
-    alt="ajouter aux favori"
-    onclick="update_favori()"
-    />
     <img id='popin_tape_tl' src="/assets/tape.png" alt="">
     <img id='popin_tape_br' src="/assets/tape.png" alt="">
     <div id="popin_photo" src="" alt="">
@@ -45,6 +40,7 @@
       &nbsp<button type="button" name="button" onclick="document.location.href=`/comparaison?arbre1=${document.getElementById('popin_nom_francais').innerHTML}&arbre2=${document.getElementById('comparer_arbres').value}`">Comparer</button>
     </div>
     <button id="popin_close" type="button" name="button" onclick="cacher_popin()">&times</button>
+    <span id = "etoile_favori" onclick="update_favori()">Ajouter aux favoris</span>
   </div>
 </div>
 
@@ -526,10 +522,12 @@
         let favori_icon = document.getElementById("etoile_favori");
         const fav = JSON.parse(localStorage.getItem("arbres_favori"));
         if(fav && fav.indexOf(arbre_popin['Genre'].trim() + ' ' + arbre_popin['Espèce'].trim())>-1){
-          favori_icon.style.filter = "invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%)"
+          favori_icon.style.color = "#bdb246"
+          favori_icon.innerText = "Retirer des favoris"
         }
         else{
-          favori_icon.style.filter="none"
+          favori_icon.style.color="#294F8D"
+          favori_icon.innerText = "Ajouter aux favoris"
         }
 
         if(arbre_popin["Image Id"]!= ''){
@@ -743,18 +741,21 @@
       const nom = document.getElementById('popin_nom_latin').innerText;
       if(!localStorage.getItem("arbres_favori")){
         localStorage.setItem("arbres_favori", JSON.stringify([nom]))
-        document.getElementById("etoile_favori").style.filter="invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%)"
+        document.getElementById("etoile_favori").style.color = "#bdb246"
+        document.getElementById("etoile_favori").innerText = "Retirer des favoris"
       }
       else{
         let fav = JSON.parse(localStorage.getItem("arbres_favori"))
         const index = fav.indexOf(nom)
         if(index>-1){
-          document.getElementById("etoile_favori").style.filter="none"
+          document.getElementById("etoile_favori").style.color = "#294F8D"
+          document.getElementById("etoile_favori").innerText = "Ajouter aux favoris"
           fav.splice(index,1)
         }
         else{
           fav.push(nom)
-          document.getElementById("etoile_favori").style.filter="invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%)"
+          document.getElementById("etoile_favori").style.color = "#bdb246"
+          document.getElementById("etoile_favori").innerText = "Retirer des favoris"
         }
         localStorage.setItem("arbres_favori", JSON.stringify(fav))
       }
