@@ -87,9 +87,8 @@
   <button type="button" onclick="refuser_cookies(event)">Refuser</button>
 </aside>
 <aside id="merci_dialogue">Merci</aside>
-<a href="#" class="bouton-remonter">
-  <img src="/assets/arrow-up-solid.svg" alt="" width="25">
-</a>
+<img class="feuille-remonter" src="/assets/feuille-svg.svg" alt="">
+<img class="fleche-remonter" src="/assets/arrow-up-solid.svg" alt="" width="25" onclick="document.location.href='#'">
 
 
 <footer>
@@ -110,19 +109,18 @@
 
   xhttp_filtres.onload = function () {
       const data = tri(JSON.parse(xhttp_filtres.responseText));
-      critere1 = data[0];
       for (let i = 0; i < data.length; i++) {
         const critere = data[i];
         if (critere.type_question == "Select") {
-          filtre_select(critere);
+            filtre_select(critere);
         }
         else if (critere.type_question == "Checkbox") {
-          filtre_checkbox(critere);
-          var liste_reponses = [];
-          for (var j = 0; j < critere.reponses.length; j++) {
-            liste_reponses.push(critere.reponses[j].valeur);
-          }
-          question_checkboxes[critere.nom]=liste_reponses;
+            filtre_checkbox(critere);
+            var liste_reponses = [];
+            for (var j = 0; j < critere.reponses.length; j++) {
+                liste_reponses.push(critere.reponses[j].valeur);
+            }
+            question_checkboxes[critere.nom]=liste_reponses;
         }
       }
   }
@@ -205,12 +203,13 @@
 
     if (critere.commentaire !== ""){
       label.setAttribute('for', critere.nom);
-      label.setAttribute('title', critere.commentaire);
-      label.setAttribute('class',"tooltip");
+      label.innerHTML = critere.nom;
+      label.classList.add('label-info');
       var span=document.createElement('span');
-      span.setAttribute('title',"");
-      label.appendChild(span);
-      span.innerHTML = critere.nom;
+      span.setAttribute('title', critere.commentaire);
+      span.classList.add("tooltip");
+      span.innerHTML = "&#x1F342";
+      label.insertAdjacentElement('beforeend', span);
       div.appendChild(label);
     }
 
@@ -260,24 +259,25 @@
       const reponse = critere.reponses[i];
       var input = document.createElement('input');
       input.setAttribute('type', "checkbox");
-      input.setAttribute('id', reponse.texte);
-      input.setAttribute('name', reponse.texte);
+      input.setAttribute('id', reponse.valeur);
+      input.setAttribute('name', reponse.valeur);
       input.setAttribute('value', reponse.valeur);
       input.addEventListener('change', function() {update_resultats(1)});
 
       var label = document.createElement('label');
-      if (reponse.commentaire ===""){
-        label.setAttribute('for', reponse.texte);
-        label.innerHTML = reponse.texte;
+      if (reponse.texte ===""){
+        label.setAttribute('for', reponse.valeur);
+        label.innerHTML = reponse.valeur;
       }
-      if (reponse.commentaire !==""){
-        label.setAttribute('for', reponse.texte);
-        label.setAttribute('title', reponse.commentaire);
-        label.setAttribute('class',"tooltip");
+      if (reponse.texte !==""){
+        label.setAttribute('for', reponse.valeur);
+        label.innerHTML = reponse.valeur;
+        label.classList.add('label-info');
         var span=document.createElement('span');
-        span.setAttribute('title',"");
-        label.appendChild(span);
-        span.innerHTML = reponse.texte;
+        span.setAttribute('title', reponse.texte);
+        span.classList.add("tooltip");
+        span.innerHTML = "&#x1F342";
+        label.insertAdjacentElement('beforeend', span);
       }
 
       div_checkbox.appendChild(input);
@@ -298,7 +298,7 @@
     article.setAttribute('id', 'article '+nom_latin);
     article.classList.add('arbre-grid-item');
 
-    
+
     //var p = document.createElement('p');
     //p.innerHTML = mots_cles(arbre);
     //p.classList.add('mot-cle');
@@ -310,7 +310,7 @@
     img.addEventListener('click', afficher_popin);
     img.classList.add('image-arbre');
     img.classList.add((side===0)? 'right' : 'left');
-    
+
 
     //article.appendChild(img);
     let val = mots_cles(arbre);

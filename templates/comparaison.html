@@ -34,9 +34,8 @@
     </table>
   </section>
 
-  <a href="#" class="bouton-remonter">
-    <img src="/assets/arrow-up-solid.svg" alt="" width="25">
-  </a>
+  <img class="feuille-remonter" src="/assets/feuille-svg.svg" alt="">
+  <img class="fleche-remonter" src="/assets/arrow-up-solid.svg" alt="" width="25" onclick="document.location.href='#'">
 
   <footer id="footer">
     <img src="/assets/logo_erasme_grandlyon.png" width="500" >
@@ -46,6 +45,7 @@
         var caracteristiques = [];
         var arbres = [];
         var legendes = [];
+        let question_checkboxes = {};
 
         var xhttp_arbres = new XMLHttpRequest();
         xhttp_arbres.open('GET', '/data/arbres');
@@ -67,77 +67,112 @@
             xhttp_legendes.send();
 
             xhttp_legendes.onload = function () {
-                legendes = JSON.parse(xhttp_legendes.responseText);
 
-                var xhttp_legende = new XMLHttpRequest();
-                xhttp_legende.open('GET', `/data/arbres?page=1`);
-                xhttp_legende.setRequestHeader('Content-type', 'application/json');
-                xhttp_legende.send()
+                var xhttp_filtres = new XMLHttpRequest();
+                xhttp_filtres.open('GET', '/data/filtres');
+                xhttp_filtres.setRequestHeader('Content-type', 'application/json');
+                xhttp_filtres.send();
 
-                xhttp_legende.onload = function() {
-                    arbres_result = JSON.parse(xhttp_legende.responseText);
-                    const colonnes = Object.keys(arbres_result[0]);
-                    for (var i = 0; i < colonnes.length; i++) {
-                        if (colonnes[i]!='Nom commun' && colonnes[i]!='Image Id') {
-                            caracteristiques.push(colonnes[i]);
-
-                            var tr_titre = document.createElement('tr');
-                            var th = document.createElement('th');
-                            th.setAttribute('colspan', '2');
-                            th.style.borderBottom = 'solid grey';
-                            th.style.paddingBottom = '0.5em';
-                            /*th.style.border = 'solid';
-                            th.style.borderColor = '#BB8271';*/
-                            th.innerHTML=colonnes[i];
-                            tr_titre.appendChild(th);
-
-
-                            var tr_donnees = document.createElement('tr');
-                            var col1 = document.createElement('td');
-                            col1.setAttribute('id', colonnes[i]+'_arbre1');
-                            col1.style.width = '50%';
-                            col1.style.paddingRight = '10%';
-                            col1.style.textAlign = 'center';
-                            col1.style.color = '#294F8D';
-                            col1.style.backgroundColor = '#FCE5D2';
-                            /*col1.style.border = 'solid';*/
-                            col1.style.borderColor = '#FCE5D2';
-                            col1.innerHTML="-";
-                            col1.style.paddingBottom = '4em';
-
-
-                            var col2 = document.createElement('td');
-                            col2.setAttribute('id', colonnes[i]+'_arbre2');
-                            col2.style.width = '50%';
-                            col2.style.paddingLeft = '10%';
-                            col2.style.textAlign = 'center';
-                            col2.style.color = '#294F8D';
-                            col2.style.backgroundColor = '#FCE5D2';
-                            col2.style.borderColor = '#FCE5D2';
-                            col2.innerHTML="-";
-                            col2.style.paddingBottom = '4em';
-
-                            tr_donnees.appendChild(col1);
-                            tr_donnees.appendChild(col2);
-                            tableau_compare.appendChild(tr_titre);
-                            tableau_compare.appendChild(tr_donnees);
-
+                xhttp_filtres.onload = function () {
+                    const data = JSON.parse(xhttp_filtres.responseText);
+                    for (let i = 0; i < data.length; i++) {
+                      const critere = data[i];
+                      if (critere.type_question == "Checkbox") {
+                        var liste_reponses = [];
+                        for (var j = 0; j < critere.reponses.length; j++) {
+                          liste_reponses.push(critere.reponses[j].valeur);
                         }
+                        question_checkboxes[critere.nom]=liste_reponses;
+                      }
                     }
-                    recherche_arbre.addEventListener('change', update_compare_arbre);
-                    recherche_arbre2.addEventListener('change', update_compare_arbre);
+                    legendes = JSON.parse(xhttp_legendes.responseText);
 
-                    var url = decodeURI(document.location.href);
-                    var boom1 = url.split('?');
-                    if (boom1.length>1){
-                      var boom2 = boom1[1].split('&');
-                      var arbre1 = boom2[0].split('=')[1];
-                      var arbre2 = boom2[1].split('=')[1];
-                      recherche_arbre.value=arbre1;
-                      recherche_arbre2.value=arbre2;
-                      var event = new Event('change');
-                      recherche_arbre.dispatchEvent(event);
-                      recherche_arbre2.dispatchEvent(event);
+                    var xhttp_legende = new XMLHttpRequest();
+                    xhttp_legende.open('GET', `/data/arbres?page=1`);
+                    xhttp_legende.setRequestHeader('Content-type', 'application/json');
+                    xhttp_legende.send()
+
+                    xhttp_legende.onload = function() {
+                        arbres_result = JSON.parse(xhttp_legende.responseText);
+                        const colonnes = Object.keys(arbres_result[0]);
+                        for (var i = 0; i < colonnes.length; i++) {
+                            if (colonnes[i]!='Nom commun' && colonnes[i]!='Image Id' && !critere_dans_checkboxes(colonnes[i])) {
+                                caracteristiques.push(colonnes[i]);
+
+                                var tr_titre = document.createElement('tr');
+                                var th = document.createElement('th');
+                                th.setAttribute('colspan', '2');
+                                th.classList.add('th-compare');
+                                th.innerHTML=colonnes[i];
+                                tr_titre.appendChild(th);
+
+
+                                var tr_donnees = document.createElement('tr');
+                                var col1 = document.createElement('td');
+                                col1.setAttribute('id', colonnes[i]+'_arbre1');
+                                col1.classList.add('td-compare');
+                                col1.style.paddingRight = '10%';
+                                col1.innerHTML="-";
+
+
+                                var col2 = document.createElement('td');
+                                col2.setAttribute('id', colonnes[i]+'_arbre2');
+                                col2.classList.add('td-compare');
+                                col2.style.paddingLeft = '10%';
+                                col2.innerHTML="-";
+
+                                tr_donnees.appendChild(col1);
+                                tr_donnees.appendChild(col2);
+                                tableau_compare.appendChild(tr_titre);
+                                tableau_compare.appendChild(tr_donnees);
+                            }
+                            var titres_checkboxes = Object.keys(question_checkboxes);
+                        }
+                        for (var i = 0; i < titres_checkboxes.length; i++) {
+                          caracteristiques.push(titres_checkboxes[i]);
+
+                          var tr_titre = document.createElement('tr');
+                          var th = document.createElement('th');
+                          th.setAttribute('colspan', '2');
+                          th.classList.add('th-compare');
+                          th.innerHTML=titres_checkboxes[i];
+                          tr_titre.appendChild(th);
+
+
+                          var tr_donnees = document.createElement('tr');
+                          var col1 = document.createElement('td');
+                          col1.setAttribute('id', titres_checkboxes[i]+'_arbre1');
+                          col1.classList.add('td-compare');
+                          col1.style.paddingRight = '10%';
+                          col1.innerHTML="-";
+
+
+                          var col2 = document.createElement('td');
+                          col2.setAttribute('id', titres_checkboxes[i]+'_arbre2');
+                          col2.classList.add('td-compare');
+                          col2.style.paddingLeft = '10%';
+                          col2.innerHTML="-";
+
+                          tr_donnees.appendChild(col1);
+                          tr_donnees.appendChild(col2);
+                          tableau_compare.appendChild(tr_titre);
+                          tableau_compare.appendChild(tr_donnees);
+                        }
+                        recherche_arbre.addEventListener('change', update_compare_arbre);
+                        recherche_arbre2.addEventListener('change', update_compare_arbre);
+
+                        var url = decodeURI(document.location.href);
+                        var boom1 = url.split('?');
+                        if (boom1.length>1){
+                          var boom2 = boom1[1].split('&');
+                          var arbre1 = boom2[0].split('=')[1];
+                          var arbre2 = boom2[1].split('=')[1];
+                          recherche_arbre.value=arbre1;
+                          recherche_arbre2.value=arbre2;
+                          var event = new Event('change');
+                          recherche_arbre.dispatchEvent(event);
+                          recherche_arbre2.dispatchEvent(event);
+                        }
                     }
                 }
             }
@@ -156,36 +191,62 @@
             return(undefined);
         }
 
+        function critere_dans_checkboxes(critere){
+          var titres_checkboxes = Object.keys(question_checkboxes);
+          for (var i = 0; i < titres_checkboxes.length; i++) {
+            if (question_checkboxes[titres_checkboxes[i]].includes(critere)) {
+              return(true);
+            }
+          }
+          return(false);
+        }
+
         function update_compare_arbre(event) {
             var nom_commun_arbre = event.currentTarget.value;
             var arbre = chercher_arbre(nom_commun_arbre);
             var num_colonne = (event.currentTarget.id=='recherche_arbre') ? 1: 2;
             if (arbre){
                 for (let i = 0; i < caracteristiques.length; i++) {
-                    const id_elt = caracteristiques[i] + '_arbre' + num_colonne;
-                    var td = document.getElementById(id_elt);
+                    if (arbre[caracteristiques[i]]) {
+                        const id_elt = caracteristiques[i] + '_arbre' + num_colonne;
+                        var td = document.getElementById(id_elt);
 
-                    if (caracteristiques[i] == "Indice de potentiel d'adaptation") {
-                        var keys_adaptation = Object.keys(legendes[caracteristiques[i]]["values"]);
-                        correspondance_legende = arbre[caracteristiques[i]].replace(',', '.');
-                        for (let j = 0; j < keys_adaptation.length; j++) {
-                            var condition = keys_adaptation[j].replace(',', '.');
-                            var boom = condition.split('<');
-                            if (parseFloat(boom[0])<=parseFloat(correspondance_legende) && parseFloat(correspondance_legende)<parseFloat(boom[2])) {
-                                td.innerHTML = legendes[caracteristiques[i]]["values"][keys_adaptation[j]];
+                        if (caracteristiques[i] == "Indice de potentiel d'adaptation") {
+                            var keys_adaptation = Object.keys(legendes[caracteristiques[i]]["values"]);
+                            correspondance_legende = arbre[caracteristiques[i]].replace(',', '.');
+                            for (let j = 0; j < keys_adaptation.length; j++) {
+                                var condition = keys_adaptation[j].replace(',', '.');
+                                var boom = condition.split('<');
+                                if (parseFloat(boom[0])<=parseFloat(correspondance_legende) && parseFloat(correspondance_legende)<parseFloat(boom[2])) {
+                                    td.innerHTML = legendes[caracteristiques[i]]["values"][keys_adaptation[j]];
+                                }
                             }
+                        } else if (arbre[caracteristiques[i]].split(' - ').length>1 && legendes[caracteristiques[i]]["values"][arbre[caracteristiques[i]].split(' - ')[0].trim()] && legendes[caracteristiques[i]]["values"][arbre[caracteristiques[i]].split(' - ')[1].trim()]) {
+                            var boom = arbre[caracteristiques[i]].split(' - ');
+                            var legende_colonne = `${legendes[caracteristiques[i]]["values"][boom[0].trim()]} à ${legendes[caracteristiques[i]]["values"][boom[1].trim()]}`;
+                            td.innerHTML = legende_colonne[0].toUpperCase() + legende_colonne.substring(1).toLowerCase();
+                        } else {
+                            correspondance_legende = arbre[caracteristiques[i]];
+                            td.innerHTML = (legendes[caracteristiques[i]]) ? ((legendes[caracteristiques[i]]["values"][correspondance_legende]) ? legendes[caracteristiques[i]]["values"][correspondance_legende] : correspondance_legende): correspondance_legende;
                         }
-                    } else if (arbre[caracteristiques[i]].split(' - ').length>1 && legendes[caracteristiques[i]]["values"][arbre[caracteristiques[i]].split(' - ')[0].trim()] && legendes[caracteristiques[i]]["values"][arbre[caracteristiques[i]].split(' - ')[1].trim()]) {
-                        var boom = arbre[caracteristiques[i]].split(' - ');
-                        var legende_colonne = `${legendes[caracteristiques[i]]["values"][boom[0].trim()]} à ${legendes[caracteristiques[i]]["values"][boom[1].trim()]}`;
-                        td.innerHTML = legende_colonne[0].toUpperCase() + legende_colonne.substring(1).toLowerCase();
-                    } else {
-                        correspondance_legende = arbre[caracteristiques[i]];
-                        td.innerHTML = (legendes[caracteristiques[i]]) ? ((legendes[caracteristiques[i]]["values"][correspondance_legende]) ? legendes[caracteristiques[i]]["values"][correspondance_legende] : correspondance_legende): correspondance_legende;
                     }
                 }
-            }
+                var titres_checkboxes = Object.keys(question_checkboxes);
+                for (var i = 0; i < titres_checkboxes.length; i++) {
+                  const id_elt = titres_checkboxes[i] + '_arbre' + num_colonne;
+                  var td = document.getElementById(id_elt);
 
+                    var criteres_valides = []
+                    for (var j = 0; j < question_checkboxes[titres_checkboxes[i]].length; j++) {
+                        var critere = question_checkboxes[titres_checkboxes[i]][j];
+                        if (arbre[critere] == 'X'){
+                            criteres_valides.push(critere.toLowerCase());
+                        }
+                    }
+                    var texte_brut = criteres_valides.join(', ');
+                    td.innerHTML = texte_brut[0].toUpperCase() + texte_brut.slice(1);
+                }
+            }
         }
 
   </script>
