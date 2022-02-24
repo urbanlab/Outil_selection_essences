@@ -195,17 +195,17 @@ p.francais{
     animation-duration: 0.5s;
     animation-fill-mode: forwards;
   }
-  
+
   @keyframes button-hover-anim{
     from{transform: scale(100%);}
     to{transform: scale(107%);}
   }
-  
+
   .bouton_nav_pages:hover{
     animation-name: button-hover-anim;
     cursor: pointer;
   }
-  
+
   .bouton-remonter{
     height: 50px;
     width: 50px;
@@ -391,7 +391,7 @@ p.francais{
     line-height: 0;
   }
 
-  
+
 
   .info_arbre{
     background-image: url('/assets/arbre_template.png');
@@ -532,8 +532,6 @@ p.francais{
   }
 
 
-
-
   .popin_herbier_text_container{
     max-width: 95%;
     max-height: fit-content;
@@ -546,10 +544,24 @@ p.francais{
   }
 
   .popin_herbier_critere{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .p_herbier_critere{
     font-family: DK Crayon Crumble;
     color: #294F8D;
     font-size: 22px;
+    margin: 0;
+  }
 
+  .pictogramme{
+    width: 50px;
+    height: 50px;
+    margin: 0;
+    margin-right: 8px;
   }
 
 
@@ -560,15 +572,15 @@ p.francais{
     text-align: justify;
   }
 
-  
+
   #popin_tape_tl{
     display: none;
   }
-  
+
   #popin_tape_br{
     display: none;
   }
-  
+
 
 
 
@@ -597,7 +609,7 @@ p.francais{
     max-height:0;
   }
 
-  
+
 
   @keyframes cookies_slidein {
     from {
@@ -640,7 +652,7 @@ p.francais{
     display:flex;
     position: relative;
   }
-  
+
   .tooltip:hover:after{
     background: #bdb246;
     border-radius: 5px;
@@ -703,8 +715,8 @@ p.francais{
     -webkit-transform: scale(0.7);
     border: 2px rgba(255,255,255,0.7) dashed;
   }
-  
-  
+
+
 }
 
 
@@ -840,17 +852,17 @@ p.francais{
     animation-duration: 0.5s;
     animation-fill-mode: forwards;
   }
-  
+
   @keyframes button-hover-anim{
     from{transform: scale(100%);}
     to{transform: scale(107%);}
   }
-  
+
   .bouton_nav_pages:hover{
     animation-name: button-hover-anim;
     cursor: pointer;
   }
-  
+
   .bouton-remonter{
     height: 50px;
     width: 50px;
@@ -1174,7 +1186,7 @@ p.francais{
     left: 53%;
   }
 
-  
+
   #popin_infos{
     border: black solid;
     margin:0;
@@ -1194,9 +1206,24 @@ p.francais{
   }
 
   .popin_herbier_critere{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .p_herbier_critere{
     font-family: DK Crayon Crumble;
     color: #294F8D;
     font-size: 22px;
+    margin: 0;
+  }
+
+  .pictogramme{
+    width: 50px;
+    height: 50px;
+    margin: 0;
+    margin-right: 8px;
   }
 
   .popin_herbier_infos{
@@ -1318,7 +1345,7 @@ p.francais{
     display:flex;
     position: relative;
   }
-  
+
   .tooltip:hover:after{
     background: #bdb246;
     border-radius: 5px;
@@ -1866,9 +1893,24 @@ p.francais{
   }
 
   .popin_herbier_critere{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .p_herbier_critere{
     font-family: DK Crayon Crumble;
     color: #294F8D;
     font-size: 22px;
+    margin: 0;
+  }
+
+  .pictogramme{
+    width: 40px;
+    height: 40px;
+    margin: 0;
+    margin-right: 8px;
   }
 
   .popin_herbier_infos{

@@ -103,9 +103,18 @@
                                 var th = document.createElement('th');
                                 th.setAttribute('colspan', '2');
                                 th.classList.add('th-compare');
-                                th.innerHTML=colonnes[i];
-                                tr_titre.appendChild(th);
+                                var p_titre = document.createElement('p');
+                                var picto = document.createElement('img');
+                                picto.classList.add('pictogramme');
+                                p_titre.classList.add("titre_critere");
+                                p_titre.innerHTML=colonnes[i];
 
+                                picto.setAttribute('src', `/picto/${colonnes[i]}`);
+                                picto.setAttribute('onerror', 'this.style.display = "none";');
+
+                                th.appendChild(picto);
+                                th.appendChild(p_titre);
+                                tr_titre.appendChild(th);
 
                                 var tr_donnees = document.createElement('tr');
                                 var col1 = document.createElement('td');
@@ -125,7 +134,8 @@
                                 tr_donnees.appendChild(col2);
                                 tableau_compare.appendChild(tr_titre);
                                 tableau_compare.appendChild(tr_donnees);
-                            }
+                              }
+
                             var titres_checkboxes = Object.keys(question_checkboxes);
                         }
                         for (var i = 0; i < titres_checkboxes.length; i++) {
@@ -135,7 +145,18 @@
                           var th = document.createElement('th');
                           th.setAttribute('colspan', '2');
                           th.classList.add('th-compare');
-                          th.innerHTML=titres_checkboxes[i];
+
+                          var p_titre = document.createElement('p');
+                          var picto = document.createElement('img');
+                          picto.classList.add('pictogramme');
+                          p_titre.classList.add("titre_critere");
+                          p_titre.innerHTML=titres_checkboxes[i];
+
+                          picto.setAttribute('src', `/picto/${titres_checkboxes[i]}`);
+                          console.log(picto.complete);
+
+                          th.appendChild(picto);
+                          th.appendChild(p_titre);
                           tr_titre.appendChild(th);
 
 

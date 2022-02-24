@@ -460,12 +460,23 @@
         for (var i = 0; i < colonnes.length; i++) {
           if (colonnes[i]!='Nom commun' && colonnes[i]!='Genre' && colonnes[i]!='Espèce' && colonnes[i]!='Image Id' && !critere_dans_checkboxes(colonnes[i])) {
             var text_container = document.createElement('div');
-            var herbier_critere = document.createElement('p');
             var herbier_infos = document.createElement('p');
             text_container.classList.add('popin_herbier_text_container');
-            herbier_critere.classList.add('popin_herbier_critere');
             herbier_infos.classList.add('popin_herbier_infos');
-            herbier_critere.innerHTML = colonnes[i];
+
+            var herbier_critere = document.createElement('div');
+            var p_critere = document.createElement('p');
+            var picto_critere = document.createElement('img');
+            herbier_critere.classList.add('popin_herbier_critere');
+            p_critere.classList.add('p_herbier_critere');
+            p_critere.innerHTML = colonnes[i];
+            picto_critere.classList.add('pictogramme');
+            picto_critere.setAttribute('src', `/picto/${colonnes[i]}`);
+            picto_critere.setAttribute('onerror', 'this.style.display = "none";');
+
+            herbier_critere.appendChild(picto_critere);
+            herbier_critere.appendChild(p_critere);
+
             if (colonnes[i] == "Indice de potentiel d'adaptation") {
               var keys_adaptation = Object.keys(legendes[colonnes[i]]["values"]);
               correspondance_legende = arbre_popin[colonnes[i]].replace(',', '.');
@@ -494,12 +505,22 @@
         var titres_checkboxes = Object.keys(question_checkboxes);
         for (var i = 0; i < titres_checkboxes.length; i++) {
           var text_container = document.createElement('div');
-          var herbier_critere = document.createElement('p');
           var herbier_infos = document.createElement('p');
           text_container.classList.add('popin_herbier_text_container');
-          herbier_critere.classList.add('popin_herbier_critere');
           herbier_infos.classList.add('popin_herbier_infos');
-          herbier_critere.innerHTML = titres_checkboxes[i];
+
+          var herbier_critere = document.createElement('div');
+          var p_critere = document.createElement('p');
+          var picto_critere = document.createElement('img');
+          herbier_critere.classList.add('popin_herbier_critere');
+          p_critere.classList.add('p_herbier_critere');
+          p_critere.innerHTML = titres_checkboxes[i];
+          picto_critere.classList.add('pictogramme');
+          picto_critere.setAttribute('src', `/picto/${titres_checkboxes[i]}`);
+          picto_critere.setAttribute('onerror', 'this.style.display = "none";');
+          
+          herbier_critere.appendChild(picto_critere);
+          herbier_critere.appendChild(p_critere);
 
           var criteres_valides = []
           for (var j = 0; j < question_checkboxes[titres_checkboxes[i]].length; j++) {
@@ -541,11 +562,13 @@
           }
 
           var mots_clé = mots_cles(arbre_popin);
-          var a = document.createElement('a');
-          a.innerHTML = mots_clé;
-          a.classList.add('attention');
-          popin_photo.classList.add('img__wrapper');
-          popin_photo.appendChild(a);
+          if (mots_clé!=="") {
+            var a = document.createElement('a');
+            a.innerHTML = mots_clé;
+            a.classList.add('attention');
+            popin_photo.classList.add('img__wrapper');
+            popin_photo.appendChild(a);
+          }
 
           xhttp_attribution.onload = function(){
             var p = document.createElement('p');
