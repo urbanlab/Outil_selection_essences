@@ -265,6 +265,8 @@ function download_images(fileId, path, saveName){
     })
 }
 
+// ----- main_picto -----
+// Permet de synchroniser les pictogrammes en local avec ceux sur le drive
 function main_picto(cl, pageToken, existingPicto, callback){
     return new Promise((resolve, reject)=>{
         getImages(cl, pageToken, config.picto_folder_id)
@@ -310,6 +312,8 @@ function main_picto(cl, pageToken, existingPicto, callback){
     })
 }
 
+// ----- download_picto -----
+// Lance le téléchargement des pictogrammes en utilisant la variable client globale
 function download_picto(){
     return new Promise((resolve, reject)=>{
         fs.readdir("./assets/picto", (err,files)=>{
