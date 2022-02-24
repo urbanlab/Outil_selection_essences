@@ -34,6 +34,18 @@ p.francais{
   text-align: center;
   line-height: 100%;
 }
+.telecharger{
+  width:2%;
+  height:2%;
+  border-radius: 5em;
+  left:230px;
+  top:80px;
+  position:absolute
+}
+
+.telecharger:hover{
+  background-color: rgba(125,125,125,0.3);
+}
 
 @media screen and (max-width: 750px) {
 
@@ -500,25 +512,18 @@ p.francais{
     font-size: 13px;
   }
 
-<<<<<<< HEAD
-#etoile_favori:hover{
-  background-color: rgba(125,125,125,0.3);
-}
-.telecharger{
-  width:2%;
-  height:2%;
-  border-radius: 5em;
-  left:230px;
-  top:80px;
-  position:absolute
-}
-
-.telecharger:hover{
-  background-color: rgba(125,125,125,0.3);
-}
-=======
->>>>>>> 30d01d9db30f5d1471fc05331228bcaf83949e80
-
+  .telecharger{
+    width:2%;
+    height:2%;
+    border-radius: 5em;
+    left:230px;
+    top:80px;
+    position:absolute
+  }
+  
+  .telecharger:hover{
+    background-color: rgba(125,125,125,0.3);
+  }
 
   #popin_infos{
     margin:0;
@@ -769,7 +774,7 @@ p.francais{
     position: absolute;
     z-index: 99;
   }
-}
+
 
 
 @media screen and (min-width: 751px) and (max-width: 1110px) {
@@ -782,6 +787,18 @@ p.francais{
     flex-wrap: wrap;
     justify-content: space-around;
     background-color: #FCE5D2;
+  }
+  .telecharger{
+    width:2%;
+    height:2%;
+    border-radius: 5em;
+    left:230px;
+    top:80px;
+    position:absolute
+  }
+  
+  .telecharger:hover{
+    background-color: rgba(125,125,125,0.3);
   }
 
   #filtres{
@@ -1430,7 +1447,18 @@ p.francais{
     margin-top: 10%;
 
   }
-
+  .telecharger{
+    width:2%;
+    height:2%;
+    border-radius: 5em;
+    left:230px;
+    top:80px;
+    position:absolute
+  }
+  
+  .telecharger:hover{
+    background-color: rgba(125,125,125,0.3);
+  }
   #plus_de_filtres{
     order:100000000000;
     width: fit-content;

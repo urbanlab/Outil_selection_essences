@@ -318,10 +318,9 @@ function compute_scores(mydata,description,input1){
 			let inputs_updated=update_input(input,default_inputs);
 			
 			let [data_updated,col_enso]=update_data(mydata,filters);
-			console.log(col_enso);
+			
 			col_enso.push('Besoin en ensoleillement');
 			col_enso=Array.from(new Set(col_enso));
-			console.log(col_enso);
 			
 			const n_arbre=data_updated.length;
 			let scores=[];
@@ -372,6 +371,7 @@ function compute_scores(mydata,description,input1){
 			}else{
 				let resultat=convertToObj(arbre_non_bloque,scores);
 				return (sort_object(resultat,mydata));
+				
 				
 				;
 			}
