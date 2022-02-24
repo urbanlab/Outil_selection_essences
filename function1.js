@@ -87,7 +87,7 @@ function build_default_input_and_weights(description){
 	};
 //////////////////////////////////////////////
 
-
+//eleminer les element vides de l'input 
 function delete_non_input(input){
     const props=Object.keys(input);
     for (const i in props){
@@ -126,10 +126,11 @@ function update_input(input,default_inputs){
            
 
 ///////////////////////////////////////////////////:
-
+//modifier les données pour les addapter au calcul et extraire les colonnes de types ensolelliment (contenant des intervalles)
 function update_data(data1,filters){
     data=JSON.parse(JSON.stringify(data1));
 	const n_arbre=data.length;
+	var col_enso=[]
 	
     for (var i=0;i<n_arbre ;i++){
 
@@ -182,23 +183,30 @@ function update_data(data1,filters){
 						     break;
 						     // c'est une entier 
 						     default:
+								 let temp=data[i][prop]+''
 								 if (isNumeric(data[i][prop]) ){
             
                 
 									data[i][prop]=parseInt(data[i][prop]);
 								
+							   }else if (temp.split('-').length==2)
+							   {
+								   col_enso.push(prop)
+
 							   }
 							
 						     
 						     break;}
 				}
 		}
-	return data;
+
+	return [data,Array.from(new Set(col_enso))];
 
 };
 
 
-
+/////////////////////////////
+//calcul de scores qu'on utilise pour toutes les colonnes sauf ceux contennat des intervalles
 function compute_score(inputs_updated,prop,data_updated,i,weight,n_choice){
     if ((prop=='Tolérance pour le pH du sol') && (data_updated[i][prop]== 1)){
     	data_updated[i][prop]=inputs_updated[prop];
@@ -224,7 +232,8 @@ function compute_score(inputs_updated,prop,data_updated,i,weight,n_choice){
 }
 
 
-
+////////////////////////////////::::
+//Calcul des sommes de poids
 function sum(weights,filters_input){
 	let out=0;
 	
@@ -236,6 +245,9 @@ function sum(weights,filters_input){
 	}
 	return out
 }
+
+
+////////////////////////////////////////////////////////
 // Checking if the array lengths are same 
 // and none of the array is empty
 function convertToObj(a, b){
@@ -248,7 +260,11 @@ function convertToObj(a, b){
 	a.forEach((k, i) => {obj[k] = b[i]})
 	return obj;
   }
+
+
+//////////////////////////////////::
 function sort_object(resultat,mydata){
+	// pour ordonner une liste d'objets en utiliasant une liste de scores
 	let list_sorted=Object.entries(resultat).sort((a,b) => b[1]-a[1]).map(el=>el[0]);
 	let out =[]
 	for (const i in list_sorted){
@@ -262,9 +278,9 @@ function sort_object(resultat,mydata){
 	return out
 }
 
-
+/////////////////////////////////////////////////////////////////////////
 function compute_score_ensoleilleiment(inputs_updated,prop,data_updated,i,weight){
- 
+ // calcul des scores pour les colonnes où il y'a des intervalles  comme ceux de l'ensoleillement
  let score=0;
  
  if (data_updated[i][prop]=='N/A'){
@@ -286,6 +302,8 @@ else{
 return score;
 }
 
+/////////////////////////////////////////////////////////////////
+//calcul du score final
 function compute_scores(mydata,description,input1){	
 			let [default_inputs, weight,default_var,n_choice]=build_default_input_and_weights(description);
 			
@@ -299,7 +317,10 @@ function compute_scores(mydata,description,input1){
 			
 			let inputs_updated=update_input(input,default_inputs);
 			
-			var data_updated=update_data(mydata,filters);
+			let [data_updated,col_enso]=update_data(mydata,filters);
+			
+			col_enso.push('Besoin en ensoleillement');
+			col_enso=Array.from(new Set(col_enso));
 			
 			const n_arbre=data_updated.length;
 			let scores=[];
@@ -323,7 +344,7 @@ function compute_scores(mydata,description,input1){
 						if (!(weight[fil] == 'bloquant')){
 						
 							
-							score+=((fil=='Besoin en ensoleillement')? compute_score_ensoleilleiment(inputs_updated,fil,data_updated,i,weight):compute_score(inputs_updated,fil,data_updated,i,weight,n_choice))
+							score+=((fil in col_enso)? compute_score_ensoleilleiment(inputs_updated,fil,data_updated,i,weight):compute_score(inputs_updated,fil,data_updated,i,weight,n_choice))
 							
 							
 						}else{
@@ -350,6 +371,8 @@ function compute_scores(mydata,description,input1){
 			}else{
 				let resultat=convertToObj(arbre_non_bloque,scores);
 				return (sort_object(resultat,mydata));
+				
+				
 				;
 			}
 			
