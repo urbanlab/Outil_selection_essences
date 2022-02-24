@@ -96,7 +96,7 @@
                         arbres_result = JSON.parse(xhttp_legende.responseText);
                         const colonnes = Object.keys(arbres_result[0]);
                         for (var i = 0; i < colonnes.length; i++) {
-                            if (colonnes[i]!='Nom commun' && colonnes[i]!='Image Id' && !critere_dans_checkboxes(colonnes[i])) {
+                            if (colonnes[i]!='Nom commun' && colonnes[i]!='Photo' && !critere_dans_checkboxes(colonnes[i])) {
                                 caracteristiques.push(colonnes[i]);
 
                                 var tr_titre = document.createElement('tr');

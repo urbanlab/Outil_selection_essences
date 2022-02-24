@@ -29,9 +29,9 @@
     alt="ajouter aux favori"
     onclick="update_favori()"
     />
-    
+
     <div class="telecharger">
-      <img 
+      <img
     src="/assets/download-solid.svg"/>
 
     </div>
@@ -64,14 +64,14 @@
 </div>
 
 <form id='filtres' onreset="Reset()">
-   
+
   <button type="button" id="plus_de_filtres" onclick="modifier_filtres()">Plus de filtres</button>
   <div class="reset">
-    <button type="button" style="background-color: red; 
+    <button type="button" style="background-color: red;
     color: white">Rénitialiser les filtres</button></div>
-  
-  
-  
+
+
+
 
 </form>
 
@@ -196,7 +196,7 @@
       update_resultats(numero_page);
     }
   }
-  
+
 
   function update_affichage_arbres(arbres) {
     var div = document.getElementById('arbres_grid');
@@ -333,7 +333,7 @@
 
     var img = document.createElement('img');
     img.setAttribute('id', 'img '+nom_latin);
-    img.setAttribute('src', (arbre["Image Id"]!="")? `/image/${arbre["Image Id"]}` : '/assets/arbre_template.png');
+    img.setAttribute('src', (arbre["Photo"]!="")? `/image/${arbre["Photo"]}` : '/assets/arbre_template.png');
     img.addEventListener('click', afficher_popin);
     img.classList.add('image-arbre');
     img.classList.add((side===0)? 'right' : 'left');
@@ -369,7 +369,7 @@
 
     section.appendChild(article);
   }
-  
+
 
   function modifier_filtres(){
     var filtres = document.getElementsByClassName('pas_bloquant');
@@ -464,7 +464,7 @@
       var popin = document.getElementById('popin');
       arbre_popin = JSON.parse(xhttp_popin.responseText)[0];
       var popin_photo = document.getElementById('popin_photo');
-      popin_photo.style.backgroundImage = `url(${arbre_popin["Image Id"]!='' ? `/image/${arbre_popin["Image Id"]}` : '/assets/arbre_template.png'})`
+      popin_photo.style.backgroundImage = `url(${arbre_popin["Photo"]!='' ? `/image/${arbre_popin["Photo"]}` : '/assets/arbre_template.png'})`
       var popin_nom_latin = document.getElementById('popin_nom_latin');
       popin_nom_latin.innerHTML= arbre_popin['Genre'] + ' ' + arbre_popin['Espèce'] ;
 
@@ -486,7 +486,7 @@
       xhttp_legende.onload = function() {
         legendes = JSON.parse(xhttp_legende.responseText);
         for (var i = 0; i < colonnes.length; i++) {
-          if (colonnes[i]!='Nom commun' && colonnes[i]!='Genre' && colonnes[i]!='Espèce' && colonnes[i]!='Image Id' && !critere_dans_checkboxes(colonnes[i])) {
+          if (colonnes[i]!='Nom commun' && colonnes[i]!='Genre' && colonnes[i]!='Espèce' && colonnes[i]!='Photo' && !critere_dans_checkboxes(colonnes[i])) {
             var text_container = document.createElement('div');
             var herbier_infos = document.createElement('p');
             text_container.classList.add('popin_herbier_text_container');
@@ -546,7 +546,7 @@
           picto_critere.classList.add('pictogramme');
           picto_critere.setAttribute('src', `/picto/${titres_checkboxes[i]}`);
           picto_critere.setAttribute('onerror', 'this.style.display = "none";');
-          
+
           herbier_critere.appendChild(picto_critere);
           herbier_critere.appendChild(p_critere);
 
@@ -579,9 +579,9 @@
           favori_icon.innerText = "Ajouter aux favoris"
         }
 
-        if(arbre_popin["Image Id"]!= ''){
+        if(arbre_popin["Photo"]!= ''){
           var xhttp_attribution = new XMLHttpRequest();
-          xhttp_attribution.open('GET', `/image_attribution/${arbre_popin['Image Id']}`);
+          xhttp_attribution.open('GET', `/image_attribution/${arbre_popin['Photo']}`);
           xhttp_attribution.setRequestHeader('Content-type', 'application/json');
           xhttp_attribution.send();
 
@@ -792,8 +792,8 @@
       document.querySelector('form').reset();
       update_resultats(1)
     })
-    
- 
+
+
     var button_tel = document.querySelector('.telecharger');
     button_tel.addEventListener('click',()=>{
       var specialElementHandlers = {
@@ -802,19 +802,19 @@
       var doc = new jsPDF();  //create jsPDF object
       doc.fromHTML(document.getElementById("popin"), // page element which you want to print as PDF
       15,
-      15, 
+      15,
       {
         'width': 170 , //set width,
         'elementHandlers':specialElementHandlers
       },
-      function(a) 
+      function(a)
       {
         doc.save("arbre.pdf"); // save file name as HTML2PDF.pdf
-      }); 
+      });
     } )
-    
-     
-      
+
+
+
   function update_favori(){
     if(localStorage.getItem("cookies-accepted")){
       const nom = document.getElementById('popin_nom_latin').innerText;
