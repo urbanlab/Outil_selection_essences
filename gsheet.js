@@ -1,3 +1,7 @@
+/*
+    Interraction avec l'api google sheet permettant de modifier le tableau des essences
+*/
+
 const res = require('express/lib/response')
 const {google} = require('googleapis')
 const keys = require('./keys.json')
@@ -11,6 +15,9 @@ const client = new google.auth.JWT(
     ["https://www.googleapis.com/auth/spreadsheets.readonly"]
 )
 
+// ----- getDataRange -----
+// Lancement de la requête de récupération des données
+// - range : format A1:B8 de séléction des données dans le tableau
 function getDataRange(client, range) {
     const p = new Promise((resolve, reject)=>{
         client.authorize(function(err, token){
@@ -32,6 +39,8 @@ function getDataRange(client, range) {
     return p 
 }
 
+// ----- gsrun ----- 
+// fonction de récupération des données
 function gsrun(cl, range){
     const gsapi = google.sheets({
         version: 'v4',
@@ -46,7 +55,7 @@ function gsrun(cl, range){
     const promise = new Promise((resolve, reject) => {
         gsapi.spreadsheets.values.get(opt, (err, result)=>{
             if(err){
-                throw err
+                console.log(err)
             }
             resolve(result.data.values)
         })
