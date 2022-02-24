@@ -541,10 +541,11 @@
           }
 
           var mots_clé = mots_cles(arbre_popin);
-          var p = document.createElement('p');
-          p.innerHTML = mots_clé;
-          p.classList.add('mot-cle');
-          popin_photo.appendChild(p);
+          var a = document.createElement('a');
+          a.innerHTML = mots_clé;
+          a.classList.add('attention');
+          popin_photo.classList.add('img__wrapper');
+          popin_photo.appendChild(a);
 
           xhttp_attribution.onload = function(){
             var p = document.createElement('p');
