@@ -35,9 +35,6 @@ p.francais{
   line-height: 100%;
 }
 
-
-
-
 @media screen and (max-width: 750px) {
 
   #titre_page{
@@ -376,7 +373,7 @@ p.francais{
     padding-right: 10%;
   }
 
-  
+
 
   .bouton_pages{
     margin-top: 2%;
@@ -423,7 +420,7 @@ p.francais{
     white-space:nowrap;
   }
 
-  
+
 
 
   .modal{
@@ -536,7 +533,7 @@ p.francais{
 
 
 
-  
+
   .popin_herbier_text_container{
     max-width: 95%;
     max-height: fit-content;
@@ -587,7 +584,7 @@ p.francais{
   }
 
 
-  
+
   #cookies_dialogue, #merci_dialogue, #rappel_cookies{
     position: fixed;
     bottom: 0;
@@ -715,9 +712,46 @@ p.francais{
 
 
 
+  .label-info{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+  }
 
+  .tooltip{
+    display:flex;
+    position: relative;
+    width: fit-content;
+    height: fit-content;
+    margin-left: 5px;
+    font-size: 1.1em;
+  }
 
+  .tooltip:hover:after{
+    font-size: 0.9em;
+    background: #bdb246;
+    border-radius: 5px;
+    bottom: 26px;
+    color: #fff;
+    content: attr(title);
+    left: -25%;
+    padding: 5px 15px;
+    position: absolute;
+    z-index: 98;
+    width: 400px;
+  }
 
+  .tooltip:hover:before{
+    border: solid;
+    border-color: #bdb246 transparent;
+    border-width: 6px 6px 0 6px;
+    bottom: 20px;
+    content: "";
+    left: 10%;
+    position: absolute;
+    z-index: 99;
+  }
+}
 
 
 @media screen and (min-width: 751px) and (max-width: 1110px) {
@@ -962,7 +996,7 @@ p.francais{
 
 
   .info_arbre{
-    border: solid black 1px; 
+    border: solid black 1px;
     background-image: url('/assets/arbre_template.png');
     background-size: cover;
     background-position: center;
@@ -1250,6 +1284,34 @@ p.francais{
     }
   }
 
+  .label-info{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+  }
+
+  .tooltip{
+    display:flex;
+    position: relative;
+    width: fit-content;
+    height: fit-content;
+    margin-left: 5px;
+    font-size: 1.1em;
+  }
+
+  .tooltip:hover:after{
+    font-size: 0.9em;
+    background: #bdb246;
+    border-radius: 5px;
+    bottom: 26px;
+    color: #fff;
+    content: attr(title);
+    left: -25%;
+    padding: 5px 15px;
+    position: absolute;
+    z-index: 98;
+    width: 400px;
+  }
 
 
   .tooltip{
@@ -1387,7 +1449,7 @@ p.francais{
     font-size: 18px;
   }
 
-    
+
   #recherche_arbre{
     margin-right: 7%;
     background-color: white !important;
@@ -1419,33 +1481,34 @@ p.francais{
     animation-duration: 0.5s;
     animation-fill-mode: forwards;
   }
-  
+
   @keyframes button-hover-anim{
     from{transform: scale(100%);}
     to{transform: scale(107%);}
   }
-  
+
   .bouton_nav_pages:hover{
     animation-name: button-hover-anim;
     cursor: pointer;
   }
-  
-  .bouton-remonter{
-    height: 50px;
-    width: 50px;
-    background-color: grey;
-    opacity: 0.3;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+
+  .feuille-remonter{
+    height: 100px;
+    width: 100px;
+    opacity: 60%;
     position: fixed;
-    right: 20px;
-    bottom: 20px;
-    cursor: pointer;
+    right: 0%;
+    bottom: 2%;
     z-index: 1000;
   }
-  
+
+  .fleche-remonter{
+    z-index: 1001;
+    position: fixed;
+    right: 2.8%;
+    bottom: 6%;
+    cursor: pointer;
+  }
 
   .bouton_pages{
     margin-top: 2%;
@@ -1480,7 +1543,7 @@ p.francais{
 
   .filtre_checkbox{
     display: grid;
-    grid-template-columns: 2vw 15vw;
+    grid-template-columns: 2vw 13vw;
     align-items: left;
     margin:5px;
   }
@@ -1596,7 +1659,7 @@ p.francais{
     -o-border-image: url(/assets/frame-border.svg) 6 9 5 5 stretch stretch;
     border-image: url(/assets/frame-border.svg) 6 9 5 5 stretch stretch;
   }
-  
+
 
   header{
     width: 100%;
@@ -1719,8 +1782,8 @@ p.francais{
     font-size: 0.5em;
     margin: 3px 3px;
   }
-  
-  
+
+
 
   .popin_titres{
     display: flex;
@@ -1823,7 +1886,7 @@ p.francais{
     z-index: 10000;
     transform: rotateZ(-3deg);
   }
-  
+
   #popin_tape_br{
     position: fixed;
     height: 14%;
@@ -1885,13 +1948,31 @@ p.francais{
     background-color: rgba(125,125,125,0.3);
   }
 
+  /*
+  -moz-border-image: url(./assets/frame-border.svg) 6 9 5 5 stretch stretch;
+  -webkit-border-image: url(./assets/frame-border.svg) 6 9 5 5 stretch stretch;
+  -o-border-image: url(./assets/frame-border.svg) 6 9 5 5 stretch stretch;
+  border-image: url(./assets/frame-border.svg) 6 9 5 5 stretch stretch;
+  */
+
+  .label-info{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+  }
 
   .tooltip{
     display:flex;
     position: relative;
+    width: fit-content;
+    height: fit-content;
+    margin-left: 5px;
+    font-size: 1.1em;
   }
-  
+
   .tooltip:hover:after{
+    font-size: 0.9em;
     background: #bdb246;
     border-radius: 5px;
     bottom: 26px;
@@ -1921,23 +2002,23 @@ p.francais{
   }
 
   .attention {
-    top: 2em;
-    left: -4em;
-    color: #fff;
-    display: block;
-    position:absolute;
-    text-align: center;
-    text-decoration: none;
-    letter-spacing: .06em;
-    background-color: #A00;
-    padding: 0.5em 5em 0.4em 5em;
-    text-shadow: 0 0 0.75em #444;
-    box-shadow: 0 0 0.5em rgba(0,0,0,0.5);
-    font: bold 16px/1.2em Arial, Sans-Serif;
-    -webkit-text-shadow: 0 0 0.75em #444;
-    -webkit-box-shadow: 0 0 0.5em rgba(0,0,0,0.5);
-    -webkit-transform: rotate(-45deg) scale(0.75,1);
-    z-index:10;
+      top: 2em;
+      left: -4em;
+      color: #fff;
+      display: block;
+      position:absolute;
+      text-align: center;
+      text-decoration: none;
+      letter-spacing: .06em;
+      background-color: #A00;
+      padding: 0.5em 5em 0.4em 5em;
+      text-shadow: 0 0 0.75em #444;
+      box-shadow: 0 0 0.5em rgba(0,0,0,0.5);
+      font: bold 16px/1.2em 'Eczar', arial;
+      -webkit-text-shadow: 0 0 0.75em #444;
+      -webkit-box-shadow: 0 0 0.5em rgba(0,0,0,0.5);
+      -webkit-transform: rotate(-45deg) scale(0.75,1);
+      z-index:10;
   }
   .attention:before {
     content: '';

@@ -12,7 +12,34 @@
 
 <header>
     <h1 id="titre_page">Outil de séléction d'essence</h1>
+    <nav id="nav_pages">
+        <a href="/">Accueil</a>
+    </nav>
 </header>
-<section style = "margin-top: 20%">
-    La page que vous cherchez n'existe pas
+<section style = "margin-top: 10%; color:294F8D">
+    La page que vous cherchez n'existe pas :'(
+    <br>
+    <span id="random_name" style = "color:294F8D"></span>
+    <div id = "random_image" style="display: flex; justify-content: center">
+
+    </div>
 </section>
+
+<script>
+    var xhttp_random = new XMLHttpRequest();
+  xhttp_random.open('GET', '/data/arbres/random');
+  xhttp_random.setRequestHeader('Content-type', 'application/json');
+  xhttp_random.send();
+
+  xhttp_random.onload = function(){
+    const data = JSON.parse(xhttp_random.responseText);
+    document.getElementById('random_name').innerText = `Consolez-vous avec un ${data["Genre"]} ${data["Espèce"]}`
+    console.log(data)
+    let img = document.createElement('img')
+    img.setAttribute('src', (data["Image Id"]!="")? `/image/${data["Image Id"]}` : '/assets/arbre_template.png');
+    img.setAttribute('style', 'object-fit: cover; object-position: center; width: 20vw; height: 20vw')
+    img.classList.add('image-arbre')
+    const image_div = document.getElementById('random_image')
+    image_div.appendChild(img)
+  }
+</script>

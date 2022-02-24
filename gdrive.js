@@ -26,10 +26,14 @@ const client = new google.auth.JWT(
 Permet de lister les images contenues sur drive. google Drive ne renvoie pas tous les fichiers d'un seul coup mais seulement par
 "page", si toutes les images ne sont pas renvoyées, l'api renvoie un token puis il faut refaire la requête avec le nouveau token
 Ce qui renvoie les images de la page suivante
+/!\ Cette fonction récupère à chaque fois toutes les images possédées par le client : i.e lorsque l'on télécharge les pictogrammes,
+la fonction va aussi itérer sur les images d'arbres et ne renvoyer que celles qui sont dans le dossier des pictogrammes.
+Le mieux à faire serait de recréer un utilisateur n'ayant accès qu'aux pictogrammes.
 - cl : client google api
 - pageToken : token renvoié par l'api (au début il vaut null)
+- image_folder : identifiant du dossier d'images
 */
-function getImages(cl, pageToken){
+function getImages(cl, pageToken, image_folder){
     const gdapi = google.drive({
         version: 'v3',
         auth: cl
@@ -47,9 +51,8 @@ function getImages(cl, pageToken){
                 reject(err)
             }
             let images = []
-            let descriptions = {}
             for(let i=0; i<result.data.files.length; i++){
-                if(result.data.files[i].parents && result.data.files[i].parents[0]==config.image_folder_id){
+                if(result.data.files[i].parents && result.data.files[i].parents[0]==image_folder){
                     images.push(result.data.files[i])
                 }
             }
@@ -137,7 +140,7 @@ function getData(cl, range){
 */
 function main_refresh(pageToken, callback){
     return new Promise((resolve, reject)=>{
-        getImages(client, pageToken)
+        getImages(client, pageToken, config.image_folder_id)
         .then((value)=>{
             images = value[0]
             pageToken = value[1]
@@ -219,7 +222,7 @@ function refreshPictures(callback){
 /* ----- main_images -----
     Permet de télécharger une image à partir du fileId
 */
-function main_images(cl, fileId){
+function main_images(cl, fileId, path, name){
     const gdapi = google.drive({
         version: 'v3',
         auth: cl
@@ -233,15 +236,15 @@ function main_images(cl, fileId){
         .then(res=>{
             const mimeType = res.headers['content-type']
             if(mime[mimeType]){
-                let dest = fs.createWriteStream(`./assets/images/${fileId}.${mime[mimeType]}`)
+                let dest = fs.createWriteStream(`${path}/${name}.${mime[mimeType]}`)
                 let progress = 0
                 res.data
                 .on('error', err => {
-                    console.error(`Erreur téléchargement image ${fileId}`);
+                    console.error(`Erreur téléchargement image ${name}`);
                 })
                 .on('end', ()=>{
                     resolve()
-                    console.log(`Téléchargée sous ./assets/images/${fileId}.${mime[mimeType]}`)
+                    console.log(`Téléchargée sous ${path}/${name}.${mime[mimeType]}`)
                 })
                 .pipe(dest);
             }
@@ -251,17 +254,75 @@ function main_images(cl, fileId){
 
 // ----- download_images -----
 // Lance le téléchargement d'une image 
-function download_images(fileId){
+function download_images(fileId, path, saveName){
     return new Promise((resolve, reject)=>{
         client.authorize(function(err, token){
-            main_images(client, fileId)
+            main_images(client, fileId, path, saveName)
             .then(()=>{
                 resolve()
             })
         })
     })
 }
+
+function main_picto(cl, pageToken, existingPicto, callback){
+    return new Promise((resolve, reject)=>{
+        getImages(cl, pageToken, config.picto_folder_id)
+        .then((value)=>{
+            const images = value[0]
+            const pageToken = value[1]
+            let downloadPromise = new Promise((resolve, reject)=>{
+                resolve()
+            })
+            const compfunc = (a,b)=>{
+                if(a==b.split('.')[0]) return 0
+                else if(a<b.split('.')[0]) return -1
+                else if(a>b.split('.')[0]) return 1
+            }
+            for(let i=0; i< images.length; i++){
+                const pictoIndex = utils.binSearch(existingPicto, images[i]["name"], compfunc)
+                if(pictoIndex==-1){
+                    downloadPromise = downloadPromise.then(()=>{
+                        return download_images(images[i]["id"], "./assets/picto", images[i]["name"])
+                    })
+                }   
+                else{
+                    existingPicto.splice(pictoIndex, 1)
+                }
+            }
+            downloadPromise = downloadPromise.then(()=>{
+                return pageToken
+            })
+            return downloadPromise
+        })
+        .then((pageToken)=>{
+            if(pageToken){
+                main_picto(cl, pageToken, existingPicto, callback)
+            }
+            else{
+                resolve()
+            }
+        })
+    })
+    .then(()=>{
+        existingPicto = existingPicto.map(picto=>`./assets/picto/${picto}`)
+        utils.deleteFiles(existingPicto, callback)
+    })
+}
+
+function download_picto(){
+    return new Promise((resolve, reject)=>{
+        fs.readdir("./assets/picto", (err,files)=>{
+            files = files.sort()
+            main_picto(client, null, files, ()=>{
+                resolve()
+            })
+        })
+    })
+}
+
 module.exports = {
     refreshPictures: refreshPictures,
-    downloadImages: download_images
+    downloadImages: download_images,
+    downloadPictos: download_picto
 }

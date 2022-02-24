@@ -19,7 +19,7 @@ app.use(bodyParser.json({
     extended: true
 }));
 
-// 
+//
 app.get("/image_attribution/:id", (req, res)=>{
     fs.readFile('./data/attributions.json', (err, data)=>{
         if(err){
@@ -52,6 +52,19 @@ app.get("/image/:id", (req, res)=>{
     })
 });
 
+app.get("/picto/:name", (req, res)=>{
+    fs.readdir('./assets/picto', (err, files)=>{
+        filtered = files.filter(x=>{
+            return x.split('.')[0]==xss(req.params.name)
+        })
+        if(filtered.length==0){
+            res.status(404).send()
+        }
+        else{
+            res.sendFile(path.join(__dirname,`/assets/picto/${filtered[0]}`))
+        }
+    })
+})
 // ========================== Filtres =============================
 app.get('/data/filtres', (req, res)=>{
     fs.readFile('./data/filtres.json', (err, value)=>{
@@ -83,13 +96,28 @@ app.post('/data/arbres', (req, res) => {
     res.status(200).send(json);
 });
 
+app.get('/data/arbres/random', (req, res)=>{
+    fs.readFile('./data/arbres.json', (err, value)=>{
+        if(err){
+            res.status(500).send("Erreur lecture des données arbres")
+        }
+        values = JSON.parse(value)
+        if(values.lengh==0){
+            res.send()
+        }
+        else{
+            const response = values[Math.floor(Math.random()*values.length)]
+            res.send(JSON.stringify(response))
+        }
+    })
+})
 
 app.get('/data/arbres', (req, res)=>{
     const param_id = req.query.id;
     const param_page = req.query.page;
     fs.readFile('./data/arbres.json', (err, value)=>{
         if(err){
-            res.status(500).send("Erreur lecture des données filtres")
+            res.status(500).send("Erreur lecture des données arbres")
         }
         values = JSON.parse(value)
         let response = []
@@ -236,15 +264,16 @@ app.get("/secure/data/refresh", (req,res)=>{
                     var json = {
                         nom: value[0][i],
                         importance: value[1][i],
-                        type_question: value[3][i]
+                        commentaire: (value[3][i])?value[3][i]:'',
+                        type_question: value[4][i]
                     }
-                    var c=4;
+                    var c=5;
                     reponses=[];
                     while (value[c] && value[c][i]!='' && value[c][i]!= undefined) {
                         morceaux = value[c][i].split(':');
                         json_reponse = {
                             valeur: morceaux[0],
-                            texte: morceaux[1]
+                            texte: (morceaux[1])?morceaux[1]:""
                         }
                         reponses.push(json_reponse);
                         c++;
@@ -274,7 +303,7 @@ app.get("/secure/data/refresh", (req,res)=>{
 
 app.get('/secure/images/manual_download/:id', (req, res)=>{
     let id = xss(req.params["id"])
-    const promise = new Promise((resolve, reject)=>{return image_updater.downloadImages(id)})
+    const promise = new Promise((resolve, reject)=>{return image_updater.downloadImages(id, "./assets/images", id)})
     .then(()=>{
         res.send("Images téléchargée")
         resolve()
@@ -285,6 +314,7 @@ app.get('/secure/images/manual_download/:id', (req, res)=>{
 })
 
 app.get('/secure/images/refresh', (req, res)=>{
+    console.log("Début mise à jour des images")
     image_updater.refreshPictures(function(){
         fs.readdir('./assets/images', (err, files)=>{
             files = files.sort()
@@ -292,7 +322,7 @@ app.get('/secure/images/refresh', (req, res)=>{
             arbresPromise.then((colnames)=>{
                 ncols = colnames[0].length+utils.letterToColumn(config.data_column_offset)-1
                 lastColumn = utils.columnToLetter(ncols)
-                gsheet.getData(gsheet.client, `'${config.data_spreadsheet}'!${config.data_column_offset}${config.data_start_row}:${lastColumn}`)
+                return gsheet.getData(gsheet.client, `'${config.data_spreadsheet}'!${config.data_column_offset}${config.data_start_row}:${lastColumn}`)
                 .then((values)=>{
                     let response = []
                     const processData = async (cb)=>{
@@ -309,10 +339,10 @@ app.get('/secure/images/refresh', (req, res)=>{
                             }
                             const image_id = val[config.image_id_column]
                             const id_index = utils.binSearch(files, image_id, compfunc)
-                            
+
                             if(image_id.trim() != "" && image_id.trim() != "-" && id_index == -1){
                                 console.log(`Téléchargement image ${image_id} (${i+1}/${values.length})`)
-                                await image_updater.downloadImages(image_id)
+                                await image_updater.downloadImages(image_id, "./assets/images", image_id)
                             }
                             else if (id_index > -1){
                                 console.log(`Image ${image_id} existante (${i+1}/${values.length})`)
@@ -332,12 +362,20 @@ app.get('/secure/images/refresh', (req, res)=>{
                     })
                 })
                 .then(()=>{
+                    console.log("Fin de téléchargement des images essences")
+                })
+            })
+            .then(()=>{
+                console.log("Début téléchargement des pictogrammes")
+                image_updater.downloadPictos()
+                .then(()=>{
+                    console.log("Fin de téléchargement des pictogrammes")
                     console.log("Fin de mise à jour des images")
                     res.send("images mises à jour")
                 })
-                .catch((err)=>{
-                    res.status(500).send("Erreur récupération des données")
-                })
+            })
+            .catch((err)=>{
+                res.status(500).send("Erreur récupération des données")
             })
         })
     })
