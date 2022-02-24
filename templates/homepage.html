@@ -306,6 +306,7 @@
 
     var img = document.createElement('img');
     img.setAttribute('id', 'img '+nom_latin);
+    console.log(arbre["image Id"])
     img.setAttribute('src', (arbre["Image Id"]!="")? `/image/${arbre["Image Id"]}` : '/assets/arbre_template.png');
     img.addEventListener('click', afficher_popin);
     img.classList.add('image-arbre');

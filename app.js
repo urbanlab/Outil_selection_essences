@@ -166,7 +166,7 @@ app.get('/data/legendes', (req, res)=>{
 // ================================================
 
 app.use("/secure", (req, res, next) => {
-    if (req.query.password) {
+    if (xss(req.query.password)) {
         password = xss(req.query.password);
         const hash = crypto.createHash('md5').update(password).digest('hex')
         if (hash == password_update) {
@@ -186,14 +186,14 @@ app.get("/secure/data/refresh", (req,res)=>{
     // ==== Données d'arbres ====
     const arbresPromise = gsheet.getData(gsheet.client, `'${config.data_spreadsheet}'!${config.data_column_offset}${config.data_column_names_row}:${config.data_column_names_row}`)
     arbresPromise.then((colnames)=>{
-        ncols = colnames[0].length+utils.letterToColumn(config.data_column_offset)-1
+        ncols = colnames[0].length+utils.letterToColumn(config.data_column_offset)-2
         lastColumn = utils.columnToLetter(ncols)
         gsheet.getData(gsheet.client, `'${config.data_spreadsheet}'!${config.data_column_offset}${config.data_start_row}:${lastColumn}`)
         .then((values)=>{
             let response = []
             for (let i = 0; i < values.length; i++) {
                 let val = {}
-                for(let j=0; j<ncols-1; j++){
+                for(let j=0; j<ncols; j++){
                     val[colnames[0][j]]=values[i][j]
                 }
                 response.push(val)
@@ -301,18 +301,6 @@ app.get("/secure/data/refresh", (req,res)=>{
     })
 })
 
-app.get('/secure/images/manual_download/:id', (req, res)=>{
-    let id = xss(req.params["id"])
-    const promise = new Promise((resolve, reject)=>{return image_updater.downloadImages(id, "./assets/images", id)})
-    .then(()=>{
-        res.send("Images téléchargée")
-        resolve()
-    })
-    .catch((err)=>{
-        res.status(500).send("Erreur lors du téléchargement")
-    })
-})
-
 app.get('/secure/images/refresh', (req, res)=>{
     console.log("Début mise à jour des images")
     image_updater.refreshPictures(function(){
@@ -320,7 +308,7 @@ app.get('/secure/images/refresh', (req, res)=>{
             files = files.sort()
             const arbresPromise = gsheet.getData(gsheet.client, `'${config.data_spreadsheet}'!${config.data_column_offset}${config.data_column_names_row}:${config.data_column_names_row}`)
             arbresPromise.then((colnames)=>{
-                ncols = colnames[0].length+utils.letterToColumn(config.data_column_offset)-1
+                ncols = colnames[0].length+utils.letterToColumn(config.data_column_offset)-2
                 lastColumn = utils.columnToLetter(ncols)
                 return gsheet.getData(gsheet.client, `'${config.data_spreadsheet}'!${config.data_column_offset}${config.data_start_row}:${lastColumn}`)
                 .then((values)=>{
@@ -328,7 +316,7 @@ app.get('/secure/images/refresh', (req, res)=>{
                     const processData = async (cb)=>{
                         for (let i = 0; i < values.length; i++) {
                             let val = {}
-                            for(let j=0; j<ncols-1; j++){
+                            for(let j=0; j<ncols; j++){
                                 val[colnames[0][j]]=values[i][j]
                             }
                             response.push(val)
@@ -340,7 +328,7 @@ app.get('/secure/images/refresh', (req, res)=>{
                             const image_id = val[config.image_id_column]
                             const id_index = utils.binSearch(files, image_id, compfunc)
 
-                            if(image_id.trim() != "" && image_id.trim() != "-" && id_index == -1){
+                            if(image_id && image_id.trim() != "" && image_id.trim() != "-" && id_index == -1){
                                 console.log(`Téléchargement image ${image_id} (${i+1}/${values.length})`)
                                 await image_updater.downloadImages(image_id, "./assets/images", image_id)
                             }
