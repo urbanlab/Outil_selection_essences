@@ -325,7 +325,8 @@ app.get('/secure/images/refresh', (req, res)=>{
                                 else if(a<b.split('.')[0]) return -1
                                 else if(a>b.split('.')[0]) return 1
                             }
-                            const image_id = val[config.image_id_column]
+                            const image_id = val[config.image_column_name]
+                            console.log(image_id)
                             const id_index = utils.binSearch(files, image_id, compfunc)
 
                             if(image_id && image_id.trim() != "" && image_id.trim() != "-" && id_index == -1){
