@@ -49,7 +49,7 @@
       &nbsp<button type="button" name="button" onclick="document.location.href=`/comparaison?arbre1=${document.getElementById('popin_nom_francais').innerHTML}&arbre2=${document.getElementById('comparer_arbres').value}`">Comparer</button>
     </div>
     <button id="popin_close" type="button" name="button" onclick="cacher_popin()">&times</button>
-    <span id = "etoile_favori" onclick="update_favori()">Ajouter aux favoris</span>
+    <span id = "etoile_favori" onclick="update_favori()">Ajouter à mon herbier</span>
   </div>
 </div>
 
@@ -562,11 +562,11 @@
         const fav = JSON.parse(localStorage.getItem("arbres_favori"));
         if(fav && fav.indexOf(arbre_popin['Genre'].trim() + ' ' + arbre_popin['Espèce'].trim())>-1){
           favori_icon.style.color = "#bdb246"
-          favori_icon.innerText = "Retirer des favoris"
+          favori_icon.innerText = "Retirer de mon herbier"
         }
         else{
           favori_icon.style.color="#294F8D"
-          favori_icon.innerText = "Ajouter aux favoris"
+          favori_icon.innerText = "Ajouter à mon herbier"
         }
 
         if(arbre_popin["Photo"]!= ''){
@@ -811,20 +811,20 @@
       if(!localStorage.getItem("arbres_favori")){
         localStorage.setItem("arbres_favori", JSON.stringify([nom]))
         document.getElementById("etoile_favori").style.color = "#bdb246"
-        document.getElementById("etoile_favori").innerText = "Retirer des favoris"
+        document.getElementById("etoile_favori").innerText = "Retirer de mon herbier"
       }
       else{
         let fav = JSON.parse(localStorage.getItem("arbres_favori"))
         const index = fav.indexOf(nom)
         if(index>-1){
           document.getElementById("etoile_favori").style.color = "#294F8D"
-          document.getElementById("etoile_favori").innerText = "Ajouter aux favoris"
+          document.getElementById("etoile_favori").innerText = "Ajouter à mon herbier"
           fav.splice(index,1)
         }
         else{
           fav.push(nom)
           document.getElementById("etoile_favori").style.color = "#bdb246"
-          document.getElementById("etoile_favori").innerText = "Retirer des favoris"
+          document.getElementById("etoile_favori").innerText = "Retirer de mon herbier"
         }
         localStorage.setItem("arbres_favori", JSON.stringify(fav))
       }
