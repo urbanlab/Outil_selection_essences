@@ -811,20 +811,20 @@
       if(!localStorage.getItem("arbres_favori")){
         localStorage.setItem("arbres_favori", JSON.stringify([nom]))
         document.getElementById("etoile_favori").style.color = "#bdb246"
-        document.getElementById("etoile_favori").innerText = "Retirer des favoris"
+        document.getElementById("etoile_favori").innerText = "Retirer de mon herbier"
       }
       else{
         let fav = JSON.parse(localStorage.getItem("arbres_favori"))
         const index = fav.indexOf(nom)
         if(index>-1){
           document.getElementById("etoile_favori").style.color = "#294F8D"
-          document.getElementById("etoile_favori").innerText = "Ajouter aux favoris"
+          document.getElementById("etoile_favori").innerText = "Ajouter à mon herbier"
           fav.splice(index,1)
         }
         else{
           fav.push(nom)
           document.getElementById("etoile_favori").style.color = "#bdb246"
-          document.getElementById("etoile_favori").innerText = "Retirer des favoris"
+          document.getElementById("etoile_favori").innerText = "Retirer de mon herbier"
         }
         localStorage.setItem("arbres_favori", JSON.stringify(fav))
       }
