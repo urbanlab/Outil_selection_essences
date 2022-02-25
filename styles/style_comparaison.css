@@ -174,7 +174,7 @@ footer:after{
   -o-border-image: url(/assets/frame-border.svg) 6 9 5 5 stretch stretch;
   border-image: url(/assets/frame-border.svg) 6 9 5 5 stretch stretch;
   font-size: 1.2em;
-  width: 200%;
+  width: 196%;
 }
 
 .titre_critere{
@@ -198,7 +198,18 @@ footer:after{
   font-size: 1.1em;
 }
 
-
+.photo-compare{
+  width: 90%;
+  height: 300px;
+  object-fit: cover;
+  object-position: center;
+  border-style: solid;
+  border-width: 10px 10px 10px 10px;
+  -moz-border-image: url(/assets/frame-border.svg) 6 9 5 5 stretch stretch;
+  -webkit-border-image: url(/assets/frame-border.svg) 6 9 5 5 stretch stretch;
+  -o-border-image: url(/assets/frame-border.svg) 6 9 5 5 stretch stretch;
+  border-image: url(/assets/frame-border.svg) 6 9 5 5 stretch stretch;
+}
 
 .feuille-remonter{
   height: 100px;

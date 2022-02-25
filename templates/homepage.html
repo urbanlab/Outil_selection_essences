@@ -49,16 +49,15 @@
       &nbsp<button type="button" name="button" onclick="document.location.href=`/comparaison?arbre1=${document.getElementById('popin_nom_francais').innerHTML}&arbre2=${document.getElementById('comparer_arbres').value}`">Comparer</button>
     </div>
     <button id="popin_close" type="button" name="button" onclick="cacher_popin()">&times</button>
-    <span id = "etoile_favori" onclick="update_favori()">Ajouter à mon herbier</span>
+    <span id = "etoile_favori" onclick="update_favori()">J'ajoute à mon herbier</span>
   </div>
 </div>
 
 <form id='filtres' onreset="Reset()">
 
-  <button type="button" id="plus_de_filtres" onclick="modifier_filtres()">Plus de filtres</button>
+  <button type="button" id="plus_de_filtres" class="filtres_options" onclick="modifier_filtres()">Plus de filtres</button>
   <div class="reset">
-    <button type="button" style="background-color: red;
-    color: white">Rénitialiser les filtres</button></div>
+    <button type="button" class="filtres_options">Rénitialiser les filtres</button></div>
 
 
 
@@ -562,11 +561,11 @@
         const fav = JSON.parse(localStorage.getItem("arbres_favori"));
         if(fav && fav.indexOf(arbre_popin['Genre'].trim() + ' ' + arbre_popin['Espèce'].trim())>-1){
           favori_icon.style.color = "#bdb246"
-          favori_icon.innerText = "Retirer de mon herbier"
+          favori_icon.innerText = "J'enlève de mon herbier"
         }
         else{
           favori_icon.style.color="#294F8D"
-          favori_icon.innerText = "Ajouter à mon herbier"
+          favori_icon.innerText = "J'ajoute à mon herbier"
         }
 
         if(arbre_popin["Photo"]!= ''){

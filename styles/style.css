@@ -206,7 +206,7 @@ p.francais{
     animation-name: button-hover-anim;
     cursor: pointer;
   }
-  
+
   .feuille-remonter{
     height: 20px;
     width: 20px;
@@ -351,11 +351,14 @@ p.francais{
     -webkit-border-image: url(/assets/frame-border.svg) 6 9 5 5 stretch stretch;
     -o-border-image: url(/assets/frame-border.svg) 6 9 5 5 stretch stretch;
     border-image: url(/assets/frame-border.svg) 6 9 5 5 stretch stretch;
-  
+
   }
 
   #plus_de_filtres{
     order:100000000000;
+  }
+
+  .filtres_options{
     width: fit-content;
     margin: auto;
     border: none;
@@ -364,7 +367,7 @@ p.francais{
     align-items: center;
   }
 
-  #plus_de_filtres:hover{
+  .filtres_options:hover{
     color: #D82600;
     cursor: pointer;
   }
@@ -503,14 +506,14 @@ p.francais{
   }
 
   .telecharger{
-    width:2%;
-    height:2%;
+    width:6%;
+    height:6%;
     border-radius: 5em;
-    left:230px;
-    top:80px;
+    left:70%;
+    top:10%;
     position:absolute
   }
-  
+
   .telecharger:hover{
     background-color: rgba(125,125,125,0.3);
   }
@@ -549,11 +552,19 @@ p.francais{
     max-width: 95%;
     max-height: fit-content;
     line-height: 20px;
-    border-radius: 0.5vw 0.5vw 0.5vw 0.5vw;
-    border: #E8E8E8 solid;
     margin-bottom: 20px;
-    background-color: #F0F0F0;
     padding: 0px 5px 0px 5px;
+
+    background-color: #F0F0F0 !important;
+    background-clip: padding-box !important;
+    border-style: solid;
+    border-width: 10px 10px 10px 10px;
+    -moz-border-image: url(/assets/frame-border-grey.svg) 6 9 5 5 stretch stretch;
+    -webkit-border-image: url(/assets/frame-border-grey.svg) 6 9 5 5 stretch stretch;
+    -o-border-image: url(/assets/frame-border-grey.svg) 6 9 5 5 stretch stretch;
+    border-image: url(/assets/frame-border-grey.svg) 6 9 5 5 stretch stretch;
+
+    filter: drop-shadow(2px 2px 2px #CCC);
   }
 
   .popin_herbier_critere{
@@ -642,8 +653,8 @@ p.francais{
 
     position: fixed;
     top: 17%;
-    left: 58%;
-    width: auto;
+    left: 55%;
+    width: 35%;
     display: flex;
     text-align: center;
     justify-content: center;
@@ -732,7 +743,7 @@ p.francais{
     -webkit-transform: scale(0.7);
     border: 2px rgba(255,255,255,0.7) dashed;
   }
-  
+
 
   .label-info{
     display: flex;
@@ -754,18 +765,7 @@ p.francais{
     justify-content: space-around;
     background-color: #FCE5D2;
   }
-  .telecharger{
-    width:2%;
-    height:2%;
-    border-radius: 5em;
-    left:230px;
-    top:80px;
-    position:absolute
-  }
   
-  .telecharger:hover{
-    background-color: rgba(125,125,125,0.3);
-  }
 
   #filtres{
     width: 30%;
@@ -777,6 +777,10 @@ p.francais{
   }
 
   #plus_de_filtres{
+    order:100000000000;
+  }
+
+  .filtres_options{
     order:100000000000;
     width: fit-content;
     margin: auto;
@@ -851,7 +855,7 @@ p.francais{
     animation-name: button-hover-anim;
     cursor: pointer;
   }
-  
+
   .feuille-remonter{
     height: 40px;
     width: 40px;
@@ -879,7 +883,7 @@ p.francais{
     font-size: 20px;
   }
 
-  #plus_de_filtres:hover{
+  .filtres_options:hover{
     color: #D82600;
     cursor: pointer;
   }
@@ -1155,49 +1159,44 @@ p.francais{
     margin:0;
     width: 2.5em;
     height: 2.5em;
-    left: 86%;
+    left: 90%;
     top: 10%;
     cursor: pointer;
   }
 
   .popin_titres{
-    left: 16%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: fixed;
+    left: 6%;
     top: 11%;
-    width: 35%;
+    width: 45%;
     height: 20%;
+    margin-bottom: 2%;
   }
 
-  #popin_nom_francais{
-    font-size: 34px;
-  }
 
   #popin_photo{
-    width: 32%;
+    width: 35%;
     height: 20%;
-    object-fit: cover;
+    background-size: cover;
+    background-position: center;
     position: fixed;
     top : 11%;
     left: 53%;
+    display: flex;
+    flex-direction: column-reverse;
+  }
+
+  .copyrights{
+    color: white;
+    text-shadow: 0px 0px 2px black;
+    font-size: 0.5em;
+    margin: 3px 3px;
   }
 
 
-  #popin_infos{
-    border: black solid;
-    margin:0;
-    position: fixed;
-    display: inline-block;
-    overflow: auto;
-    left: 10%;
-    width: 80%;
-    height: 50%;
-    top: 33%;
-    background-color: transparent;
-    border-radius: 0.5vw;
-    line-height: 125%;
-    border-spacing: 0;
-    scrollbar-color: #E8E8E8 white  ;
-    scrollbar-width: thin;
-  }
 
   .popin_herbier_critere{
     display: flex;
@@ -1227,6 +1226,26 @@ p.francais{
     text-align: justify;
   }
 
+  #popin_infos{
+    margin: 0;
+    position: fixed;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    left: 10%;
+    width: 80%;
+    height: 50%;
+    top: 33%;
+    background-color: transparent;
+    overflow-y: auto;
+    border-spacing: 0;
+    scrollbar-color: #E8E8E8 white  ;
+    scrollbar-width: thin;
+  }
+
+
+
   #popin_infos::-webkit-scrollbar{
     width: 10px;
     margin-left: 5px;
@@ -1240,23 +1259,34 @@ p.francais{
   }
 
   .popin_herbier_text_container{
-    max-width: 40%;
+    max-width: 44%;
     max-height: fit-content;
     line-height: 20px;
-    border-radius: 0.5vw 0.5vw 0.5vw 0.5vw;
-    border: #E8E8E8 solid;
     margin-bottom: 20px;
-    background-color: #F0F0F0;
     padding: 0px 5px 0px 5px;
+
+    background-color: #F0F0F0 !important;
+    background-clip: padding-box !important;
+    border-style: solid;
+    border-width: 10px 10px 10px 10px;
+    -moz-border-image: url(/assets/frame-border-grey.svg) 6 9 5 5 stretch stretch;
+    -webkit-border-image: url(/assets/frame-border-grey.svg) 6 9 5 5 stretch stretch;
+    -o-border-image: url(/assets/frame-border-grey.svg) 6 9 5 5 stretch stretch;
+    border-image: url(/assets/frame-border-grey.svg) 6 9 5 5 stretch stretch;
+
+    filter: drop-shadow(2px 2px 2px #CCC);
   }
 
   #popin_nom_francais{
-    margin:0;
-    width:100%;
+    margin: 0;
+    width: 100%;
     text-align: center;
     line-height: 100%;
     margin-bottom: 2%;
-    color: white;
+    color: #294F8D;
+    font-family: Snell Roundhand;
+    font-variant: normal;
+    font-size: 40px;
   }
 
   #popin_nom_latin{
@@ -1266,19 +1296,78 @@ p.francais{
     text-align: center;
     line-height: 100%;
     margin-bottom: 2%;
-    color: #4A494A;
+    font-family: 'Comic Sans MS';
+    color: #BEBEBE;
+    font-size: 18px;
   }
 
   #popin_comparer{
     position: fixed;
-    left: 45%;
+    left: 43%;
     width: 50%;
-    top: 83%;
+    top: 85%;
     height: fit-content;
     display: flex;
     flex-direction: row;
     justify-content: center;
     flex-wrap: wrap;
+  }
+
+  #etoile_favori{
+    max-width: 95%;
+    max-height: 25%;
+    line-height: 35px;
+    border-radius: 0.5vw 0.5vw 0.5vw 0.5vw;
+    border: #E8E8E8 solid;
+    margin-bottom: 20px;
+    background-color: #F0F0F0;
+    padding: 0px 5px 0px 5px;
+    position: fixed;
+    top: 85%;
+    left: 20%;
+    width: auto;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  #etoile_favori:hover{
+    cursor: pointer;
+    background-color: rgba(125,125,125,0.3);
+  }
+
+
+  .telecharger{
+    width:4%;
+    height:4%;
+    border-radius: 5em;
+    left:12%;
+    top:85.5%;
+    position:absolute
+  }
+
+  .telecharger:hover{
+    background-color: rgba(125,125,125,0.3);
+  }
+
+  #popin_tape_tl{
+    position: fixed;
+    height: 7%;
+    top: 9%;
+    left: 51%;
+    z-index: 10000;
+    transform: rotateZ(-3deg);
+  }
+
+  #popin_tape_br{
+    position: fixed;
+    height: 7%;
+    top: 26%;
+    left: 81%;
+    z-index: 10000;
+    transform: rotateZ(3deg);
   }
 
 
@@ -1311,7 +1400,7 @@ p.francais{
     align-items: center;
   }
 
-  
+
   .tooltip{
     display:flex;
     width: fit-content;
@@ -1416,19 +1505,12 @@ p.francais{
     margin-top: 10%;
 
   }
-  .telecharger{
-    width:2%;
-    height:2%;
-    border-radius: 5em;
-    left:230px;
-    top:80px;
-    position:absolute
-  }
-  
-  .telecharger:hover{
-    background-color: rgba(125,125,125,0.3);
-  }
+
   #plus_de_filtres{
+    order:100000000000;
+  }
+
+  .filtres_options{
     order:100000000000;
     width: fit-content;
     margin: auto;
@@ -1437,7 +1519,7 @@ p.francais{
     text-decoration: underline;
   }
 
-  #plus_de_filtres:hover{
+  .filtres_options:hover{
     color: #D82600;
     cursor: pointer;
   }
@@ -1860,14 +1942,22 @@ p.francais{
   }
 
   .popin_herbier_text_container{
-    max-width: 47%;
+    max-width: 45%;
     max-height: fit-content;
     line-height: 20px;
-    border-radius: 0.5vw 0.5vw 0.5vw 0.5vw;
-    border: #E8E8E8 solid;
     margin-bottom: 20px;
-    background-color: #F0F0F0;
     padding: 0px 5px 0px 5px;
+
+    background-color: #F0F0F0 !important;
+    background-clip: padding-box !important;
+    border-style: solid;
+    border-width: 10px 10px 10px 10px;
+    -moz-border-image: url(/assets/frame-border-grey.svg) 6 9 5 5 stretch stretch;
+    -webkit-border-image: url(/assets/frame-border-grey.svg) 6 9 5 5 stretch stretch;
+    -o-border-image: url(/assets/frame-border-grey.svg) 6 9 5 5 stretch stretch;
+    border-image: url(/assets/frame-border-grey.svg) 6 9 5 5 stretch stretch;
+
+    filter: drop-shadow(2px 2px 2px #CCC);
   }
 
   .popin_herbier_critere{
@@ -1953,12 +2043,23 @@ p.francais{
   }
 
   #etoile_favori{
+    max-width: 95%;
+    max-height: 25%;
+    line-height: 35px;
+    border-radius: 0.5vw 0.5vw 0.5vw 0.5vw;
+    border: #E8E8E8 solid;
+    margin-bottom: 20px;
+    background-color: #F0F0F0;
+    padding: 0px 5px 0px 5px;
     position: fixed;
-    left: 45%;
-    top: 83%;
+    left: 48%;
+    top: 82.5%;
     width: auto;
-    border-radius: 5em;
-
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    flex-direction: row;
+    flex-wrap: wrap;
   }
 
   #etoile_favori:hover{
@@ -1966,12 +2067,19 @@ p.francais{
     background-color: rgba(125,125,125,0.3);
   }
 
-  /*
-  -moz-border-image: url(./assets/frame-border.svg) 6 9 5 5 stretch stretch;
-  -webkit-border-image: url(./assets/frame-border.svg) 6 9 5 5 stretch stretch;
-  -o-border-image: url(./assets/frame-border.svg) 6 9 5 5 stretch stretch;
-  border-image: url(./assets/frame-border.svg) 6 9 5 5 stretch stretch;
-  */
+  .telecharger{
+    width:2%;
+    height:2%;
+    border-radius: 5em;
+    left:43%;
+    top:83%;
+    position:absolute
+  }
+
+  .telecharger:hover{
+    background-color: rgba(125,125,125,0.3);
+  }
+
 
   .label-info{
     display: flex;
@@ -2053,5 +2161,3 @@ p.francais{
   }
 
 }
-
-
