@@ -36,7 +36,7 @@
     document.getElementById('random_name').innerText = `Consolez-vous avec un ${data["Genre"]} ${data["Espèce"]}`
     console.log(data)
     let img = document.createElement('img')
-    img.setAttribute('src', (data["Image Id"]!="")? `/image/${data["Image Id"]}` : '/assets/arbre_template.png');
+    img.setAttribute('src', (data["Image Id"]!="")? `/image/${data["Photo"]}` : '/assets/arbre_template.png');
     img.setAttribute('style', 'object-fit: cover; object-position: center; width: 20vw; height: 20vw')
     img.classList.add('image-arbre')
     const image_div = document.getElementById('random_image')
