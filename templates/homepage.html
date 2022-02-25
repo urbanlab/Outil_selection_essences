@@ -561,11 +561,11 @@
         const fav = JSON.parse(localStorage.getItem("arbres_favori"));
         if(fav && fav.indexOf(arbre_popin['Genre'].trim() + ' ' + arbre_popin['Espèce'].trim())>-1){
           favori_icon.style.color = "#bdb246"
-          favori_icon.innerText = "J'enlève de mon herbier"
+          favori_icon.innerText = "Retirer de mon herbier"
         }
         else{
           favori_icon.style.color="#294F8D"
-          favori_icon.innerText = "J'ajoute à mon herbier"
+          favori_icon.innerText = "Ajouter à mon herbier"
         }
 
         if(arbre_popin["Photo"]!= ''){
