@@ -13,7 +13,7 @@ const crypto = require('crypto');
 const gdrive = require('./gdrive.js');
 const { resolve } = require('path');
 
-const password_update = '3056849e9b6bef41c0eb17b01bfb25bb'; // Créé avec https://www.md5hashgenerator.com/
+const password_update = '333ca0fd33d9f248f44b4ce49f5d1c47'; // Créé avec https://www.md5hashgenerator.com/ (MD5)
 
 app.use(bodyParser.json({
     extended: true
@@ -79,21 +79,25 @@ app.get('/data/filtres', (req, res)=>{
 
 // ==================== /data/arbres =================
 app.post('/data/arbres', (req, res) => {
-    const param_page = req.query.page;
-    mydata=require('./data/arbres.json');
-    description=require('./data/filtres.json');
-    result_tri = compute_scores(mydata,description,req.body);
-    response = [];
+    const param_page = xss(req.query.page);
+    fs.readFile('./data/arbres.json', (err, mydata)=>{
+        mydata = JSON.parse(mydata)
+        fs.readFile('./data/filtres.json', (err, description)=>{
+            description = JSON.parse(description)
+            const result_tri = compute_scores(mydata,description,req.body);
+            let response = [];
 
-    const page = (param_page) ? parseInt(param_page) : 1;
+            const page = (param_page) ? parseInt(param_page) : 1;
 
-    for (let i = (page-1)*9; i < Math.min(page*9, result_tri.length); i++) {
-        let arbre = result_tri[i]
-        response.push(arbre);
-    }
-    var json = {nb_arbres_tries : result_tri.length,
-                response: response};
-    res.status(200).send(json);
+            for (let i = (page-1)*9; i < Math.min(page*9, result_tri.length); i++) {
+                let arbre = result_tri[i]
+                response.push(arbre);
+            }
+            var json = {nb_arbres_tries : result_tri.length,
+                        response: response};
+            res.status(200).send(json);
+        })
+    })
 });
 
 app.get('/data/arbres/random', (req, res)=>{
@@ -166,7 +170,7 @@ app.get('/data/legendes', (req, res)=>{
 // ================================================
 
 app.use("/secure", (req, res, next) => {
-    if (req.query.password) {
+    if (xss(req.query.password)) {
         password = xss(req.query.password);
         const hash = crypto.createHash('md5').update(password).digest('hex')
         if (hash == password_update) {
@@ -186,14 +190,14 @@ app.get("/secure/data/refresh", (req,res)=>{
     // ==== Données d'arbres ====
     const arbresPromise = gsheet.getData(gsheet.client, `'${config.data_spreadsheet}'!${config.data_column_offset}${config.data_column_names_row}:${config.data_column_names_row}`)
     arbresPromise.then((colnames)=>{
-        ncols = colnames[0].length+utils.letterToColumn(config.data_column_offset)-1
+        const ncols = colnames[0].length+utils.letterToColumn(config.data_column_offset)-2
         lastColumn = utils.columnToLetter(ncols)
         gsheet.getData(gsheet.client, `'${config.data_spreadsheet}'!${config.data_column_offset}${config.data_start_row}:${lastColumn}`)
         .then((values)=>{
             let response = []
-            for (let i = 0; i < values.length; i++) {
+            for(let i = 0; i < values.length-1; i++) {
                 let val = {}
-                for(let j=0; j<ncols-1; j++){
+                for(let j=0; j<ncols; j++){
                     val[colnames[0][j]]=values[i][j]
                 }
                 response.push(val)
@@ -254,7 +258,7 @@ app.get("/secure/data/refresh", (req,res)=>{
     // ==== Données filtres ====
     const filtresPromise = gsheet.getData(gsheet.client, `'${config.filter_spreadsheet}'!${config.filter_column_offset}${config.filter_row_offset}:${config.filter_row_offset}`)
     .then((colnames)=>{
-        ncols = colnames[0].length+utils.letterToColumn(config.filter_column_offset)
+        const ncols = colnames[0].length+utils.letterToColumn(config.filter_column_offset)
         lastColumn = utils.columnToLetter(ncols)
         gsheet.getData(gsheet.client, `'${config.filter_spreadsheet}'!${config.filter_column_offset}${config.filter_row_offset}:${lastColumn}`)
         .then((value)=>{
@@ -301,18 +305,6 @@ app.get("/secure/data/refresh", (req,res)=>{
     })
 })
 
-app.get('/secure/images/manual_download/:id', (req, res)=>{
-    let id = xss(req.params["id"])
-    const promise = new Promise((resolve, reject)=>{return image_updater.downloadImages(id, "./assets/images", id)})
-    .then(()=>{
-        res.send("Images téléchargée")
-        resolve()
-    })
-    .catch((err)=>{
-        res.status(500).send("Erreur lors du téléchargement")
-    })
-})
-
 app.get('/secure/images/refresh', (req, res)=>{
     console.log("Début mise à jour des images")
     image_updater.refreshPictures(function(){
@@ -320,7 +312,7 @@ app.get('/secure/images/refresh', (req, res)=>{
             files = files.sort()
             const arbresPromise = gsheet.getData(gsheet.client, `'${config.data_spreadsheet}'!${config.data_column_offset}${config.data_column_names_row}:${config.data_column_names_row}`)
             arbresPromise.then((colnames)=>{
-                ncols = colnames[0].length+utils.letterToColumn(config.data_column_offset)-1
+                const ncols = colnames[0].length+utils.letterToColumn(config.data_column_offset)-2
                 lastColumn = utils.columnToLetter(ncols)
                 return gsheet.getData(gsheet.client, `'${config.data_spreadsheet}'!${config.data_column_offset}${config.data_start_row}:${lastColumn}`)
                 .then((values)=>{
@@ -328,7 +320,7 @@ app.get('/secure/images/refresh', (req, res)=>{
                     const processData = async (cb)=>{
                         for (let i = 0; i < values.length; i++) {
                             let val = {}
-                            for(let j=0; j<ncols-1; j++){
+                            for(let j=0; j<ncols; j++){
                                 val[colnames[0][j]]=values[i][j]
                             }
                             response.push(val)
@@ -337,10 +329,11 @@ app.get('/secure/images/refresh', (req, res)=>{
                                 else if(a<b.split('.')[0]) return -1
                                 else if(a>b.split('.')[0]) return 1
                             }
-                            const image_id = val[config.image_id_column]
+                            const image_id = val[config.image_column_name]
+                            console.log(image_id)
                             const id_index = utils.binSearch(files, image_id, compfunc)
 
-                            if(image_id.trim() != "" && image_id.trim() != "-" && id_index == -1){
+                            if(image_id && image_id.trim() != "" && image_id.trim() != "-" && id_index == -1){
                                 console.log(`Téléchargement image ${image_id} (${i+1}/${values.length})`)
                                 await image_updater.downloadImages(image_id, "./assets/images", image_id)
                             }

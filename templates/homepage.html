@@ -22,6 +22,7 @@
 
 <div id="popin" class="modal" onclick="click_hors_popin()">
   <div class="modal-content" onclick="event.stopPropagation()">
+<<<<<<< HEAD
     <div class="telecharger">
       <img 
     src="/assets/download-solid.svg"/>
@@ -42,6 +43,22 @@
       </div>
       
       
+=======
+    <div id ='hidden'>
+
+      <div class="telecharger">
+        <img src="/assets/download-solid.svg"/>
+      </div>
+
+    </div>
+    <img id='popin_tape_tl' src="/assets/tape.png" alt="">
+    <img id='popin_tape_br' src="/assets/tape.png" alt="">
+    <div id="popin_photo" src="" alt="">
+    </div>
+    <div class="popin_titres">
+      <h1 id='popin_nom_francais'></h1>
+      <h2 id='popin_nom_latin'></h2>
+>>>>>>> 7fd53783d4e095766bd5be1982546bafc40f3383
     </div>
     <div id="popin_infos">
   
@@ -56,19 +73,18 @@
       &nbsp<button type="button" name="button" onclick="document.location.href=`/comparaison?arbre1=${document.getElementById('popin_nom_francais').innerHTML}&arbre2=${document.getElementById('comparer_arbres').value}`">Comparer</button>
     </div>
     <button id="popin_close" type="button" name="button" onclick="cacher_popin()">&times</button>
-    <span id = "etoile_favori" onclick="update_favori()">Ajouter aux favoris</span>
+    <span id = "etoile_favori" onclick="update_favori()">J'ajoute à mon herbier</span>
   </div>
 </div>
 
 <form id='filtres' onreset="Reset()">
-   
-  <button type="button" id="plus_de_filtres" onclick="modifier_filtres()">Plus de filtres</button>
+
+  <button type="button" id="plus_de_filtres" class="filtres_options" onclick="modifier_filtres()">Plus de filtres</button>
   <div class="reset">
-    <button type="button" style="background-color: red; 
-    color: white">Rénitialiser les filtres</button></div>
-  
-  
-  
+    <button type="button" class="filtres_options">Rénitialiser les filtres</button></div>
+
+
+
 
 </form>
 
@@ -193,7 +209,7 @@
       update_resultats(numero_page);
     }
   }
-  
+
 
   function update_affichage_arbres(arbres) {
     var div = document.getElementById('arbres_grid');
@@ -330,7 +346,7 @@
 
     var img = document.createElement('img');
     img.setAttribute('id', 'img '+nom_latin);
-    img.setAttribute('src', (arbre["Image Id"]!="")? `/image/${arbre["Image Id"]}` : '/assets/arbre_template.png');
+    img.setAttribute('src', (arbre["Photo"]!="")? `/image/${arbre["Photo"]}` : '/assets/arbre_template.png');
     img.addEventListener('click', afficher_popin);
     img.classList.add('image-arbre');
     img.classList.add((side===0)? 'right' : 'left');
@@ -366,7 +382,7 @@
 
     section.appendChild(article);
   }
-  
+
 
   function modifier_filtres(){
     var filtres = document.getElementsByClassName('pas_bloquant');
@@ -461,7 +477,7 @@
       var popin = document.getElementById('popin');
       arbre_popin = JSON.parse(xhttp_popin.responseText)[0];
       var popin_photo = document.getElementById('popin_photo');
-      popin_photo.style.backgroundImage = `url(${arbre_popin["Image Id"]!='' ? `/image/${arbre_popin["Image Id"]}` : '/assets/arbre_template.png'})`
+      popin_photo.style.backgroundImage = `url(${arbre_popin["Photo"]!='' ? `/image/${arbre_popin["Photo"]}` : '/assets/arbre_template.png'})`
       var popin_nom_latin = document.getElementById('popin_nom_latin');
       popin_nom_latin.innerHTML= arbre_popin['Genre'] + ' ' + arbre_popin['Espèce'] ;
 
@@ -483,14 +499,25 @@
       xhttp_legende.onload = function() {
         legendes = JSON.parse(xhttp_legende.responseText);
         for (var i = 0; i < colonnes.length; i++) {
-          if (colonnes[i]!='Nom commun' && colonnes[i]!='Genre' && colonnes[i]!='Espèce' && colonnes[i]!='Image Id' && !critere_dans_checkboxes(colonnes[i])) {
+          if (colonnes[i]!='Nom commun' && colonnes[i]!='Genre' && colonnes[i]!='Espèce' && colonnes[i]!='Photo' && !critere_dans_checkboxes(colonnes[i])) {
             var text_container = document.createElement('div');
-            var herbier_critere = document.createElement('p');
             var herbier_infos = document.createElement('p');
             text_container.classList.add('popin_herbier_text_container');
-            herbier_critere.classList.add('popin_herbier_critere');
             herbier_infos.classList.add('popin_herbier_infos');
-            herbier_critere.innerHTML = colonnes[i];
+
+            var herbier_critere = document.createElement('div');
+            var p_critere = document.createElement('p');
+            var picto_critere = document.createElement('img');
+            herbier_critere.classList.add('popin_herbier_critere');
+            p_critere.classList.add('p_herbier_critere');
+            p_critere.innerHTML = colonnes[i];
+            picto_critere.classList.add('pictogramme');
+            picto_critere.setAttribute('src', `/picto/${colonnes[i]}`);
+            picto_critere.setAttribute('onerror', 'this.style.display = "none";');
+
+            herbier_critere.appendChild(picto_critere);
+            herbier_critere.appendChild(p_critere);
+
             if (colonnes[i] == "Indice de potentiel d'adaptation") {
               var keys_adaptation = Object.keys(legendes[colonnes[i]]["values"]);
               correspondance_legende = arbre_popin[colonnes[i]].replace(',', '.');
@@ -519,12 +546,22 @@
         var titres_checkboxes = Object.keys(question_checkboxes);
         for (var i = 0; i < titres_checkboxes.length; i++) {
           var text_container = document.createElement('div');
-          var herbier_critere = document.createElement('p');
           var herbier_infos = document.createElement('p');
           text_container.classList.add('popin_herbier_text_container');
-          herbier_critere.classList.add('popin_herbier_critere');
           herbier_infos.classList.add('popin_herbier_infos');
-          herbier_critere.innerHTML = titres_checkboxes[i];
+
+          var herbier_critere = document.createElement('div');
+          var p_critere = document.createElement('p');
+          var picto_critere = document.createElement('img');
+          herbier_critere.classList.add('popin_herbier_critere');
+          p_critere.classList.add('p_herbier_critere');
+          p_critere.innerHTML = titres_checkboxes[i];
+          picto_critere.classList.add('pictogramme');
+          picto_critere.setAttribute('src', `/picto/${titres_checkboxes[i]}`);
+          picto_critere.setAttribute('onerror', 'this.style.display = "none";');
+
+          herbier_critere.appendChild(picto_critere);
+          herbier_critere.appendChild(p_critere);
 
           var criteres_valides = []
           for (var j = 0; j < question_checkboxes[titres_checkboxes[i]].length; j++) {
@@ -548,16 +585,16 @@
         const fav = JSON.parse(localStorage.getItem("arbres_favori"));
         if(fav && fav.indexOf(arbre_popin['Genre'].trim() + ' ' + arbre_popin['Espèce'].trim())>-1){
           favori_icon.style.color = "#bdb246"
-          favori_icon.innerText = "Retirer des favoris"
+          favori_icon.innerText = "Retirer de mon herbier"
         }
         else{
           favori_icon.style.color="#294F8D"
-          favori_icon.innerText = "Ajouter aux favoris"
+          favori_icon.innerText = "Ajouter à mon herbier"
         }
 
-        if(arbre_popin["Image Id"]!= ''){
+        if(arbre_popin["Photo"]!= ''){
           var xhttp_attribution = new XMLHttpRequest();
-          xhttp_attribution.open('GET', `/image_attribution/${arbre_popin['Image Id']}`);
+          xhttp_attribution.open('GET', `/image_attribution/${arbre_popin['Photo']}`);
           xhttp_attribution.setRequestHeader('Content-type', 'application/json');
           xhttp_attribution.send();
 
@@ -566,11 +603,13 @@
           }
 
           var mots_clé = mots_cles(arbre_popin);
-          var a = document.createElement('a');
-          a.innerHTML = mots_clé;
-          a.classList.add('attention');
-          popin_photo.classList.add('img__wrapper');
-          popin_photo.appendChild(a);
+          if (mots_clé!=="") {
+            var a = document.createElement('a');
+            a.innerHTML = mots_clé;
+            a.classList.add('attention');
+            popin_photo.classList.add('img__wrapper');
+            popin_photo.appendChild(a);
+          }
 
           xhttp_attribution.onload = function(){
             var p = document.createElement('p');
@@ -766,6 +805,7 @@
       document.querySelector('form').reset();
       update_resultats(1)
     })
+<<<<<<< HEAD
     function getElementsByIds(ids) {
     var idList = ids.split(" ");
     var results = [], item;
@@ -779,6 +819,10 @@
 }
     
  
+=======
+
+
+>>>>>>> 7fd53783d4e095766bd5be1982546bafc40f3383
     var button_tel = document.querySelector('.telecharger');
     button_tel.addEventListener('click',()=>{
       var specialElementHandlers = {
@@ -802,10 +846,11 @@
 
     doc.fromHTML(document.getElementById("inpdf"), // page element which you want to print as PDF
       15,
-      15, 
+      15,
       {
         'width': 150 , //set width,
         'elementHandlers':specialElementHandlers
+<<<<<<< HEAD
       }
       
       ); 
@@ -829,30 +874,37 @@
       doc.setFont('Lato-Regular', 'normal');  
       doc.setFontType("bold"); 
       doc.save(text+".pdf")
+=======
+      },
+      function(a)
+      {
+        doc.save("arbre.pdf"); // save file name as HTML2PDF.pdf
+      });
+>>>>>>> 7fd53783d4e095766bd5be1982546bafc40f3383
     } )
-    
-     
-      
+
+
+
   function update_favori(){
     if(localStorage.getItem("cookies-accepted")){
       const nom = document.getElementById('popin_nom_latin').innerText;
       if(!localStorage.getItem("arbres_favori")){
         localStorage.setItem("arbres_favori", JSON.stringify([nom]))
         document.getElementById("etoile_favori").style.color = "#bdb246"
-        document.getElementById("etoile_favori").innerText = "Retirer des favoris"
+        document.getElementById("etoile_favori").innerText = "Retirer de mon herbier"
       }
       else{
         let fav = JSON.parse(localStorage.getItem("arbres_favori"))
         const index = fav.indexOf(nom)
         if(index>-1){
           document.getElementById("etoile_favori").style.color = "#294F8D"
-          document.getElementById("etoile_favori").innerText = "Ajouter aux favoris"
+          document.getElementById("etoile_favori").innerText = "Ajouter à mon herbier"
           fav.splice(index,1)
         }
         else{
           fav.push(nom)
           document.getElementById("etoile_favori").style.color = "#bdb246"
-          document.getElementById("etoile_favori").innerText = "Retirer des favoris"
+          document.getElementById("etoile_favori").innerText = "Retirer de mon herbier"
         }
         localStorage.setItem("arbres_favori", JSON.stringify(fav))
       }
