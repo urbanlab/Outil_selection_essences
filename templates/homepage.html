@@ -22,24 +22,31 @@
 
 <div id="popin" class="modal" onclick="click_hors_popin()">
   <div class="modal-content" onclick="event.stopPropagation()">
-    <div id ='hidden'>
-
-      <div class="telecharger">
-        <img src="/assets/download-solid.svg"/>
-      </div>
+    <div class="telecharger">
+      <img 
+    src="/assets/download-solid.svg"/>
 
     </div>
-    <img id='popin_tape_tl' src="/assets/tape.png" alt="">
-    <img id='popin_tape_br' src="/assets/tape.png" alt="">
+    <div id="popin_tape">
+      <img id='popin_tape_tl' src="/assets/tape.png" alt="">
+      <img id='popin_tape_br' src="/assets/tape.png" alt="">
+
+    </div>
     <div id="popin_photo" src="" alt="">
     </div>
-    <div class="popin_titres">
-      <h1 id='popin_nom_francais'></h1>
-      <h2 id='popin_nom_latin'></h2>
+    <div id="inpdf"> 
+     
+      <div class="popin_titres">
+        <h1 id='popin_nom_francais'></h1>
+        <h2 id='popin_nom_latin'></h2>
+      </div>
+      
+      <div id="popin_infos">
+  
+      </div>
     </div>
-    <div id="popin_infos">
+    
 
-    </div>
 
     <div id="popin_comparer">
       <label for="comparer_arbres">Je compare :&nbsp</label>
@@ -786,25 +793,79 @@
       document.querySelector('form').reset();
       update_resultats(1)
     })
-
-
+    function getElementsByIds(ids) {
+    var idList = ids.split(" ");
+    var results = [], item;
+    for (var i = 0; i < idList.length; i++) {
+        item = document.getElementById(idList[i]);
+        if (item) {
+            results.push(item);
+        }
+    }
+    return(results);
+}
+    
+ 
     var button_tel = document.querySelector('.telecharger');
     button_tel.addEventListener('click',()=>{
-      var specialElementHandlers = {
-    '#hidden': function (element, renderer) {
-        return true;}};
-      var doc = new jsPDF();  //create jsPDF object
-      doc.fromHTML(document.getElementById("popin"), // page element which you want to print as PDF
-      15,
-      15,
-      {
-        'width': 170 , //set width,
-        'elementHandlers':specialElementHandlers
-      },
-      function(a)
-      {
-        doc.save("arbre.pdf"); // save file name as HTML2PDF.pdf
-      });
+
+      var pdf = new jsPDF('p', 'pt', 'letter');
+        var options = {
+            background: '#fff' //background is transparent if you don't set it, which turns it black for some reason.
+        };
+        pdf.addHTML(document.getElementById('inpdf'), options, function () {
+                pdf.save('Test.pdf');
+        });
+      // var specialElementHandlers = {
+       
+      //   '.pictogramme': function (element, renderer) {
+      //   return true;}
+        
+        
+      //   };
+      // /////////
+      
+      // var doc = new jsPDF('l');  //create jsPDF object
+      // var text = document.getElementById('popin_nom_francais').textContent;
+      // var infos=document.getElementById('popin_infos').textContent;
+      // // doc.text(50, 10, text)
+      // // doc.setFont("times");    
+      // // doc.setFontType("bold"); 
+      // // doc.setTextColor(165, 0, 0);   
+      // alert(document.getElementById("popin_infos").innerHTML)
+      // // getElementsByIds("popin_nom_francais" , "popin_nom_latin","popin_photo", "popin_infos")
+
+      // doc.fromHTML(document.getElementById("inpdf"), // page element which you want to print as PDF
+      // 15,
+      // 15,
+      // {
+      //   'width': 170 , //set width,
+      //   'elementHandlers':specialElementHandlers
+      // },
+      // function(a)
+      // {
+      //   doc.save(text+".pdf"); // save file name as HTML2PDF.pdf
+      // })
+      //  doc.addImage(document.getElementById("popin_photo").value, 'JPEG', 0, 0, 50, 50);
+      // // define custom font
+      // // define custom font
+
+      // doc.fromHTML(document.getElementById("popin_infos"), // page element which you want to print as PDF
+      // 15,
+      // 15, 
+      // {
+      //   'width': 150 , //set width,
+      //   'elementHandlers':specialElementHandlers
+      // }
+      
+      // ); 
+
+
+   
+      // doc.setFontSize(12);
+      // doc.setFont('Lato-Regular', 'normal');  
+      // doc.setFontType("bold"); 
+      
     } )
 
 

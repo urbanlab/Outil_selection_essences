@@ -773,7 +773,15 @@ p.francais{
     justify-content: space-around;
     background-color: #FCE5D2;
   }
-
+  
+  .telecharger{
+    width:2%;
+    height:2%;
+    border-radius: 5em;
+    left:180px;
+    top:80px;
+    position:absolute
+  }
 
   #filtres{
     width: 30%;
@@ -1507,8 +1515,6 @@ p.francais{
 
   body{
     min-width: fit-content;
-    margin-left:5vw;
-    margin-right: 5vw;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
