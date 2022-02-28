@@ -22,34 +22,31 @@
 
 <div id="popin" class="modal" onclick="click_hors_popin()">
   <div class="modal-content" onclick="event.stopPropagation()">
-<<<<<<< HEAD
-    <div id ='hidden'>
-    <img id="etoile_favori"
-    src="/assets/star-svgrepo-com.svg"
-    alt="ajouter aux favori"
-    onclick="update_favori()"
-    />
-    
     <div class="telecharger">
       <img 
     src="/assets/download-solid.svg"/>
 
     </div>
-  </div>
-    <img id="popin_photo" src="" alt="">
-=======
-    <img id='popin_tape_tl' src="/assets/tape.png" alt="">
-    <img id='popin_tape_br' src="/assets/tape.png" alt="">
-    <div id="popin_photo" src="" alt="">
-    </div>
->>>>>>> 30d01d9db30f5d1471fc05331228bcaf83949e80
-    <div class="popin_titres">
-      <h1 id='popin_nom_francais'></h1>
-      <h2 id='popin_nom_latin'></h2>
-    </div>
-    <div id="popin_infos">
+    <div id="popin_tape">
+      <img id='popin_tape_tl' src="/assets/tape.png" alt="">
+      <img id='popin_tape_br' src="/assets/tape.png" alt="">
 
     </div>
+    <div id="popin_photo" src="" alt="">
+    </div>
+    <div id="inpdf"> 
+     
+      <div class="popin_titres">
+        <h1 id='popin_nom_francais'></h1>
+        <h2 id='popin_nom_latin'></h2>
+      </div>
+      
+      
+    </div>
+    <div id="popin_infos">
+  
+    </div>
+
 
     <div id="popin_comparer">
       <label for="comparer_arbres">Je compare :&nbsp</label>
@@ -769,25 +766,69 @@
       document.querySelector('form').reset();
       update_resultats(1)
     })
+    function getElementsByIds(ids) {
+    var idList = ids.split(" ");
+    var results = [], item;
+    for (var i = 0; i < idList.length; i++) {
+        item = document.getElementById(idList[i]);
+        if (item) {
+            results.push(item);
+        }
+    }
+    return(results);
+}
     
  
     var button_tel = document.querySelector('.telecharger');
     button_tel.addEventListener('click',()=>{
       var specialElementHandlers = {
-    '#hidden': function (element, renderer) {
-        return true;}};
+       
+        '.telecharger': function (element, renderer) {
+        return true;}
+        
+        
+        };
+      /////////
+      
       var doc = new jsPDF();  //create jsPDF object
-      doc.fromHTML(document.getElementById("popin"), // page element which you want to print as PDF
+      var text = document.getElementById('popin_nom_francais').textContent;
+      var infos=document.getElementById('popin_infos').textContent;
+      doc.text(50, 10, text)
+      doc.setFont("times");    
+      doc.setFontType("bold"); 
+      doc.setTextColor(165, 0, 0);   
+      
+      // getElementsByIds("popin_nom_francais" , "popin_nom_latin","popin_photo", "popin_infos")
+
+    doc.fromHTML(document.getElementById("inpdf"), // page element which you want to print as PDF
       15,
       15, 
       {
-        'width': 170 , //set width,
+        'width': 150 , //set width,
         'elementHandlers':specialElementHandlers
-      },
-      function(a) 
+      }
+      
+      ); 
+      doc.addImage(document.getElementById("popin_ohoto").value, 'JPEG', 0, 0, 50, 50);
+      // define custom font
+      // define custom font
+
+      doc.fromHTML(document.getElementById("popin_infos"), // page element which you want to print as PDF
+      15,
+      15, 
       {
-        doc.save("arbre.pdf"); // save file name as HTML2PDF.pdf
-      }); 
+        'width': 150 , //set width,
+        'elementHandlers':specialElementHandlers
+      }
+      
+      ); 
+
+
+   
+      doc.setFontSize(12);
+      doc.setFont('Lato-Regular', 'normal');  
+      doc.setFontType("bold"); 
+      doc.save(text+".pdf")
     } )
     
      
