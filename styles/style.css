@@ -720,7 +720,8 @@ p.francais{
     text-align: center;
     text-decoration: none;
     letter-spacing: .06em;
-    background-color: #A00;
+    /* background-color: #A00; */
+    background-color: #BD764D;
     padding: 0.5em 5em 0.4em 5em;
     text-shadow: 0 0 0.75em #444;
     box-shadow: 0 0 0.5em rgba(0,0,0,0.5);
@@ -741,7 +742,7 @@ p.francais{
     margin: -0.3em -5em;
     transform: scale(0.7);
     -webkit-transform: scale(0.7);
-    border: 2px rgba(255,255,255,0.7) dashed;
+    border: 2px rgba(255,255,255,0.7);
   }
 
 
@@ -1454,7 +1455,8 @@ p.francais{
     text-align: center;
     text-decoration: none;
     letter-spacing: .06em;
-    background-color: #A00;
+    /* background-color: #A00; */
+    background-color: #BD764D;
     padding: 0.5em 5em 0.4em 5em;
     text-shadow: 0 0 0.75em #444;
     box-shadow: 0 0 0.5em rgba(0,0,0,0.5);
@@ -1474,7 +1476,7 @@ p.francais{
     margin: -0.3em -5em;
     transform: scale(0.7);
     -webkit-transform: scale(0.7);
-    border: 2px rgba(255,255,255,0.7) dashed;
+    border: 2px rgba(255,255,255,0.7);
   }
 
 }
@@ -2136,7 +2138,8 @@ p.francais{
     text-align: center;
     text-decoration: none;
     letter-spacing: .06em;
-    background-color: #A00;
+    /* background-color: #A00; */
+    background-color: #BD764D;
     padding: 0.5em 5em 0.4em 5em;
     text-shadow: 0 0 0.75em #444;
     box-shadow: 0 0 0.5em rgba(0,0,0,0.5);
@@ -2157,7 +2160,7 @@ p.francais{
     margin: -0.3em -5em;
     transform: scale(0.7);
     -webkit-transform: scale(0.7);
-    border: 2px rgba(255,255,255,0.7) dashed;
+    border: 2px rgba(255,255,255,0.7);
   }
 
 }
