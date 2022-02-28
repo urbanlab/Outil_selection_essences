@@ -56,7 +56,10 @@ function build_default_input_and_weights(description){
 				
 				if (description[i].nom=='Indice de confiance'){
 					value_def=5;
-				}else{
+				}else if (description[i].nom=='Potentiel invasif') {
+					value_def=3;
+				}
+				else {
 					value_def=1;
 				};
 				n_choice[description[i].nom]=description[i]['reponses'].length;
@@ -219,13 +222,15 @@ function compute_score(inputs_updated,prop,data_updated,i,weight,n_choice){
 		     const number_choice_prop=n_choice[prop];
 			 
 
-			score=((Math.abs(inputs_updated[prop]-data_updated[i][prop])==number_choice_prop-1) ? 0 : weight[prop]*Math.pow(1/2,Math.abs(inputs_updated[prop]-data_updated[i][prop])));
+			score=((Math.abs(inputs_updated[prop]-data_updated[i][prop])==number_choice_prop-1) ? 0 : weight*Math.pow(1/2,Math.abs(inputs_updated[prop]-data_updated[i][prop])));
+			
+			
 
 			
      
     } 
 	else{
-        score=((inputs_updated[prop]==data_updated[i][prop]) ? weight[prop]: 0)
+        score=((inputs_updated[prop]==data_updated[i][prop]) ? weight: 0)
     	
     }
 	return score;
@@ -292,10 +297,10 @@ else{
 	
 	
 	if (Number.isInteger(data_updated[i][prop])){
-		score=((data_updated[i][prop]==inputs_updated[prop])? weight[prop]:0)
+		score=((data_updated[i][prop]==inputs_updated[prop])? weight:0)
 	}else{
 		let parts=data_updated[i][prop].split('-');
-        score=(((parseInt(parts[0])<=inputs_updated[prop]) && (inputs_updated[prop]<=parseInt(parts[1])) )? weight[prop]:0)
+        score=(((parseInt(parts[0])<=inputs_updated[prop]) && (inputs_updated[prop]<=parseInt(parts[1])) )? weight:0)
 	}
 }
 
@@ -309,7 +314,6 @@ function compute_scores(mydata,description,input1){
 			
 			let input=delete_non_input(input1);
 			
-
 			let filters_input=Object.keys(input);
 			filters_input=filters_input.concat(default_var);
 			let filters=Object.keys(default_inputs);
@@ -326,8 +330,11 @@ function compute_scores(mydata,description,input1){
 			let scores=[];
 			let arbre_non_bloque=[];
 			let arbre_bloque=[];
-			const sum_weights=sum(weight,filters_input);
 			
+			if (filters_input.length==0){
+				filters_input=default_var
+			}
+
 
 			for (let i=0;i<n_arbre;i++){
 				let score =0;
@@ -344,11 +351,13 @@ function compute_scores(mydata,description,input1){
 						if (!(weight[fil] == 'bloquant')){
 						
 							
-							score+=((fil in col_enso)? compute_score_ensoleilleiment(inputs_updated,fil,data_updated,i,weight):compute_score(inputs_updated,fil,data_updated,i,weight,n_choice))
+							score+=((fil in col_enso)? compute_score_ensoleilleiment(inputs_updated,fil,data_updated,i,weight[fil]):compute_score(inputs_updated,fil,data_updated,i,weight[fil],n_choice))
 							
 							
 						}else{
 							bloqued=((inputs_updated[fil]!=data_updated[i][fil])? true: false)
+							score+=((bloqued)? 0:compute_score(inputs_updated,fil,data_updated,i,1,n_choice))
+
 							
 							
 						}
@@ -357,6 +366,7 @@ function compute_scores(mydata,description,input1){
 
 
 				};
+				
 				if (!(bloqued)){
 					arbre_non_bloque.push(i);
 					
@@ -371,6 +381,8 @@ function compute_scores(mydata,description,input1){
 			}else{
 				let resultat=convertToObj(arbre_non_bloque,scores);
 				return (sort_object(resultat,mydata));
+				
+				
 				
 				
 				
