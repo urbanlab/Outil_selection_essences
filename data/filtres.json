@@ -162,7 +162,7 @@
     {
         "nom": "Feuillage",
         "importance": "Peu important",
-        "commentaire": "",
+        "commentaire": "Marcescent :Entre feuillage persistant et caduc. Un feuillage marcescent sèche, mais les feuilles restent  accrochées aux branches par le pédoncule. Les feuilles vont tomber, au printemps, au moment de laisser la place à une jeune feuille. C’est, par exemple, le cas du Châtaignier, du Hêtre, du Charme et de certains Chênes. Persistant : Végétal qui conserve son feuillage à l’automne/hiver, les feuilles se renouvellent au fur et à mesure, il n’y a pas de grosses pertes à une époque précise. Caduc : Végétal qui perd l’essentiel de son feuillage à l’automne/hiver.",
         "type_question": "Select",
         "reponses": [
             {
