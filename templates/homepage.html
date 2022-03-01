@@ -74,8 +74,11 @@
   <nav id="barre_recherche">
     <label for="recherche_arbre">Je&nbspcherche&nbspun&nbsparbre&nbsp:&nbsp</label>
     <input type="text" id="recherche_arbre" name="recherche_arbre" size="50" placeholder="Nom de l'arbre" value="">
-    <label for="favoris">Voir&nbspmon&nbspherbier&nbsp</label>
-    <input type="checkbox" id="favoris" name="favoris" value="favoris" onchange="afficher_favoris(event)">
+    <div class="barre-recherche-tooltip">
+      <label for="favoris">Je&nbspconsulte&nbspmon&nbspherbier&nbsp</label>
+      <input type="checkbox" id="favoris" name="favoris" value="favoris" onchange="afficher_favoris(event)">
+      <span class="tooltip tooltip-herbier" title="C'est ici que sont conservés tes arbres favoris">&#x1F342</span>
+    </div>
   </nav>
   <span id = "nombre_arbre_trouves"></span>
   <nav class="bouton_pages">
@@ -412,9 +415,11 @@
       document.getElementById("nombre_arbre_trouves").innerText = `${nb_arbres_tries} essence(s) trouvés`
       arbres_tries = JSON.parse(xhttp.responseText).response;
       update_affichage_arbres(arbres_tries);
-      nombres_pages = document.getElementsByClassName('nombre_pages')
+      var page_actuelle = document.getElementsByClassName('page_actuelle');
+      var nombres_pages = document.getElementsByClassName('nombre_pages');
       for(let i=0; i<nombres_pages.length; i++){
         nombres_pages[i].innerHTML=Math.max(Math.ceil(parseInt(nb_arbres_tries)/9), 1);
+        page_actuelle[i].innerHTML=page;
       }
     }
   }
