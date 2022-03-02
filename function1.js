@@ -143,7 +143,7 @@ function update_data(data1,filters){
 				
                 
 				if (prop=='Indice de potentiel d\'adaptation'){
-				
+					data[i][prop]=data[i][prop].replace(/,/g, '.');
 									if(parseFloat(data[i][prop])>=3){
 										
 										data[i][prop]=1;
@@ -380,7 +380,11 @@ function compute_scores(mydata,description,input1){
 				return([])
 			}else{
 				let resultat=convertToObj(arbre_non_bloque,scores);
-				return (sort_object(resultat,mydata));
+				//return (sort_object(resultat,mydata));
+				 return( scores.sort())
+				// return(scores.length)
+				 //return(sort_object(resultat,mydata)[353])
+				
 				
 				
 				
@@ -394,10 +398,10 @@ function compute_scores(mydata,description,input1){
 var mydata = require('./data/arbres.json');
 var input1 = require('./input.json');
 var description=require('./data/filtres.json');
-//console.log(compute_scores(mydata,description,input1))
+console.log(compute_scores(mydata,description,input1))
 
 
-module.exports = compute_scores;
+// module.exports = compute_scores;
 
 
 
