@@ -25,6 +25,7 @@
     "googleapis": "^92.0.0",
     "html2canvas": "^1.4.1",
     "http": "0.0.1-security",
+    "jspdf": "^2.5.1",
     "nodemon": "^2.0.15",
     "xss": "^1.0.10"
   }
