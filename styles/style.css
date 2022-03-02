@@ -154,6 +154,13 @@ p.francais{
     font-size: 20px;
   }
 
+  .barre-recherche-tooltip{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+
   #nombre_arbre_trouves{
     height: fit-content;
     text-align: center;
@@ -216,7 +223,7 @@ p.francais{
     bottom: 20px;
     z-index: 1000;
   }
-  
+
   .fleche-remonter{
     z-index: 1001;
     position: fixed;
@@ -765,7 +772,7 @@ p.francais{
     justify-content: space-around;
     background-color: #FCE5D2;
   }
-  
+
 
   #filtres{
     width: 30%;
@@ -818,6 +825,13 @@ p.francais{
     font-size: 20px;
   }
 
+  .barre-recherche-tooltip{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+
   #recherche_arbre{
     background-color: white !important;
     background-clip: padding-box !important;
@@ -865,7 +879,7 @@ p.francais{
     bottom: 20px;
     z-index: 1000;
   }
-  
+
   .fleche-remonter{
     z-index: 1001;
     position: fixed;
@@ -1440,6 +1454,11 @@ p.francais{
     z-index: 99;
   }
 
+  .tooltip-herbier:hover:after{
+    right: 15%;
+    left: auto;
+  }
+
   .img__wrapper{
     position:relative;
     overflow:hidden;
@@ -1486,8 +1505,7 @@ p.francais{
 
   body{
     min-width: fit-content;
-    margin-left:5vw;
-    margin-right: 5vw;
+    margin:0;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -1535,6 +1553,13 @@ p.francais{
     flex-direction: row;
     align-items: center;
     padding-left: 3%;
+  }
+
+  .barre-recherche-tooltip{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
   }
 
   #nombre_arbre_trouves{
@@ -2118,6 +2143,15 @@ p.francais{
     left: 10%;
     position: absolute;
     z-index: 99;
+  }
+
+  .tooltip-herbier:hover{
+    cursor: default;
+  }
+
+  .tooltip-herbier:hover:after{
+    right: 15%;
+    left: auto;
   }
 
   .img__wrapper{
