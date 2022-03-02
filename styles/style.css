@@ -34,6 +34,17 @@ p.francais{
   text-align: center;
   line-height: 100%;
 }
+<<<<<<< HEAD
+.telecharger{
+  width:2%;
+  height:2%;
+  border-radius: 5em;
+  left:180px;
+  top:80px;
+  position:absolute
+}
+=======
+>>>>>>> ea27a70b6fdba3ecbdcdaa18c9a56f50793948e4
 
 
 @media screen and (max-width: 750px) {
@@ -764,6 +775,14 @@ p.francais{
     flex-wrap: wrap;
     justify-content: space-around;
     background-color: #FCE5D2;
+  }
+  .telecharger{
+    width:2%;
+    height:2%;
+    border-radius: 5em;
+    left:180px;
+    top:80px;
+    position:absolute
   }
   
 
@@ -1505,7 +1524,18 @@ p.francais{
     margin-top: 10%;
 
   }
-
+  .telecharger{
+    width:2%;
+    height:2%;
+    border-radius: 5em;
+    left:180px;
+    top:80px;
+    position:absolute
+  }
+  
+  .telecharger:hover{
+    background-color: rgba(125,125,125,0.3);
+  }
   #plus_de_filtres{
     order:100000000000;
   }
@@ -2157,5 +2187,6 @@ p.francais{
     -webkit-transform: scale(0.7);
     border: 2px rgba(255,255,255,0.7) dashed;
   }
+
 
 }
