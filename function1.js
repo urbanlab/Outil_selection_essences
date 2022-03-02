@@ -380,11 +380,10 @@ function compute_scores(mydata,description,input1){
 				return([])
 			}else{
 				let resultat=convertToObj(arbre_non_bloque,scores);
-				//return (sort_object(resultat,mydata));
-				 return( scores.sort())
-				// return(scores.length)
-				 //return(sort_object(resultat,mydata)[353])
+				return (sort_object(resultat,mydata));
+				 
 				
+
 				
 				
 				
@@ -398,10 +397,10 @@ function compute_scores(mydata,description,input1){
 var mydata = require('./data/arbres.json');
 var input1 = require('./input.json');
 var description=require('./data/filtres.json');
-console.log(compute_scores(mydata,description,input1))
+//console.log(compute_scores(mydata,description,input1))
 
 
-// module.exports = compute_scores;
+module.exports = compute_scores;
 
 
 
