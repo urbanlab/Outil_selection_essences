@@ -413,7 +413,7 @@
 
     xhttp.onload = function() {
       nb_arbres_tries = JSON.parse(xhttp.responseText).nb_arbres_tries;
-      document.getElementById("nombre_arbre_trouves").innerText = `${nb_arbres_tries} essence(s) trouvés`
+      document.getElementById("nombre_arbre_trouves").innerText = `Résultat de la recherche ${nb_arbres_tries} essence(s) trouvée(s)`
       arbres_tries = JSON.parse(xhttp.responseText).response;
       update_affichage_arbres(arbres_tries);
       var page_actuelle = document.getElementsByClassName('page_actuelle');
@@ -677,7 +677,7 @@
         let arbre = arbres_trouves[i];
         arbres_trouves_page.push(arbre);
     }
-    document.getElementById("nombre_arbre_trouves").innerText = `${arbres_trouves.length} essence(s) trouvées`
+    document.getElementById("nombre_arbre_trouves").innerText = `Résultat de la recherche : ${arbres_trouves.length} essence(s) trouvée(s)`
     update_affichage_arbres(arbres_trouves_page);
   }
 
@@ -722,7 +722,7 @@
         let arbre = arbres_favoris[i];
         arbres_favoris_page.push(arbre);
     }
-    document.getElementById("nombre_arbre_trouves").innerText = `${arbres_favoris.length} essence(s) trouvées`
+    document.getElementById("nombre_arbre_trouves").innerText = `Résultat de la recherche : ${arbres_favoris.length} essence(s) trouvée(s)`
     update_affichage_arbres(arbres_favoris_page);
   }
 
@@ -780,12 +780,16 @@
   function accepter_cookies(e){
     cookies_aside = document.getElementById('cookies_dialogue')
     cookies_aside.style.animation = "1.5s ease-in reverse 0.5s cookies_slidein"
+    cookies_aside = document.getElementById('rappel_cookies')
+    cookies_aside.style.animation = "1.5s ease-in reverse 0.5s cookies_slidein"
     localStorage.setItem("cookies-accepted", true)
     document.getElementById('merci_dialogue').style.animation = "1.5s ease-in alternate 2 1s cookies_slidein"
   }
 
   function refuser_cookies(e){
     cookies_aside = document.getElementById('cookies_dialogue')
+    cookies_aside.style.animation = "1.5s ease-in reverse 0.5s cookies_slidein"
+    cookies_aside = document.getElementById('rappel_cookies')
     cookies_aside.style.animation = "1.5s ease-in reverse 0.5s cookies_slidein"
   }
   var button_reset = document.querySelector('.reset');
