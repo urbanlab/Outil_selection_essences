@@ -102,15 +102,15 @@
 <aside id='cookies_dialogue'>
   Voulez-vous accepter les cookies ? (Les cookies sont utilisés seulement pour la fonction favori)
   <br>
-  <button type="button" onclick="accepter_cookies(event)">Accepter</button>
-  <button type="button" onclick="refuser_cookies(event)">Refuser</button>
+  <button type="button" onclick="accepter_cookies(event, false)">Accepter</button>
+  <button type="button" onclick="refuser_cookies(event, false)">Refuser</button>
 </aside>
 
 <aside id='rappel_cookies'>
   Vous devez activer les cookies pour utiliser cette fonctionnalité
   <br>
-  <button type="button" onclick="accepter_cookies(event)">Accepter</button>
-  <button type="button" onclick="refuser_cookies(event)">Refuser</button>
+  <button type="button" onclick="accepter_cookies(event, true)">Accepter</button>
+  <button type="button" onclick="refuser_cookies(event, true)">Refuser</button>
 </aside>
 <aside id="merci_dialogue">Merci</aside>
 <img class="feuille-remonter" src="/assets/feuille-svg.svg" alt="">
@@ -777,20 +777,28 @@
     document.getElementById('cookies_dialogue').style.display="none"
   }
 
-  function accepter_cookies(e){
-    cookies_aside = document.getElementById('cookies_dialogue')
-    cookies_aside.style.animation = "1.5s ease-in reverse 0.5s cookies_slidein"
-    cookies_aside = document.getElementById('rappel_cookies')
-    cookies_aside.style.animation = "1.5s ease-in reverse 0.5s cookies_slidein"
+  function accepter_cookies(e, rappel){
+    if(!rappel){
+      cookies_aside = document.getElementById('cookies_dialogue')
+      cookies_aside.style.animation = "1.5s ease-in reverse 0.5s cookies_slidein"
+    }
+    else{
+      cookies_aside = document.getElementById('rappel_cookies')
+      cookies_aside.style.animation = "1.5s ease-in reverse 0.5s cookies_slidein"
+    }
     localStorage.setItem("cookies-accepted", true)
     document.getElementById('merci_dialogue').style.animation = "1.5s ease-in alternate 2 1s cookies_slidein"
   }
 
-  function refuser_cookies(e){
-    cookies_aside = document.getElementById('cookies_dialogue')
-    cookies_aside.style.animation = "1.5s ease-in reverse 0.5s cookies_slidein"
-    cookies_aside = document.getElementById('rappel_cookies')
-    cookies_aside.style.animation = "1.5s ease-in reverse 0.5s cookies_slidein"
+  function refuser_cookies(e, rappel){
+    if(!rappel){
+      cookies_aside = document.getElementById('cookies_dialogue')
+      cookies_aside.style.animation = "1.5s ease-in reverse 0.5s cookies_slidein"
+    }
+    else{
+      cookies_aside = document.getElementById('rappel_cookies')
+      cookies_aside.style.animation = "1.5s ease-in reverse 0.5s cookies_slidein"
+    }
   }
   var button_reset = document.querySelector('.reset');
   button_reset.addEventListener('click',()=>{
