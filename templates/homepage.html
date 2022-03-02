@@ -826,6 +826,10 @@
       /////////
       
       var doc = new jsPDF();  //create jsPDF object
+ 
+
+      console.log('/assets'+document.getElementById("popin_photo").style.backgroundImage.slice(5, -2)+'.jpg')
+      doc.addImage('/assets'+document.getElementById("popin_photo").style.backgroundImage.slice(5, -2)+'.jpg', 'jpg', 0, 0, 50, 50)
       var text = document.getElementById('popin_nom_francais').textContent;
       var infos=document.getElementById('popin_infos').textContent;
       // doc.text(50, 10, text)
@@ -836,10 +840,13 @@
       alert(document.getElementById('popin_infos').innerHTML)
 
       let elem = document.getElementById("inpdf").innerHTML.replaceAll('/picto','#')
-      console.log(elem)
-      console.log(document.getElementById('popin_infos'))
+    
       let divi = document.getElementById("inpdf")
       divi.innerHTML = elem
+      doc.setFontSize(10);
+      doc.setFont("times");
+      doc.setFontType("italic");
+      doc.setTextColor(255,0,0);
       // getElementsByIds("popin_nom_francais" , "popin_nom_latin","popin_photo", "popin_infos")
       doc.fromHTML(divi, // page element which you want to print as PDF
       15,
@@ -850,8 +857,10 @@
       },
       function(a)
       {
-        doc.save(text+".pdf"); // save file name as HTML2PDF.pdf
+        
+      doc.save(text+".pdf"); // save file name as HTML2PDF.pdf
       })
+      
       //  doc.addImage(document.getElementById("popin_photo").value, 'JPEG', 0, 0, 50, 50);
       // // define custom font
       // // define custom font
