@@ -543,7 +543,8 @@
           herbier_critere.classList.add('popin_herbier_critere');
           p_critere.classList.add('p_herbier_critere');
           p_critere.innerHTML = titres_checkboxes[i];
-          picto_critere.classList.add('pictogramme');
+          picto_critere.classList.add(`pictogramme`);
+          
           picto_critere.setAttribute('src', `/picto/${titres_checkboxes[i]}`);
           picto_critere.setAttribute('onerror', 'this.style.display = "none";');
 
@@ -831,13 +832,20 @@
       // doc.setFont("times");    
       // doc.setFontType("bold"); 
       // doc.setTextColor(165, 0, 0);   
-     
+      
+      alert(document.getElementById('popin_infos').innerHTML)
+
+      let elem = document.getElementById("inpdf").innerHTML.replaceAll('/picto','#')
+      console.log(elem)
+      console.log(document.getElementById('popin_infos'))
+      let divi = document.getElementById("inpdf")
+      divi.innerHTML = elem
       // getElementsByIds("popin_nom_francais" , "popin_nom_latin","popin_photo", "popin_infos")
-      doc.fromHTML(document.getElementById("inpdf"), // page element which you want to print as PDF
+      doc.fromHTML(divi, // page element which you want to print as PDF
       15,
       15,
       {
-        'width': 130 , //set width,
+        'width': 150 , //set width,
         'elementHandlers':specialElementHandlers
       },
       function(a)
@@ -862,9 +870,9 @@
    
       // doc.setFontSize(12);
       // doc.setFont('Lato-Regular', 'normal');  
-      // doc.setFontType("bold"); 
       
-    } )
+      
+    })
 
 
 
