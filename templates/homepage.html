@@ -21,11 +21,7 @@
 
 <div id="popin" class="modal" onclick="click_hors_popin()">
   <div class="modal-content" onclick="event.stopPropagation()">
-    <div class="telecharger">
-      <img
-    src="/assets/download-solid.svg"/>
 
-    </div>
     <div id="popin_tape">
       <img id='popin_tape_tl' src="/assets/tape.png" alt="">
       <img id='popin_tape_br' src="/assets/tape.png" alt="">
@@ -806,84 +802,6 @@
     }
     return(results);
 }
-
-
-    var button_tel = document.querySelector('.telecharger');
-    button_tel.addEventListener('click',()=>{
-
-      // var pdf = new jsPDF('p', 'pt', 'letter');
-      //   var options = {
-      //       background: '#fff' //background is transparent if you don't set it, which turns it black for some reason.
-      //   };
-      //   pdf.addHTML(document.getElementById('inpdf').innerHTML, options, function () {
-      //           pdf.save('Test.pdf');
-      //   });
-      var specialElementHandlers = {
-
-        '.pictogramme': function (element, renderer) {
-        return true;}
-
-
-        };
-      /////////
-
-      var doc = new jsPDF();  //create jsPDF object
-
-
-      console.log('/assets'+document.getElementById("popin_photo").style.backgroundImage.slice(5, -2)+'.jpg')
-      doc.addImage('/assets'+document.getElementById("popin_photo").style.backgroundImage.slice(5, -2)+'.jpg', 'jpg', 0, 0, 50, 50)
-      var text = document.getElementById('popin_nom_francais').textContent;
-      var infos=document.getElementById('popin_infos').textContent;
-      // doc.text(50, 10, text)
-      // doc.setFont("times");
-      // doc.setFontType("bold");
-      // doc.setTextColor(165, 0, 0);
-
-      alert(document.getElementById('popin_infos').innerHTML)
-
-      let elem = document.getElementById("inpdf").innerHTML.replaceAll('/picto','#')
-
-      let divi = document.getElementById("inpdf")
-      divi.innerHTML = elem
-      doc.setFontSize(10);
-      doc.setFont("times");
-      doc.setFontType("italic");
-      doc.setTextColor(255,0,0);
-      // getElementsByIds("popin_nom_francais" , "popin_nom_latin","popin_photo", "popin_infos")
-      doc.fromHTML(divi, // page element which you want to print as PDF
-      15,
-      15,
-      {
-        'width': 150 , //set width,
-        'elementHandlers':specialElementHandlers
-      },
-      function(a)
-      {
-
-      doc.save(text+".pdf"); // save file name as HTML2PDF.pdf
-      })
-
-      //  doc.addImage(document.getElementById("popin_photo").value, 'JPEG', 0, 0, 50, 50);
-      // // define custom font
-      // // define custom font
-
-      // doc.fromHTML(document.getElementById("popin_infos"), // page element which you want to print as PDF
-      // 15,
-      // 15,
-      // {
-      //   'width': 150 , //set width,
-      //   'elementHandlers':specialElementHandlers
-      // }
-
-      // );
-
-
-
-      // doc.setFontSize(12);
-      // doc.setFont('Lato-Regular', 'normal');
-
-
-    })
 
 
 

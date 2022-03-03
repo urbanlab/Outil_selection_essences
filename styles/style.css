@@ -560,15 +560,6 @@ footer:after{
   border-image: url(/assets/frame-border.svg) 6 9 5 5 stretch stretch;
 }
 
-.telecharger{
-  border-radius: 5em;
-  position:absolute;
-}
-
-.telecharger:hover{
-  background-color: rgba(125,125,125,0.3);
-}
-
 @media screen and (max-width: 750px) {
 
   #titre_page{
@@ -734,17 +725,6 @@ footer:after{
 
   #popin_nom_latin{
     font-size: 13px;
-  }
-
-  .telecharger{
-    width:6%;
-    height:6%;
-    left:70%;
-    top:10%;
-  }
-
-  .telecharger:hover{
-    background-color: rgba(125,125,125,0.3);
   }
 
   #popin_infos{
@@ -1000,17 +980,6 @@ footer:after{
     width: auto;
   }
 
-  .telecharger{
-    width:4%;
-    height:4%;
-    left:12%;
-    top:85.5%;
-  }
-
-  .telecharger:hover{
-    background-color: rgba(125,125,125,0.3);
-  }
-
   #popin_tape_tl{
     position: fixed;
     height: 7%;
@@ -1255,17 +1224,6 @@ footer:after{
     left: 48%;
     top: 82.5%;
     width: auto;
-  }
-
-  .telecharger{
-    width:2%;
-    height:2%;
-    left:43%;
-    top:83%;
-  }
-
-  .telecharger:hover{
-    background-color: rgba(125,125,125,0.3);
   }
 
   .tooltip:hover:after{
