@@ -143,7 +143,7 @@ function update_data(data1,filters){
 				
                 
 				if (prop=='Indice de potentiel d\'adaptation'){
-				
+					data[i][prop]=data[i][prop].replace(/,/g, '.');
 									if(parseFloat(data[i][prop])>=3){
 										
 										data[i][prop]=1;
@@ -381,6 +381,9 @@ function compute_scores(mydata,description,input1){
 			}else{
 				let resultat=convertToObj(arbre_non_bloque,scores);
 				return (sort_object(resultat,mydata));
+				 
+				
+
 				
 				
 				
