@@ -652,7 +652,7 @@ footer:after{
   .arbre-grid-item{
     width: 100vw;
     height:100vw;
-    margin-bottom: 10px;
+    margin-bottom: 35px;
   }
 
   .image-arbre{
@@ -854,6 +854,8 @@ footer:after{
 
   .text-container{
     width: 60%;
+    position: relative;
+    top: -60;
   }
 
   .filtre{
