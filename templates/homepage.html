@@ -22,7 +22,7 @@
 <div id="popin" class="modal" onclick="click_hors_popin()">
   <div class="modal-content" onclick="event.stopPropagation()">
     <div class="telecharger">
-      <img 
+      <img
     src="/assets/download-solid.svg"/>
 
     </div>
@@ -33,18 +33,18 @@
     </div>
     <div id="popin_photo" src="" alt="">
     </div>
-    <div id="inpdf" data-html2canvas-ignore="true"> 
-     
+    <div id="inpdf" data-html2canvas-ignore="true">
+
       <div class="popin_titres">
         <h1 id='popin_nom_francais'></h1>
         <h2 id='popin_nom_latin'></h2>
       </div>
-      
+
       <div id="popin_infos">
-  
+
       </div>
     </div>
-    
+
 
 
     <div id="popin_comparer">
@@ -341,7 +341,7 @@
     let val = mots_cles(arbre);
     if (val!==""){
       var div1 = document.createElement('div');
-      div1.setAttribute('class', 'img__wrapper')
+      div1.setAttribute('class', 'img__wrapper');
       var a1=document.createElement('a');
       a1.setAttribute('class', 'attention');
       div1.appendChild(img);
@@ -544,7 +544,7 @@
           p_critere.classList.add('p_herbier_critere');
           p_critere.innerHTML = titres_checkboxes[i];
           picto_critere.classList.add(`pictogramme`);
-          
+
           picto_critere.setAttribute('src', `/picto/${titres_checkboxes[i]}`);
           picto_critere.setAttribute('onerror', 'this.style.display = "none";');
 
@@ -580,24 +580,26 @@
           favori_icon.innerText = "Ajouter à mon herbier"
         }
 
+        while(popin_photo.children.length>0){
+          popin_photo.removeChild(popin_photo.children[0]);
+        }
+
+        var mots_clé = mots_cles(arbre_popin);
+        var mot_cle_existant = document.getElementById('mot_cle_popin');
+        if (mots_clé!=="") {
+          var a = document.createElement('a');
+          a.setAttribute('id', 'mot_cle_popin');
+          a.innerHTML = mots_clé;
+          a.classList.add('attention');
+          popin_photo.classList.add('img__wrapper');
+          popin_photo.appendChild(a);
+        }
+
         if(arbre_popin["Photo"]!= ''){
           var xhttp_attribution = new XMLHttpRequest();
           xhttp_attribution.open('GET', `/image_attribution/${arbre_popin['Photo']}`);
           xhttp_attribution.setRequestHeader('Content-type', 'application/json');
           xhttp_attribution.send();
-
-          while(popin_photo.children.length>0){
-            popin_photo.removeChild(popin_photo.children[0]);
-          }
-
-          var mots_clé = mots_cles(arbre_popin);
-          if (mots_clé!=="") {
-            var a = document.createElement('a');
-            a.innerHTML = mots_clé;
-            a.classList.add('attention');
-            popin_photo.classList.add('img__wrapper');
-            popin_photo.appendChild(a);
-          }
 
           xhttp_attribution.onload = function(){
             var p = document.createElement('p');
@@ -713,7 +715,7 @@
     var page_actuelle = document.getElementsByClassName('page_actuelle');
     var nombre_pages = document.getElementsByClassName('nombre_pages');
     for(let i=0; i<page_actuelle.length; i++){
-      page_actuelle[i].innerHTML = page;
+      page_actuelle[i].innerHTML = Math.max(page, 1);
     }
     for(let i=0; i<nombre_pages.length; i++){
       nombre_pages[i].innerHTML = Math.max(Math.ceil(arbres_favoris.length/9), 1);
@@ -722,7 +724,7 @@
         let arbre = arbres_favoris[i];
         arbres_favoris_page.push(arbre);
     }
-    document.getElementById("nombre_arbre_trouves").innerText = `${arbres_favoris.length} essence(s) trouvées`
+    document.getElementById("nombre_arbre_trouves").innerText = `${arbres_favoris.length} essence(s) trouvées`;
     update_affichage_arbres(arbres_favoris_page);
   }
 
@@ -804,8 +806,8 @@
     }
     return(results);
 }
-    
- 
+
+
     var button_tel = document.querySelector('.telecharger');
     button_tel.addEventListener('click',()=>{
 
@@ -817,30 +819,30 @@
       //           pdf.save('Test.pdf');
       //   });
       var specialElementHandlers = {
-       
+
         '.pictogramme': function (element, renderer) {
         return true;}
-        
-        
+
+
         };
       /////////
-      
+
       var doc = new jsPDF();  //create jsPDF object
- 
+
 
       console.log('/assets'+document.getElementById("popin_photo").style.backgroundImage.slice(5, -2)+'.jpg')
       doc.addImage('/assets'+document.getElementById("popin_photo").style.backgroundImage.slice(5, -2)+'.jpg', 'jpg', 0, 0, 50, 50)
       var text = document.getElementById('popin_nom_francais').textContent;
       var infos=document.getElementById('popin_infos').textContent;
       // doc.text(50, 10, text)
-      // doc.setFont("times");    
-      // doc.setFontType("bold"); 
-      // doc.setTextColor(165, 0, 0);   
-      
+      // doc.setFont("times");
+      // doc.setFontType("bold");
+      // doc.setTextColor(165, 0, 0);
+
       alert(document.getElementById('popin_infos').innerHTML)
 
       let elem = document.getElementById("inpdf").innerHTML.replaceAll('/picto','#')
-    
+
       let divi = document.getElementById("inpdf")
       divi.innerHTML = elem
       doc.setFontSize(10);
@@ -857,30 +859,30 @@
       },
       function(a)
       {
-        
+
       doc.save(text+".pdf"); // save file name as HTML2PDF.pdf
       })
-      
+
       //  doc.addImage(document.getElementById("popin_photo").value, 'JPEG', 0, 0, 50, 50);
       // // define custom font
       // // define custom font
 
       // doc.fromHTML(document.getElementById("popin_infos"), // page element which you want to print as PDF
       // 15,
-      // 15, 
+      // 15,
       // {
       //   'width': 150 , //set width,
       //   'elementHandlers':specialElementHandlers
       // }
-      
-      // ); 
+
+      // );
 
 
-   
+
       // doc.setFontSize(12);
-      // doc.setFont('Lato-Regular', 'normal');  
-      
-      
+      // doc.setFont('Lato-Regular', 'normal');
+
+
     })
 
 
@@ -910,7 +912,8 @@
       }
       arbres_favoris = favoris_into_liste_arbres(JSON.parse(localStorage.getItem("arbres_favori")));
       if (document.getElementById('favoris').checked == true) {
-        update_affichage_favoris(arbres_favoris, (document.getElementsByClassName('arbre-grid-item').length>1) ? parseInt(document.getElementsByClassName('page_actuelle')[0].innerHTML) : parseInt(document.getElementsByClassName('page_actuelle')[0].innerHTML)-1);
+        console.log(arbres_favoris);
+        update_affichage_favoris(arbres_favoris, Math.max(1,(document.getElementsByClassName('arbre-grid-item').length>1) ? parseInt(document.getElementsByClassName('page_actuelle')[0].innerHTML) : parseInt(document.getElementsByClassName('page_actuelle')[0].innerHTML)-1));
         var event = new Event('click');
         cacher_popin(event);
       }

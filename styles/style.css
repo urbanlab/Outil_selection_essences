@@ -372,7 +372,7 @@ footer:after{
   text-align: center;
   text-decoration: none;
   letter-spacing: .06em;
-  background-color: #A00;
+  background-color: #BD764D;
   padding: 0.5em 5em 0.4em 5em;
   text-shadow: 0 0 0.75em #444;
   box-shadow: 0 0 0.5em rgba(0,0,0,0.5);
@@ -393,7 +393,6 @@ footer:after{
   margin: -0.3em -5em;
   transform: scale(0.7);
   -webkit-transform: scale(0.7);
-  border: 2px rgba(255,255,255,0.7) dashed;
 }
 
 .label-info{
@@ -799,7 +798,7 @@ footer:after{
     overflow-wrap: normal;
     white-space: normal;
     top: 36px;
-    left: -50vw;
+    left: -40vw;
   }
 
   .tooltip:hover:before{
@@ -908,7 +907,7 @@ footer:after{
 
   footer{
     margin:0;
-    height: 2%;
+    height: 10%;
     flex-direction: row;
     padding: 36px 0 64px;
     font-size: 15px;
