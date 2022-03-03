@@ -318,7 +318,7 @@ app.get('/secure/images/refresh', (req, res)=>{
                 .then((values)=>{
                     let response = []
                     const processData = async (cb)=>{
-                        for (let i = 0; i < values.length; i++) {
+                        for (let i = 0; i < values.length-1; i++) {
                             let val = {}
                             for(let j=0; j<ncols; j++){
                                 val[colnames[0][j]]=values[i][j]
@@ -330,15 +330,14 @@ app.get('/secure/images/refresh', (req, res)=>{
                                 else if(a>b.split('.')[0]) return 1
                             }
                             const image_id = val[config.image_column_name]
-                            console.log(image_id)
                             const id_index = utils.binSearch(files, image_id, compfunc)
 
                             if(image_id && image_id.trim() != "" && image_id.trim() != "-" && id_index == -1){
-                                console.log(`Téléchargement image ${image_id} (${i+1}/${values.length})`)
+                                console.log(`Téléchargement image ${image_id} (${i+1}/${values.length-1})`)
                                 await image_updater.downloadImages(image_id, "./assets/images", image_id)
                             }
                             else if (id_index > -1){
-                                console.log(`Image ${image_id} existante (${i+1}/${values.length})`)
+                                console.log(`Image ${image_id} existante (${i+1}/${values.length-1})`)
                                 files.splice(id_index, 1)
                             }
                         }
