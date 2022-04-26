@@ -600,7 +600,7 @@ footer:after{
 
   #site_header_wrapper{
     display: flex;
-    top: 0;
+    position: static;
     align-items: center;
   }
 
@@ -611,13 +611,13 @@ footer:after{
     align-self: center;
   }
 
-
   h1{
-    position: fixed;
-    top: 12%;
+    position: static;
   }
 
+
   #nav_pages{
+    position: absolute;
     right: 5%;
     top: 6%;
   }
@@ -660,7 +660,7 @@ footer:after{
   }
 
   .footer_logos{
-    width: 70vw;
+    width: 100vw;
     height: 10vw;
     position: absolute;
     margin:0;
