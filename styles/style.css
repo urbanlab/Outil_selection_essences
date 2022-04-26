@@ -126,6 +126,33 @@ header:after{
   position: fixed;
 }
 
+#site_header_wrapper {
+  display: flex;
+  justify-content: space-between;
+  height: fit-content;
+  padding:  7px 48px 0;
+  position: fixed;
+  box-sizing: inherit;
+}
+
+.site-title {
+  margin:0;
+  height:100%;
+  display: flex;
+  width: fit-content;
+  height: fit-content;
+  align-items: center;
+}
+
+.site-title a {
+  display:flex;
+  align-items:center;
+}
+
+.site-title a img {
+  max-width:200px;
+}
+
 footer{
   width: 100%;
   display: flex;
@@ -562,8 +589,32 @@ footer:after{
 
 @media screen and (max-width: 750px) {
 
+
+  header{
+    height: 20%;
+  }
+
+  .site_branding{
+    display: flex;
+  }
+
+  #site_header_wrapper{
+    display: flex;
+    top: 0;
+    align-items: center;
+  }
+
   #titre_page{
     text-align: center;
+    font-size: 25px;
+    margin: auto;
+    align-self: center;
+  }
+
+
+  h1{
+    position: fixed;
+    top: 12%;
   }
 
   #nav_pages{
@@ -601,13 +652,19 @@ footer:after{
     margin-top: 10%;
     padding-left: 10%;
     padding-right: 10%;
+    bottom: 0;
   }
 
-  .footer_logo_erasme{
+  footer:after{
+    margin-top: 10%;
+  }
+
+  .footer_logos{
     width: 70vw;
     height: 10vw;
     position: absolute;
     margin:0;
+    bottom: 0;
   }
 
   #barre_recherche{
@@ -668,7 +725,7 @@ footer:after{
     width: 100vw;
     padding-left: 20%;
     padding-right: 1%;
-    margin-top: 30%;
+    margin-top: 35%;
     justify-content: center;
     font-size: 20px;
   }
@@ -896,7 +953,7 @@ footer:after{
     margin-top: 5%;
   }
 
-  .footer_logo_erasme{
+  .footer_logos{
     width: 65vw;
     height: 8vw;
     position: absolute;

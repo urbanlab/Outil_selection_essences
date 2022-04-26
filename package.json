@@ -21,6 +21,7 @@
     "async": "^3.2.3",
     "body-parser": "^1.19.1",
     "crypto": "^1.0.1",
+    "docker": "^1.0.0",
     "express": "^4.17.2",
     "googleapis": "^92.0.0",
     "html2canvas": "^1.4.1",
