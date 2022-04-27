@@ -649,14 +649,17 @@ footer:after{
   footer{
     height: 10%;
     flex-direction: column;
-    margin-top: 10%;
+    margin-top: 0%;
     padding-left: 10%;
     padding-right: 10%;
     bottom: 0;
+    padding-top: 15%;
+    position: relative;
+    top: 150px;
   }
 
   footer:after{
-    margin-top: 10%;
+    margin-top: 0%;
   }
 
   .footer_logos{
