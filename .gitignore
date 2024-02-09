@@ -2,6 +2,6 @@ node_modules/
 keys.json
 keys2.json
 image-updater-keys.json
-assets/images/*
-data/*
+#assets/images/*
+#data/*
 mdp_admin.txt

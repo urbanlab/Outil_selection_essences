@@ -1,3 +1,8 @@
+@font-face {
+  font-family: "Eczar";
+  src: url("/assets/fonts/Eczar-Bold.ttf") format("truetype");
+}
+
 *{
   font-family: 'Eczar', arial;
   color: #282828;
